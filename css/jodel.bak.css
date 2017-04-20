@@ -1,0 +1,84 @@
+*
+{
+	padding: 0;
+	margin: 0;
+}
+
+.clear {
+	clear: both;
+}
+
+body
+{
+	/*font-family: Orbitron, arial, sans-serif;*/
+	background-color: white;
+   /* background-image:url("../img/background.jpg");*/
+   color: white;
+}
+
+a
+{
+	text-decoration: none;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+
+
+header {
+
+	background-color: white;
+	/*float: left;*/
+	position: fixed;
+	display: block;
+    left: 50%;
+    /*top: 50%;*/
+	z-index: 100;
+	width: 100%;
+	text-align:center;
+
+	
+}
+
+.header-icons {
+
+	text-decoration: none;
+	color: orange;
+	float:left;
+}
+
+
+
+.header-icons:active,
+.header-icons:focus {
+
+	text-decoration: none;
+	color: red;
+}
+
+nav,
+nav a{
+	text-decoration: none;
+	background-color: orange;
+	color: white;
+	border: 1px solid orange;
+	float:left;
+}
+
+.navactive{
+
+	text-decoration: none;
+	background-color:white;
+	color:orange;
+}
+
+.jodel {
+	border: 1px solid white;
+}
+
+.adminmark{
+
+	color:lawngreen;
+}

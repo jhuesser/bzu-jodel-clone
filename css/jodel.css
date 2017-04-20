@@ -1,0 +1,94 @@
+
+.test {
+	padding-top: 70px;
+}
+.clear {
+	clear: both;
+}
+
+.nav {
+	background-color: orange;
+	position: fixed;
+	z-index: 100;
+	width: 100%;
+	
+	
+}
+
+.nav-link {
+	color: white;
+}
+.active {
+	color: orange;
+	background-color: white;
+}
+
+.active:hover {
+	color: orange !important;
+	background-color: white;
+}
+
+.nav-link:hover {
+	color: lightgrey;
+}
+
+.jodelvotes {
+	float: right;
+}
+
+.jodelvotes a {
+	color: white;
+	text-decoration: none;
+}
+
+.jodelvotes a:hover {
+	color: grey;
+	text-decoration: none;
+}
+
+.jodelmeta a {
+	color: white;
+	text-decoration: none;
+}
+
+.newpost {
+	
+	text-align: center;
+	position: fixed; 
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+	font-size: 80px;
+	
+
+}
+
+.newpost a {
+text-decoration: none;
+	color: lightgrey;
+}
+
+.newpost a:hover {
+text-decoration: none;
+	color: grey;
+}
+
+.btn:hover{
+	cursor: pointer;
+}
+
+*::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    white !important;
+}
+*:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    white !important;
+   opacity:  1;
+}
+*::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    white !important;
+   opacity:  1;
+}
+*:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    white !important;
+}

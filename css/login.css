@@ -1,0 +1,13 @@
+.btn:hover {
+	cursor: pointer;
+	color: orange;
+	background-color: white;
+	border: 1px solid orange;
+	
+}
+
+.btn{
+	background-color: orange;
+	color: white;
+	border: 1px solid orange;
+}

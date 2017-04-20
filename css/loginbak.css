@@ -1,0 +1,175 @@
+*
+{
+	padding: 0;
+	margin: 0;
+}
+
+.clear {
+	clear: both;
+}
+
+body
+{
+	font-family: Orbitron, arial, sans-serif;
+	/*background-color: white;*/
+    background-image:url("../img/background.jpg");
+}
+
+a
+{
+	text-decoration: none;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+@media screen and (min-width: 500px){
+header {
+	background-color: orange;
+	color: white;
+	/*float:left;*/
+	width: 100%;
+	position: fixed;
+}
+.headerlogo {
+	width: 20%;
+	float:left;
+}
+
+.sitetitle {
+	margin-top: 15px;
+	float: left;
+	margin-left: 50px;
+}
+
+.main
+{
+	padding: 0 0;
+	background-color: white;
+	
+}
+
+#login
+{
+	border: solid 1px black;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    background-color: white;
+    z-index: 100;
+	text-align:center;
+    height: 510px;
+    margin-top: -200px;
+
+    width: 500px;
+    margin-left: -300px;
+    
+    padding-top:10px;
+    /*
+    -webkit-box-shadow: 10px 10px 10px rgba(201, 201, 201, 0.5);
+	-moz-box-shadow: 10px 10px 10px rgba(201, 201, 201, 0.5);
+	box-shadow: 10px 10px 10px rgba(201, 201, 201, 0.5);
+    */
+}
+
+#signup
+{
+	border: solid 1px black;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    background-color: white;
+    z-index: 100;
+	text-align:center;
+    height: 550px;
+    margin-top: -200px;
+
+    width: 500px;
+    margin-left: -300px;
+    
+    padding-top:10px;
+    /*
+    -webkit-box-shadow: 10px 10px 10px rgba(201, 201, 201, 0.5);
+	-moz-box-shadow: 10px 10px 10px rgba(201, 201, 201, 0.5);
+	box-shadow: 10px 10px 10px rgba(201, 201, 201, 0.5);
+    */
+}
+
+.inner{
+	position: fixed;
+    height: 200px;
+    width: 450px;
+    /*margin: 0;
+    top: 50%;
+    left: 50%; */
+    margin-left:25px;
+    margin-top:25px;
+    /*border: 1px solid black; */
+    text-align:center;
+    background-color:white;	
+}
+
+.loginmark {
+	margin-top:70px;
+    color:white;
+}
+.signupmark {
+	margin-top:10px;
+    color: white;
+}
+
+.signupmark a,
+.loginmark a {
+    text-decoration: underline;
+    color:white;
+}
+
+.errormsg{
+	background-color: red;
+	color:white;
+	margin: 10px 0;
+	padding: 10px 0;
+}
+
+.formlabel{
+	margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="password"]{
+	margin-bottom: 20px;
+	height: 50px;
+	font-size: 40px;
+	width: 400px;
+	text-align: center;
+}
+
+.g-recaptcha {
+margin: 20px auto;
+margin-left: 90px;
+   display: block;
+	width: 50%;
+}
+
+input[type="submit"]{
+	background-color: orange; 
+    border: 2px solid orange;
+    color: white;
+  padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    float:left;
+   margin-left: 170px;
+}
+input[type="submit"]:hover {
+	background-color:white;
+	color:orange;
+}
+}
