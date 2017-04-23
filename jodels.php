@@ -7,7 +7,7 @@ $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
 include 'functions/apicalls.php';
-include 'functions/votes.php';
+
 $config = include('config.php');
 $apiroot = $config->apiUrl;
 include 'functions/votes.php';
