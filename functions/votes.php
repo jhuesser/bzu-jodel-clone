@@ -2,7 +2,6 @@
 
 function voteJodel($jodel2vote, $how2vote){
 
-$jodel2upvote = $_GET['upvotejodel'];
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2vote;
 	$jodeljson = getCall($callurl);
@@ -50,13 +49,21 @@ $jodel2upvote = $_GET['upvotejodel'];
 	}
 
 	//incerase karma of the author, update it in DB
-	$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
+	if ($how2vote == "up"){
+		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
+	} elseif ($how2vote == "down"){
+		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_downvote'];
+	}
 	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
 	$callurl = $apiroot . "jodlers/" . $author;
 	$karmaupdated = putCall($callurl, $postfields);
 
 	//incerase the karma of the voter (current user) and update it in DB
-	$karma = $karma + $config->karma_calc['do_upvote'];
+	if ($how2vote == "up"){
+		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['do_upvote'];
+	} elseif ($how2vote == "down"){
+		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['do_downvote'];
+	}
 	$postfields = "{\n  \n  \"karma\": $karma\n}";
 	$callurl = $apiroot . "jodlers/" . $userid;
 	$karmaupdated = putCall($callurl, $postfields);

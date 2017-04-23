@@ -7,6 +7,7 @@ $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
 include 'functions/apicalls.php';
+include 'functions/votes.php';
 $config = include('config.php');
 $apiroot = $config->apiUrl;
 
@@ -29,6 +30,10 @@ $_SESSION['acctype'] = $accstate;
 
 //if joels.php?upvotejodel=$jodelID is called, upvote it
 if(isset($_GET['upvotejodel'])){
+	$jodel2vote = $_GET['upvotejodel'];
+	voteJodel($jodel2vote, "up");
+
+	/*
 	$jodel2upvote = $_GET['upvotejodel'];
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2upvote;
@@ -88,7 +93,7 @@ if(isset($_GET['upvotejodel'])){
 	$_SESSION['errorMsg'] = "Already voted";
 }
 //redirect again to jodels.php to show clean URL in browser
-header('Location: https://jodel.domayntec.ch/jodels.php');
+header('Location: https://jodel.domayntec.ch/jodels.php');*/
 }
 
 //if jodels.php?downvotejodel=$jodelID ist called, downvote post
