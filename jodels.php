@@ -10,7 +10,7 @@ include 'functions/apicalls.php';
 include 'functions/votes.php';
 $config = include('config.php');
 $apiroot = $config->apiUrl;
-
+include 'functions/votes.php';
 if(!isset($_SESSION['userid'])) {
  header('Location: https://jodel.domayntec.ch/login.php');
 }
