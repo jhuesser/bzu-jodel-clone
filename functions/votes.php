@@ -77,8 +77,3 @@ header('Location: https://jodel.domayntec.ch/jodels.php');
 
 
 }
-
-function voteComment($comment2Vote){
-
-
-}
