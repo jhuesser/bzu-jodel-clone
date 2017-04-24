@@ -267,7 +267,7 @@ foreach($postdata['jodeldata'] as $post){
 			<div class="clear"></div>
 			<div class="jodelmeta">
 				<?php
-				jodelage();
+				jodelage(); 
 				/**
 				$now = date('Y-m-d H:i:s');
 				
