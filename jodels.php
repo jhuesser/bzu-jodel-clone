@@ -1,6 +1,5 @@
 <?php
 include 'functions/jodelmeta.php';
-
 session_start();
 //Set default values for head & load it
 $title = "Posts | SocialDomayn";
@@ -8,9 +7,10 @@ $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
 include 'functions/apicalls.php';
+
 $config = include('config.php');
 $apiroot = $config->apiUrl;
-
+include 'functions/votes.php';
 if(!isset($_SESSION['userid'])) {
  header('Location: https://jodel.domayntec.ch/login.php');
 }
@@ -30,6 +30,10 @@ $_SESSION['acctype'] = $accstate;
 
 //if joels.php?upvotejodel=$jodelID is called, upvote it
 if(isset($_GET['upvotejodel'])){
+	$jodel2vote = $_GET['upvotejodel'];
+	voteJodel($jodel2vote, "up");
+
+	/*
 	$jodel2upvote = $_GET['upvotejodel'];
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2upvote;
@@ -89,7 +93,7 @@ if(isset($_GET['upvotejodel'])){
 	$_SESSION['errorMsg'] = "Already voted";
 }
 //redirect again to jodels.php to show clean URL in browser
-header('Location: https://jodel.domayntec.ch/jodels.php');
+header('Location: https://jodel.domayntec.ch/jodels.php');*/
 }
 
 //if jodels.php?downvotejodel=$jodelID ist called, downvote post
@@ -267,9 +271,9 @@ foreach($postdata['jodeldata'] as $post){
 			<div class="clear"></div>
 			<div class="jodelmeta">
 				<?php
-				jodelage(); 
-				/**
-				$now = date('Y-m-d H:i:s');
+
+                $timeago = jodelage($post['createdate']);
+				/**$now = date('Y-m-d H:i:s');
 				
 				$now = date_create_from_format('Y-m-d H:i:s', $now);
 				$postdate = $post['createdate'];
@@ -312,7 +316,8 @@ foreach($postdata['jodeldata'] as $post){
 				} else {
 					$timeago = $timeago . " Y";
 				}
-				*/
+                 */
+			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
 				<?php echo " " ;?><a href="comments.php?showcomment=<?php echo $post['jodelID'];?>"><i class="fa fa-comment" aria-hidden="true"></i><?php echo $post['comments_cnt'];?></a>
