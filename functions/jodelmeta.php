@@ -1,9 +1,9 @@
 <?php
 
-function jodelage()
+function jodelage($postdate)
 {
+    $now = date('Y-m-d H:i:s');
     $now = date_create_from_format('Y-m-d H:i:s', $now);
-    $postdate = $post['createdate'];
     $postdate = date_create_from_format('Y-m-d H:i:s', $postdate);
     $interval = date_diff($postdate, $now);
 
@@ -21,7 +21,7 @@ function jodelage()
                     $x = TRUE;
                     break;
                 case 1:
-                    $timeago = $timeago . " m";
+                    $timeago = $timeago . " M";
                     $x = TRUE;
                     break;
                 case 2:
@@ -33,7 +33,7 @@ function jodelage()
                     $x = TRUE;
                     break;
                 case 4:
-                    $timeago = $timeago . " i";
+                    $timeago = $timeago . " m";
                     $x = TRUE;
                     break;
                 case 5:
@@ -47,7 +47,9 @@ function jodelage()
             }
 
         }}while($x == FALSE);
-    echo $timeago;
+
+return $timeago;
+
 }
 
 ?>
