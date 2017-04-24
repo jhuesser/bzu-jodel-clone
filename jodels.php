@@ -1,4 +1,5 @@
 <?php
+include 'functions/jodelmeta.php';
 
 session_start();
 //Set default values for head & load it
@@ -266,6 +267,8 @@ foreach($postdata['jodeldata'] as $post){
 			<div class="clear"></div>
 			<div class="jodelmeta">
 				<?php
+				jodelage();
+				/**
 				$now = date('Y-m-d H:i:s');
 				
 				$now = date_create_from_format('Y-m-d H:i:s', $now);
@@ -309,7 +312,7 @@ foreach($postdata['jodeldata'] as $post){
 				} else {
 					$timeago = $timeago . " Y";
 				}
-			
+				*/
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
 				<?php echo " " ;?><a href="comments.php?showcomment=<?php echo $post['jodelID'];?>"><i class="fa fa-comment" aria-hidden="true"></i><?php echo $post['comments_cnt'];?></a>
