@@ -47,6 +47,8 @@ if ($err) {
  *
  * @author Jonas Hüsser
  *
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ *
  * @since 0.1
  */
 function postCall($apiURL, $postfields){
@@ -88,6 +90,8 @@ if ($err) {
  * @return mixed The result of the PUT call
  *
  * @author Jonas Hüsser
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
  *
  * @since 0.1
  */
