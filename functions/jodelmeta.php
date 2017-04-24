@@ -2,10 +2,10 @@
 
 function jodelage()
 {
-				$now = date_create_from_format('Y-m-d H:i:s', $now);
-				$postdate = $post['createdate'];
-				$postdate = date_create_from_format('Y-m-d H:i:s', $postdate);
-				$interval = date_diff($postdate, $now);
+    $now = date_create_from_format('Y-m-d H:i:s', $now);
+    $postdate = $post['createdate'];
+    $postdate = date_create_from_format('Y-m-d H:i:s', $postdate);
+    $interval = date_diff($postdate, $now);
 
     $tunit = array('%y','%m','%d','%H','%i','%s');
     $unit = 0;
