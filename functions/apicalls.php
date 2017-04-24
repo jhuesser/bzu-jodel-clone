@@ -6,8 +6,11 @@
  *
  * @author Jonas Hüsser
  *
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ *
  * @since 0.1
  */
+
 function getCall($apiURL){
 $curl = curl_init();
 
@@ -43,6 +46,8 @@ if ($err) {
  * @return mixed The result of the POST call
  *
  * @author Jonas Hüsser
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
  *
  * @since 0.1
  */
@@ -85,6 +90,8 @@ if ($err) {
  * @return mixed The result of the PUT call
  *
  * @author Jonas Hüsser
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
  *
  * @since 0.1
  */
