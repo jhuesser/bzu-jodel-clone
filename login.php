@@ -64,6 +64,7 @@ $caller = "https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerH
 
 }
 if(isset($errorMessage)) {
+	//display login message
  ?>
 
  <div class="alert alert-danger" role="alert">
@@ -76,6 +77,7 @@ if(isset($errorMessage)) {
 }
 
 ?>
+<!-- login form -->
 <div class="container">
 	<div class="wrapper">
 		<form action="?login=1" method="post" name="Login_Form" class="form-signin">       
@@ -88,6 +90,9 @@ if(isset($errorMessage)) {
 			 
 			  <button class="btn btn-lg btn-block"  name="Submit" value="Login" type="Submit"><?php echo $config->login_strings['login'];?></button>  			
 		</form>
+		<!-- link to sign up page -->
 		<p><?php echo $config->login_strings['create_acc']; ?></p>			
 	</div>
 </div>
+
+<!-- end login form -->
