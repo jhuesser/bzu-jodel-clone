@@ -23,7 +23,7 @@ if(isset($_GET['login'])) {
           
         }
 //check if solved captcha is valid
- $captachresp =json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6LdozRgTAAAAALNEFAspM4WP66rIrWxikjFSnHfK&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
+ $captachresp =json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$config->recaptcha_secret . "&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
         if($captachresp['success'] == false)
         {
 			//captcha is not valid
@@ -86,7 +86,7 @@ if(isset($errorMessage)) {
 			  
 			  <input type="text" class="form-control" name="username" placeholder="<?php echo $config->login_strings['username'];?>" required="true" autofocus="true" />
 			  <input type="password" class="form-control" name="password" placeholder="<?php echo $config->login_strings['paswd'];?>" required="true"/> 
-			  <div class="g-recaptcha" data-sitekey="6LdozRgTAAAAAFBmt9zfZTm6wdh8kVkKXigPnYmq"></div>    		  
+			  <div class="g-recaptcha" data-sitekey="<?php echo $config->recaptcha_sitekey; ?>"></div>    		  
 			 
 			  <button class="btn btn-lg btn-block"  name="Submit" value="Login" type="Submit"><?php echo $config->login_strings['login'];?></button>  			
 		</form>
