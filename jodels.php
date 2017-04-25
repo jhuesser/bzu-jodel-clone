@@ -218,9 +218,9 @@ if(isset($_SESSION['errorMsg'])) {
 
 }
  
-
+//set up url where posts are stored
  $postsUrl = $apiroot . "jodeldata?transform=1";
-
+//setup post filter (as selected in main menu)
  switch ($sort){
 	 case "latest":
 	 	$filter = "";
@@ -234,15 +234,18 @@ if(isset($_SESSION['errorMsg'])) {
 	default:
 		$filter = "";
  }
+ 
+ //setup api call with filter
 $jodelsUrl = $postsUrl . $filter;
-
-
 $posts = getCall($jodelsUrl);
-
 $postdata = json_decode($posts, true);
+
+//process posts
+//TODO: I guess this is a performance breaker
 foreach($postdata['jodeldata'] as $post){
 	for($i=0; $i < count($post['jodelID']); $i++){
-		
+		//get numbers of comments on post
+		//TODO: take data from field comments_cnt in jodeldata, store them there too.
 		$callurl = $apiroot . "comments?transform=1&filter=jodelIDFK,eq," . $post['jodelID'];
 		$commentjson = getCall($callurl);
 		$comments = json_decode($commentjson, true);
@@ -250,18 +253,23 @@ foreach($postdata['jodeldata'] as $post){
 		$comcnt = count($comment['commentID']);
 		
 		}
-
+		//setup layout
 		?><div class="card card-inverse mb-3 text-center" id="<?php echo $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
   <div class="card-block">
     <blockquote class="card-blockquote">
 		<?php
 			if($post['votes_cnt'] < -5){
+				//post is downvoted by the community.
+				//TODO: set required downvotes to config
+				//TODO: Don't display this posts in stream
 				echo "This post was voted out by the community";
 				?></blockquote>
   </div>
 </div><?php
 			} else{
+				//post isn't downvoted
 		 echo $post['jodel'];?>
+		 <!-- voting and number of votes -->
 		<div class="jodelvotes">
 			
 				<a href="?upvotejodel=<?php echo $post['jodelID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
@@ -269,13 +277,20 @@ foreach($postdata['jodeldata'] as $post){
 				<a href="?downvotejodel=<?php echo $post['jodelID'];?>"<i class="fa fa-angle-down" aria-hidden="true"></i></a>
 			</div>
 			<div class="clear"></div>
+			<!-- end voting and number of votes -->
+			
+			<!-- post metadata -->
 			<div class="jodelmeta">
 				<?php
+				//get current time
 				$now = date('Y-m-d H:i:s');
-				
+				//format time
 				$now = date_create_from_format('Y-m-d H:i:s', $now);
+				//get publish date and time from post
 				$postdate = $post['createdate'];
+				//format publish date
 				$postdate = date_create_from_format('Y-m-d H:i:s', $postdate);
+				//get interval
 				$interval = date_diff($postdate, $now);
 				//years
 				$timeago = $interval->format('%y');
@@ -319,15 +334,18 @@ foreach($postdata['jodeldata'] as $post){
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
 				<?php echo " " ;?><a href="comments.php?showcomment=<?php echo $post['jodelID'];?>"><i class="fa fa-comment" aria-hidden="true"></i><?php echo $post['comments_cnt'];?></a>
 				<?php if ($post['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
-			
+			<!-- end post metadata -->
 		</blockquote>
-  </div>
+  </div> <!-- end post card somewhere here -->
 </div><?php
 		}
 }
 	}	
 
-?><div class="newpost"><a href="new.php"><i class="fa fa-plus-circle" aria-hidden="true"></a></i></div>
-<?php
+?>
+<!-- new post button -->
+<div class="newpost"><a href="new.php"><i class="fa fa-plus-circle" aria-hidden="true"></a></i></div>
 
+<?php
+//include footer
 include 'functions/footer.php';
