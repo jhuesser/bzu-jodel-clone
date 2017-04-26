@@ -1,5 +1,6 @@
 <?php
 
+include 'functions/jodelmeta.php';
 session_start();
 //Set default values for head & load it
 $title = "Posts | SocialDomayn";
@@ -277,6 +278,10 @@ foreach($postdata['jodeldata'] as $post){
 			<!-- post metadata -->
 			<div class="jodelmeta">
 				<?php
+				
+				$timeago = jodelage($post['createdate']);
+				
+				/*
 				//get current time
 				$now = date('Y-m-d H:i:s');
 				//format time
@@ -324,6 +329,7 @@ foreach($postdata['jodeldata'] as $post){
 				} else {
 					$timeago = $timeago . " Y";
 				}
+				*/
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
