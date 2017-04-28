@@ -75,9 +75,14 @@ if(isset($_GET['post'])){
 	$callurl = $apiroot . "colors?transform=1";
 	$allcolorsjson = getCall($callurl);
 	$allcolors = json_decode($allcolorsjson, true);
-	$nmbofcolors = count($allcolors['colors']);
-	//select random number between 1 and number of colors
-	$colornmb = rand(1, $nmbofcolors);
+	//init array to store every colorID
+	$colorIDs = array();
+	foreach($allcolors['colors'] as $allcols){
+		//add every colorID to array
+		array_push($colorIDs,$allcols['colorID']);
+	}
+	//select random ID from array. This is the color to use
+	$colornmb = $colorIDs[mt_rand(0, count($colorIDs) - 1)];
 	//get details about the color
 	$callurl = $apiroot . "colors?transform=1&filter=colorID,eq," . $colornmb;
 	$colors = getCall($callurl);
