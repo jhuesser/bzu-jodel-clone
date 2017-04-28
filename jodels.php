@@ -280,56 +280,6 @@ foreach($postdata['jodeldata'] as $post){
 				<?php
 				
 				$timeago = jodelage($post['createdate']);
-				
-				/*
-				//get current time
-				$now = date('Y-m-d H:i:s');
-				//format time
-				$now = date_create_from_format('Y-m-d H:i:s', $now);
-				//get publish date and time from post
-				$postdate = $post['createdate'];
-				//format publish date
-				$postdate = date_create_from_format('Y-m-d H:i:s', $postdate);
-				//get interval
-				$interval = date_diff($postdate, $now);
-				//years
-				$timeago = $interval->format('%y');
-				if ($timeago == 0){
-					//months
-					$timeago = $interval->format('%m');
-					if ($timeago == 0){
-						//days
-						$timeago = $interval->format('%a');
-						if ($timeago == 0){
-							//hours
-							$timeago = $interval->format('%h');
-							if ($timeago == 0){
-								//minutes
-								$timeago = $interval->format('%i');
-								if ($timeago == 0){
-									//seconds
-									$timeago = $interval->format('%s');
-									if ($timeago == 0){
-										$timeago = "just now";
-									} else {
-										$timeago = $timeago . " s";
-									}
-								} else {
-									$timeago = $timeago . " m";
-								}
-							} else {
-								$timeago = $timeago . " h";
-							}
-						} else {
-							$timeago = $timeago . " d";
-						}
-					} else {
-						$timeago = $timeago . " M";
-					}
-				} else {
-					$timeago = $timeago . " Y";
-				}
-				*/
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
