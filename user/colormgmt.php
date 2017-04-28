@@ -22,6 +22,13 @@ if(isset($_GET['addcolor'])){
 	header('Location: https://jodel.domayntec.ch/user/colormgmt.php');
 }
 
+if(isset($_GET['delcol'])){
+	$colorid = $_GET['delcol'];
+	$callurl = $apiurl . "colors/" . $colorid;
+	$deletedColors = deleteCall($callurl);
+	header('Location: https://jodel.domayntec.ch/user/colormgmt.php');
+}
+
 ?>
 <div id="top"></div>
 
@@ -34,7 +41,7 @@ if(isset($_GET['addcolor'])){
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" href="../jodels.php">Insert cool icon here</a>
+    <a class="nav-link" href="../jodels.php"><i class="fa fa-comments-o" aria-hidden="true"></i></a>
   </li>
   
 </ul>
@@ -80,7 +87,7 @@ $colors = json_decode($colorjson, true);
 </div>
   <button type="submit" class="btn btn-warning">Submit</button>
 </form>
-
+<div class="test"></div>
 
 <?php
 
@@ -90,6 +97,11 @@ foreach($colors['colors'] as $color){
     <blockquote class="card-blockquote">
 		<?php echo $color['colordesc'] . "\n" . $color['colorhex'];
 		?>
+		<div class="jodelvotes">
+			
+				<a href="?delcol=<?php echo $color['colorID'];?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+			</div>
+			<div class="clear"></div>
 		</blockquote>
 		</div>
 		</div>
