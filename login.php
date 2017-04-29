@@ -1,80 +1,67 @@
 <?php
+	session_start();
+	//Set default values for head & load it
+	$title = "Login | SocialDomayn";
+	$stylesheet = "login.css";
+	include 'functions/header.php';
+	//Load API functions
+	include 'functions/apicalls.php';
+	$config = include('config.php');
 
-session_start();
-//Set default values for head & load it
-$title = "Login | SocialDomayn";
-$stylesheet = "login.css";
-include 'functions/header.php';
-//Load API functions
-include 'functions/apicalls.php';
-$config = include('config.php');
-
-//If user sent loginform, set values
-if(isset($_GET['login'])) {
- $username = $_POST['username'];
- $password = $_POST['password'];
- //check if captcha is solved
- if(isset($_POST['g-recaptcha-response']))
-          $captcha=$_POST['g-recaptcha-response'];
-
-        if(!$captcha){
+	//If user sent loginform, set values
+	if(isset($_GET['login'])) {
+ 		$username = $_POST['username'];
+ 		$password = $_POST['password'];
+ 		//check if captcha is solved
+ 		if(isset($_POST['g-recaptcha-response']))
+        	$captcha=$_POST['g-recaptcha-response'];
+		if(!$captcha){
 			//is not solved
-         $errorMessage = $config->app_msgs['catpcha_not_solved'];
-          
-        }
-//check if solved captcha is valid
- $captachresp =json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$config->recaptcha_secret . "&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
-        if($captachresp['success'] == false)
-        {
+         	$errorMessage = $config->app_msgs['catpcha_not_solved'];
+          }
+		//check if solved captcha is valid
+ 		$captachresp =json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$config->recaptcha_secret . "&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
+        if($captachresp['success'] == false){
 			//captcha is not valid
-          $errorMessage = $config->app_msgs['captcha_fail'];
-        }
-        else
-        {
+        	$errorMessage = $config->app_msgs['captcha_fail'];
+        } else {
 			//check if username is registered
-$caller = "https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerHRID,eq," . $username;
-	$resp = getCall($caller);
- if($resp == '{"jodlers":[]}') {
-	 //user is not registered
-	$user = false;
- }
- $data=json_decode($resp, true);
- 	//read password hash from DB
-	foreach($data['jodlers'] as $item){
-		$passwordDB = $item['passphrase'];
-		$userid = $item['jodlerID'];
-		$jodlerHRID = $item['jodlerHRID'];
+			$caller = "https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerHRID,eq," . $username;
+			$resp = getCall($caller);
+ 			if($resp == '{"jodlers":[]}') {
+	 			//user is not registered
+				$user = false;
+ 			}
+ 			$data=json_decode($resp, true);
+ 			//read password hash from DB
+			foreach($data['jodlers'] as $item){
+				$passwordDB = $item['passphrase'];
+				$userid = $item['jodlerID'];
+				$jodlerHRID = $item['jodlerHRID'];
 	
+			}
+			//check password
+			if ($user !== false && password_verify($password, $passwordDB)) {
+				//Login successfull
+ 				$_SESSION['userid'] = $userid;
+				$_SESSION['username'] = $jodlerHRID;
+				header('Location: https://jodel.domayntec.ch/jodels.php');
+	 			// echo '<a href="index.php">openindex</a>';
+ 			} else {
+	 			//Login failed
+				$errorMessage = $config->app_msgs['login_fail'];
+			}
+		}
+		if(isset($errorMessage)) {
+			//display login message
+			?>
+ 			<div class="alert alert-danger" role="alert">
+  				<strong>Holy guacamole!</strong> <?php echo $errorMessage;?>
+			</div>
+			<?php
+		}
+
 	}
-
- //check password
- if ($user !== false && password_verify($password, $passwordDB)) {
-	//Login successfull
- 	$_SESSION['userid'] = $userid;
-	 $_SESSION['username'] = $jodlerHRID;
- 	
- 	header('Location: https://jodel.domayntec.ch/jodels.php');
-	 
-	// echo '<a href="index.php">openindex</a>';
- } else {
-	 //Login failed
- $errorMessage = $config->app_msgs['login_fail'];
- 
-}
-
-}
-if(isset($errorMessage)) {
-	//display login message
- ?>
-
- <div class="alert alert-danger" role="alert">
-  
-  <strong>Holy guacamole!</strong> <?php echo $errorMessage;?>
-</div>
-<?php
-}
-
-}
 
 ?>
 <!-- login form -->
