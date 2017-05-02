@@ -2,7 +2,7 @@
 
 session_start();
 //Set default values for head & load it
-$title = "Posts | SocialDomayn";
+$title = "Comments | SocialDomayn";
 $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
@@ -57,6 +57,7 @@ if(isset($_GET['downvotejodel'])){
 
 
 ?>
+
 <div id="top"></div>
 <ul class="nav justify-content-center">
 		<li class="nav-item">
@@ -167,3 +168,8 @@ foreach($postdata['comments'] as $comment){
 	}
 }
 }
+?>
+
+<div class="newcomment"><a href="new.php">New comment</a></i></div>
+
+
