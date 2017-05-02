@@ -7,6 +7,7 @@ $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
 include 'functions/apicalls.php';
+include 'functions/jodelmeta.php';
 $config = include('config.php');
 include 'functions/votes.php';
 $apiroot = $config->apiUrl;
@@ -59,7 +60,7 @@ if(isset($_GET['downvotejodel'])){
 <div id="top"></div>
 <ul class="nav justify-content-center">
 		<li class="nav-item">
-			<a class="nav-link" href="jodels.php#<?php echo $postID; ?>">Back (replace with a fancy icon)</a>
+			<a class="nav-link" href="jodels.php#<?php echo $postID; ?>"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
 		</li>
 		<li class="nav-item">
     <a class="nav-link" href="javascript:window.location.reload();"><i class="fa fa-refresh" aria-hidden="true"></i></a>
@@ -103,53 +104,10 @@ $jodeljson = getCall("https://jodel.domayntec.ch/api.php/jodeldata?transform=1&f
 			</div>
 			<div class="jodelmeta">
 				<?php
-				$now = date('Y-m-d H:i:s');
-				
-				$now = date_create_from_format('Y-m-d H:i:s', $now);
-				$postdate = $jodel['createdate'];
-				$postdate = date_create_from_format('Y-m-d H:i:s', $postdate);
-				$interval = date_diff($postdate, $now);
-				//years
-				$timeago = $interval->format('%y');
-				if ($timeago == 0){
-					//months
-					$timeago = $interval->format('%m');
-					if ($timeago == 0){
-						//days
-						$timeago = $interval->format('%a');
-						if ($timeago == 0){
-							//hours
-							$timeago = $interval->format('%h');
-							if ($timeago == 0){
-								//minutes
-								$timeago = $interval->format('%i');
-								if ($timeago == 0){
-									//seconds
-									$timeago = $interval->format('%s');
-									if ($timeago == 0){
-										$timeago = "just now";
-									} else {
-										$timeago = $timeago . " s";
-									}
-								} else {
-									$timeago = $timeago . " m";
-								}
-							} else {
-								$timeago = $timeago . " h";
-							}
-						} else {
-							$timeago = $timeago . " d";
-						}
-					} else {
-						$timeago = $timeago . " M";
-					}
-				} else {
-					$timeago = $timeago . " Y";
-				}
+				$timeago = jodelage($jodel['createdate']);
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
-				<?php echo " " ;?><i class="fa fa-comment" aria-hidden="true"></i><?php echo $jodel['comments_cnt'];?>
 				<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
 
 </blockquote>
@@ -165,7 +123,13 @@ foreach($postdata['comments'] as $comment){
 	for($i=0; $i < count($comment['commentID']); $i++){
 		$jodelID = $comment['jodelIDFK'];
 		
-		
+		$authorurl = $apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $comment['jodlerIDFK'];
+		$authorjson = getCall($authorurl);
+		$author = json_decode($authorjson, true);
+		foreach($author['jodlers'] as $user){
+			$accstate = $user['account_state'];
+		}
+
 
 
 		?><div class="card card-inverse mb-3 text-center" style="background-color: #<?php echo $colorhex;?>;">
@@ -187,54 +151,12 @@ foreach($postdata['comments'] as $comment){
 			</div>
 			<div class="jodelmeta">
 				<?php
-				$now = date('Y-m-d H:i:s');
-				
-				$now = date_create_from_format('Y-m-d H:i:s', $now);
-				$postdate = $comment['timestamp'];
-				$postdate = date_create_from_format('Y-m-d H:i:s', $postdate);
-				$interval = date_diff($postdate, $now);
-				//years
-				$timeago = $interval->format('%y');
-				if ($timeago == 0){
-					//months
-					$timeago = $interval->format('%m');
-					if ($timeago == 0){
-						//days
-						$timeago = $interval->format('%a');
-						if ($timeago == 0){
-							//hours
-							$timeago = $interval->format('%h');
-							if ($timeago == 0){
-								//minutes
-								$timeago = $interval->format('%i');
-								if ($timeago == 0){
-									//seconds
-									$timeago = $interval->format('%s');
-									if ($timeago == 0){
-										$timeago = "just now";
-									} else {
-										$timeago = $timeago . " s";
-									}
-								} else {
-									$timeago = $timeago . " m";
-								}
-							} else {
-								$timeago = $timeago . " h";
-							}
-						} else {
-							$timeago = $timeago . " d";
-						}
-					} else {
-						$timeago = $timeago . " M";
-					}
-				} else {
-					$timeago = $timeago . " Y";
-				}
+			
+				$timeago = jodelage($comment['timestamp']);
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
-				<?php echo " " ;?><i class="fa fa-comment" aria-hidden="true"></i><?php echo $post['comments_cnt'];?>
-				<?php if ($comment['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+				<?php if ($accstate == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
 			
 		</blockquote>
   </div>
