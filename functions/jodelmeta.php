@@ -1,5 +1,17 @@
 <?php
 
+/**
+ *
+ * @param string $postdate The date a post was created
+ * @return string The formated time interval
+ *
+ * @author Claudio Schmid
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ *
+ * @since 0.3
+ */
+
 function jodelage($postdate)
 {
     $now = date('Y-m-d H:i:s');
