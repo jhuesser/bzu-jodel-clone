@@ -100,6 +100,8 @@
 
 	//if jodels.php?downvotejodel=$jodelID ist called, downvote post
 	if(isset($_GET['downvotejodel'])){
+		voteJodel($config, $_GET['downvotejodel'], "down");
+		/*
 		$jodel2downvote = $_GET['downvotejodel'];
 		//get post and users who voted on this post
 		$callurl = $apiroot . "jodles?transform=1&filter=jodelID,eq," . $jodel2downvote;
@@ -157,6 +159,7 @@
 			$_SESSION['errorMsg'] = "Already voted";
 		}
 		header('Location: https://jodel.domayntec.ch/jodels.php');
+		*/
 	}
 	//If jodels.php?sort=$sort is called, post should be sorted
 	if(isset($_GET['sort'])){
