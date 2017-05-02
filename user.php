@@ -101,7 +101,7 @@
     }
     if($caps['reset_paswd'] == true){
       //can change passwords
-      echo '<a href="#" class="list-group-item list-group-item-action">Reset user password</a>'; 
+      echo '<a href="user/resetpasswd.php" class="list-group-item list-group-item-action">Reset user password</a>'; 
       $_SESSION['caps_reset_paswd'] = true;
       $hascaps = true;
     }

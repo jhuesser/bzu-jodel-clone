@@ -52,4 +52,28 @@ return $timeago;
 
 }
 
+function getRandomColor($apiroot){
+    $allcolorsurl = $apiroot . "colors?transform=1";
+	$allcolorsjson = getCall($allcolorsurl);
+	$allcolors = json_decode($allcolorsjson, true);
+	//init array to store every colorID
+	$colorIDs = array();
+	foreach($allcolors['colors'] as $allcols){
+		//add every colorID to array
+		array_push($colorIDs,$allcols['colorID']);
+	}
+	//select random ID from array. This is the color to use
+	$colornmb = $colorIDs[mt_rand(0, count($colorIDs) - 1)];
+	//get details about the color
+	$singlecolorurl = $apiroot . "colors?transform=1&filter=colorID,eq," . $colornmb;
+	$colors = getCall($singlecolorurl);
+	$color = json_decode($colors, true);
+	foreach($color['colors'] as $col){
+		//save color name and hex code in local values
+		$colorname= $col['colordesc'];
+		$colhex = $col['colorhex'];
+	}
+    return $colhex;
+}
+
 ?>
