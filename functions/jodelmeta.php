@@ -87,4 +87,28 @@ function getRandomColor($apiroot){
     return $colhex;
 }
 
+/**
+ *
+ * @param string $config The config
+ * @param integer $postID ID of the post to get color
+ * @return string The hex code of the post
+ *
+ * @author Jonas Hüsser
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ *
+ * @since 0.3
+ */
+ function getColorOfPost($apiroot, $postID){
+     $callurl = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $postID;
+     $postjson = getCall($callurl);
+     $posts = json_decode($postjson, true);
+     $values = (object) array('hex' => "", 'name' => "", 'id' => "");
+     foreach($posts['jodeldata'] as $post){
+        $values->hex =  $post['colorhex'];
+        $values->name = $post['colordesc'];
+        $values->colid = $post['colorID'];
+     }
+     return $values;
+ }
 ?>
