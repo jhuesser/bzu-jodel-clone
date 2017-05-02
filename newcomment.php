@@ -4,22 +4,25 @@
 	$title = "Create Post | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include 'functions/header.php';
-	//Load API functions
+	//Load all requred functions & config
 	include 'functions/apicalls.php';
 	$config = include('config.php');
 	include 'functions/jodelmeta.php';
 	$apiroot = $config->apiUrl;
+	//get session info & post to show comments from
 	$userid = $_SESSION['userid'];
 	$post = $_GET['comment'];
+	//get color of post
 	$colorOfPost = getColorOfPost($apiroot, $post);
 	$colid = $colorOfPost->colid;
 	$colorname = $colorOfPost->name;
 	$colorhex = $colorOfPost->hex;
 
-
+	//user is not logged in
 	if(!isset($_SESSION['userid'])) {
 		die('You need to <a href="login.php">login</a> first');
 	}
+	//no comment is selected
 	if(!isset($_GET['comment'])){
 		die('You need to select a post');
 	}
@@ -36,18 +39,33 @@
 	$_SESSION['karma'] = $karma;
 	$_SESSION['acctype'] = $accstate;
 
+	//user wants to post a comment
 	if(isset($_GET['post'])){
-		//new post created
+		//get ID of post to post comment to
 		$jodel = $_GET['comment'];
 		//encode special chars to avoid injection
 		$comment = htmlspecialchars($_POST['comment'], ENT_QUOTES);
 		//set color as local value
 		$color = $_POST['color'];
-		//insert new post in DB, $postfields as JSON with all data
+		//get data from original post
+		$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel;
+		$orgpostjson = getCall($callurl);
+		$orgpost = json_decode($orgpostjson, true);
+		foreach($orgpost['jodels'] as $theop){
+			//get number of comments of original post
+			$comments_cnt = $theop['comments_cnt'];
+		}
+		//incerase number of comments of OP
+		$comments_cnt++;
+		//insert new comment in DB, $postfields as JSON with all data
 		$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
 		$callurl = $apiroot . "comments";
 		$posted = postCall($callurl, $postfields);
-		//update the authors karma for creating a post
+		//update comment count of OP in DB
+		$callurl = $apiroot . "jodels/" . $jodel;
+		$postfields = "{\n\t\"comments_cnt\": \"$comments_cnt\"\n\n}";
+		$cmntupdated = putCall($callurl, $postfields);
+		//update the authors karma for creating a comment
 		$karma = $karma + $config->karma_calc['post_comment'];
 		$postfields = "{\n  \n  \"karma\": $karma\n}";
 		$callurl = $apiroot . "jodlers/" . $userid;
