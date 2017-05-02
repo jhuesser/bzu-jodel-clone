@@ -1,5 +1,4 @@
 <?php
-
 	session_start();
 	include 'functions/jodelmeta.php';
 	//Set default values for head & load it
@@ -13,6 +12,7 @@
 
 	if(!isset($_SESSION['userid'])) {
  		header('Location: https://jodel.domayntec.ch/login.php');
+
 	}
 
 	//get ID of the user
@@ -78,11 +78,13 @@
 			$callurl = $apiroot . "jodlers/" . $author;
 			$karmaupdated = putCall($callurl, $postfields);
 
+
 			//incerase the karma of the voter (current user) and update it in DB
 			$karma = $karma + $config->karma_calc['do_upvote'];
 			$postfields = "{\n  \n  \"karma\": $karma\n}";
 			$callurl = $apiroot . "jodlers/" . $userid;
 			$karmaupdated = putCall($callurl, $postfields);
+
 
 		} else {
 			//user has already voted on this post
