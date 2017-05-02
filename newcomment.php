@@ -54,6 +54,7 @@
 		foreach($orgpost['jodels'] as $theop){
 			//get number of comments of original post
 			$comments_cnt = $theop['comments_cnt'];
+			$author = $theop['jodlerIDFK'];
 		}
 		//incerase number of comments of OP
 		$comments_cnt++;
@@ -61,15 +62,31 @@
 		$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
 		$callurl = $apiroot . "comments";
 		$posted = postCall($callurl, $postfields);
+
 		//update comment count of OP in DB
 		$callurl = $apiroot . "jodels/" . $jodel;
 		$postfields = "{\n\t\"comments_cnt\": \"$comments_cnt\"\n\n}";
 		$cmntupdated = putCall($callurl, $postfields);
+
 		//update the authors karma for creating a comment
 		$karma = $karma + $config->karma_calc['post_comment'];
 		$postfields = "{\n  \n  \"karma\": $karma\n}";
 		$callurl = $apiroot . "jodlers/" . $userid;
 		$karmaupdated = putCall($callurl, $postfields);
+
+		//get info about the author of the OP
+		$callurl = $apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $author;
+		$authorjson = getCall($callurl);
+		$authorarray = json_decode($authorjson, true);
+		foreach($authorarray['jodlers'] as $user){
+			$karmaOfUser = $user['karma'];
+		}
+		//incerase karma of author
+		$karmaOfUser = $karmaOfUser + $config->karma_calc['get_comment'];
+		$postfields = "{\n  \n  \"karma\": $karmaOfUser\n}";
+		$callurl =  $apiroot . "jodlers/" . $author;
+		$authorkarmaupdated = putCall($callurl, $postfields);
+		
 		//redirect to post overview
 		header('Location: https://jodel.domayntec.ch/jodels.php');
 	}
