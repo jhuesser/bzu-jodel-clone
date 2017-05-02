@@ -1,7 +1,7 @@
 <?php
 
-function voteJodel($jodel2vote, $how2vote){
-
+function voteJodel($config, $jodel2vote, $how2vote){
+	$apiroot = $config->apiUrl;
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2vote;
 	$jodeljson = getCall($callurl);
