@@ -1,5 +1,4 @@
 <?php
-
 	session_start();
 	include 'functions/jodelmeta.php';
 	//Set default values for head & load it
@@ -9,10 +8,12 @@
 	//Load API functions
 	include 'functions/apicalls.php';
 	$config = include('config.php');
+	include 'functions/votes.php';
 	$apiroot = $config->apiUrl;
 
 	if(!isset($_SESSION['userid'])) {
  		header('Location: https://jodel.domayntec.ch/login.php');
+
 	}
 
 	//get ID of the user
@@ -30,127 +31,14 @@
 
 	//if joels.php?upvotejodel=$jodelID is called, upvote it
 	if(isset($_GET['upvotejodel'])){
-		$jodel2upvote = $_GET['upvotejodel'];
-		//Get the post to upvote and users who voted this post
-		$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2upvote;
-		$jodeljson = getCall($callurl);
-		$callurl = $apiroot . "jodelvotes?transform=1&filter=jodelIDFK,eq," . $jodel2upvote;
-		$votejson = getCall($callurl);
-		$votes = json_decode($votejson,true);
-		//Check if ID of the user already voted this post
-		foreach($votes['jodelvotes'] as $vote){
-			if($vote['userIDFK'] == $userid){
-				$voted = true;
-			}
-		}
-		//If user hasn't voted for this post yet
-		if(!$voted){
-			$jodel = json_decode($jodeljson, true);
-			//Get current votes, score and author of the post, add 1 to vote and score
-			foreach($jodel['jodels'] as $post){
-				$votes = $post['votes_cnt'];
-				$score = $post['score'];
-				$author = $post['jodlerIDFK'];
-				$votes++;
-				$score++;
-			}
-			//Update votes & score of post in DB
-			$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
-			$callurl = $apiroot . "jodels/" . $jodel2upvote;
-			$voted = putCall($callurl,$postfields);
-
-			//Wirte to DB, that this user now voted on this post
-			$postfields = "{\n  \n  \"userIDFK\": $userid,\n  \"jodelIDFK\": $jodel2upvote\n}";
-			$callurl = $apiroot . "jodelvotes";
-			$uservoted = postCall($callurl,$postfields);
-
-			//Get current karma of post author
-			$callurl = $apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $author;
-			$authorkarmajson = getCall($callurl);
-			$authorkarma = json_decode($authorkarmajson, true);
-			foreach($authorkarma['jodlers'] as $user){
-				$karmaFromAuthor = $user['karma'];
-			}
-
-			//incerase karma of the author, update it in DB
-			$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
-			$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
-			$callurl = $apiroot . "jodlers/" . $author;
-			$karmaupdated = putCall($callurl, $postfields);
-
-			//incerase the karma of the voter (current user) and update it in DB
-			$karma = $karma + $config->karma_calc['do_upvote'];
-			$postfields = "{\n  \n  \"karma\": $karma\n}";
-			$callurl = $apiroot . "jodlers/" . $userid;
-			$karmaupdated = putCall($callurl, $postfields);
-
-		} else {
-			//user has already voted on this post
-			$_SESSION['errorMsg'] = "Already voted";
-		}
-		//redirect again to jodels.php to show clean URL in browser
-		header('Location: https://jodel.domayntec.ch/jodels.php');
+		voteJodel($config, $_GET['upvotejodel'], "up");
+		
 	}
 
 	//if jodels.php?downvotejodel=$jodelID ist called, downvote post
 	if(isset($_GET['downvotejodel'])){
-		$jodel2downvote = $_GET['downvotejodel'];
-		//get post and users who voted on this post
-		$callurl = $apiroot . "jodles?transform=1&filter=jodelID,eq," . $jodel2downvote;
-		$jodeljson = getCall($callurl);
-		$callurl = $apiroot . "jodelvotes?transform=1&filter=jodelIDFK,eq," . $jodel2downvote;
-		$votejson = getCall($callurl);
-		$votes = json_decode($votejson,true);
-		//check if user already voted on this post
-		foreach($votes['jodelvotes'] as $vote){
-			if($vote['userIDFK'] == $userid){
-				$voted = true;
-			}
-		}
-		if(!$voted){
-			//if user has not voted,  get current votes & score, and lower 1.
-			$jodel = json_decode($jodeljson, true);
-			foreach($jodel['jodels'] as $post){
-				$votes = $post['votes_cnt'];
-				$score = $post['score'];
-				$author = $post['jodlerIDFK'];
-				$votes--;
-				$score--;
-			}
-			//Update votes and score in DB
-			$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
-			$callurl = $apiroot . "jodels/" . $jodel2downvote;
-			$voted = putCall($callurl,$postfields);
-
-			//wirte in DB, that user has voted on this post now
-			$postfields = "{\n  \n  \"userIDFK\": $userid,\n  \"jodelIDFK\": $jodel2downvote\n}";
-			$callurl = $apiroot . "jodelvotes";
-			$uservoted = postCall($callurl,$postfields);
-
-			//Get karma from author
-			$callurl = $apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $author;
-			$authorkarmajson = getCall($callurl);
-			$authorkarma = json_decode($authorkarmajson, true);
-			foreach($authorkarma['jodlers'] as $user){
-				$karmaFromAuthor = $user['karma'];
-			}
-
-			//lower karma of author 4, update it DB
-			$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['get_downvote'];;
-			$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
-			$callurl = $apiroot . "jodlers/" . $author;
-			$karmaupdated = putCall($callurl, $postfields);
-
-			//lower karma of voter (current user) 2, update in DB
-			$karma = $karma - $config->karma_calc['do_downvote'];;
-			$postfields = "{\n  \n  \"karma\": $karma\n}";
-			$callurl = $apiroot . "jodlers/" . $userid;
-			$karmaupdated = putCall($callurl, $postfields);
-
-		} else {
-			$_SESSION['errorMsg'] = "Already voted";
-		}
-		header('Location: https://jodel.domayntec.ch/jodels.php');
+		voteJodel($config, $_GET['downvotejodel'], "down");
+	
 	}
 	//If jodels.php?sort=$sort is called, post should be sorted
 	if(isset($_GET['sort'])){
