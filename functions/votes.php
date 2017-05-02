@@ -1,7 +1,19 @@
 <?php
 
-function voteJodel($jodel2vote, $how2vote){
-
+/**
+ *
+ * @param array $config The whole config
+ * @return integer $jodel2vote The ID of the post to vote
+ * @return string $how2vote "Up" or "down"
+ *
+ * @author Jonas Hüsser
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ *
+ * @since 0.3
+ */
+function voteJodel($config, $jodel2vote, $how2vote){
+	$apiroot = $config->apiUrl;
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2vote;
 	$jodeljson = getCall($callurl);
@@ -10,7 +22,7 @@ function voteJodel($jodel2vote, $how2vote){
 	$votes = json_decode($votejson,true);
 	//Check if ID of the user already voted this post
 	foreach($votes['jodelvotes'] as $vote){
-		if($vote['userIDFK'] == $userid){
+		if($vote['userIDFK'] == $_SESSION['userid']){
 			$voted = true;
 		}
 	}
@@ -25,7 +37,7 @@ function voteJodel($jodel2vote, $how2vote){
 		if ($how2vote == "up"){
 			$votes++;
 			$score++;
-		} elseif ($how2vote == 'down'){
+		} elseif ($how2vote == "down"){
 			$votes--;
 			$score--;
 		}
@@ -34,7 +46,7 @@ function voteJodel($jodel2vote, $how2vote){
 	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
 	$callurl = $apiroot . "jodels/" . $jodel2vote;
 	$voted = putCall($callurl,$postfields);
-
+	$userid = $_SESSION['userid'];
 	//Wirte to DB, that this user now voted on this post
 	$postfields = "{\n  \n  \"userIDFK\": $userid,\n  \"jodelIDFK\": $jodel2vote\n}";
 	$callurl = $apiroot . "jodelvotes";

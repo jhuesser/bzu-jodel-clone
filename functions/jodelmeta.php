@@ -11,7 +11,6 @@
  *
  * @since 0.3
  */
-
 function jodelage($postdate)
 {
     $now = date('Y-m-d H:i:s');
