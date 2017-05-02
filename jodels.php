@@ -8,7 +8,7 @@
 	//Load API functions
 	include 'functions/apicalls.php';
 	$config = include('config.php');
-	include 'function/votes.php';
+	include 'functions/votes.php';
 	$apiroot = $config->apiUrl;
 
 	if(!isset($_SESSION['userid'])) {
