@@ -147,12 +147,19 @@ function voteComment($config, $comment2vote, $how2vote){
 	foreach($authorkarma['jodlers'] as $user){
 		$karmaFromAuthor = $user['karma'];
 	}
-
-	$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
+	if($how2vote == "up"){
+		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
+	} elseif($how2vote == "down"){
+		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['get_downvote'];
+	}
 	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
 	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/" . $author, $postfields);
 
-	$karma = $karma + $config->karma_calc['do_upvote'];;
+	if($how2vote == "up"){
+		$karma = $karma + $config->karma_calc['do_upvote'];
+	} elseif($how2vote == "down"){
+		$karma = $karma - $config->karma_calc['do_downvote'];
+	}
 	$postfields = "{\n  \n  \"karma\": $karma\n}";
 	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/" . $userid, $postfields);
 
