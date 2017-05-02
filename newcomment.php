@@ -12,6 +12,9 @@
 	$userid = $_SESSION['userid'];
 	$post = $_GET['comment'];
 	$colorOfPost = getColorOfPost($apiroot, $post);
+	$colid = $colorOfPost->colid;
+	$colorname = $colorOfPost->name;
+	$colorhex = $colorOfPost->hex;
 
 
 	if(!isset($_SESSION['userid'])) {
@@ -41,7 +44,7 @@
 		//set color as local value
 		$color = $_POST['color'];
 		//insert new post in DB, $postfields as JSON with all data
-		$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n  \"jodelIDFK\": \"$jodel\",\n  \"comment\": \"$comment\"\n";
+		$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
 		$callurl = $apiroot . "comments";
 		$posted = postCall($callurl, $postfields);
 		//update the authors karma for creating a post
@@ -71,13 +74,13 @@
 <div class="test"></div>
 <!-- end main menu -->
 
-<form action="?post=1" method="POST">
+<form action="?post=1&comment=<?php echo $post;?>" method="POST">
 	<div class="form-group">
 		<label for="comment">Enter your message</label>
-		<textarea class="form-control" rows="10" name="comment" placeholder="Your post" style="color:white;background-color:#<?php echo $colorOfPost;?>"></textarea>
+		<textarea class="form-control" rows="10" name="comment" placeholder="Your post" style="color:white;background-color:#<?php echo $colorhex;?>"></textarea>
 	</div>
 	<!-- save the color in a hidden field -->
-	<input type="hidden" name="color" value="<?php echo $colornmb;?>">
+	<input type="hidden" name="color" value="<?php echo $colid;?>">
 	<button type="submit" class="btn btn-warning">Submit</button>
 </form>
 <!-- end post form -->

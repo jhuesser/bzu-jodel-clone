@@ -103,9 +103,12 @@ function getRandomColor($apiroot){
      $callurl = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $postID;
      $postjson = getCall($callurl);
      $posts = json_decode($postjson, true);
+     $values = (object) array('hex' => "", 'name' => "", 'id' => "");
      foreach($posts['jodeldata'] as $post){
-        $color =  $post['colorhex'];
+        $values->hex =  $post['colorhex'];
+        $values->name = $post['colordesc'];
+        $values->colid = $post['colorID'];
      }
-     return $color;
+     return $values;
  }
 ?>
