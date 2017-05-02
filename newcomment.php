@@ -11,7 +11,7 @@
 	$apiroot = $config->apiUrl;
 	$userid = $_SESSION['userid'];
 	$post = $_GET['comment'];
-	$colorOfPost = getColorOfPost($config, $post);
+	$colorOfPost = getColorOfPost($apiroot, $post);
 
 
 	if(!isset($_SESSION['userid'])) {
