@@ -7,6 +7,9 @@ $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
 include 'functions/apicalls.php';
+$config = include('config.php');
+include 'functions/votes.php';
+$apiroot = $config->apiUrl;
 
 //check if user is logged in. if not, redirect to login page
 if(!isset($_SESSION['userid'])) {
@@ -34,48 +37,8 @@ if(isset($_GET['showcomment'])){
 }
 
 if(isset($_GET['upvotecomment'])){
-	$comment2upvote = $_GET['upvotecomment'];
-	$commentsjson = getCall("https://jodel.domayntec.ch/api.php/comments?transform=1&filter=commentID,eq,$comment2upvote");
-	$votejson = getCall("https://jodel.domayntec.ch/api.php/commentvotes?transform=1&filter=commentIDFK,eq,$comment2upvote");
-	$votes = json_decode($votejson,true);
-	foreach($votes['commentvotes'] as $vote){
-		if($vote['jodlerIDFK'] == $userid){
-			$voted = true;
-		}
-	}
-	if(!$voted){
-	$comment = json_decode($commentsjson, true);
-	foreach($comment['comments'] as $post){
-		$votes = $post['votes_cnt'];
-		$score = $post['score'];
-		$author = $post['jodlerIDFK'];
-		$votes++;
-		$score++;
-	}
-	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
-	$voted = putCall("https://jodel.domayntec.ch/api.php/comments/$comment2upvote",$postfields);
-
-	$postfields = "{\n  \n  \"jodlerIDFK\": $userid,\n  \"commentIDFK\": $comment2upvote\n}";
-	$uservoted = postCall("https://jodel.domayntec.ch/api.php/commentvotes",$postfields);
-
-	$authorkarmajson = getCall("https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerID,eq,$author");
-	$authorkarma = json_decode($authorkarmajson, true);
-	foreach($authorkarma['jodlers'] as $user){
-		$karmaFromAuthor = $user['karma'];
-	}
-
-	$karmaFromAuthor = $karmaFromAuthor + 4;
-	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
-	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/$author", $postfields);
-
-	$karma = $karma + 2;
-	$postfields = "{\n  \n  \"karma\": $karma\n}";
-	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/$userid", $postfields);
-
-	} else {
-	$_SESSION['errorMsg'] = "Already voted";
-}
-header('Location: https://jodel.domayntec.ch/comments.php?showcomment=' .$postID);
+	voteComment($config, $_GET['upvotecomment'], "up");
+	
 }
 
 
