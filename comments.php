@@ -170,6 +170,6 @@ foreach($postdata['comments'] as $comment){
 }
 ?>
 
-<div class="newcomment"><a href="new.php">New comment</a></i></div>
+<div class="newcomment"><a href="newcomment.php?comment=<?php echo $postID;?>">New comment</a></i></div>
 
 
