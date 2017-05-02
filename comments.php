@@ -43,97 +43,15 @@ if(isset($_GET['upvotecomment'])){
 
 
 if(isset($_GET['downvotecomment'])){
-	votecomment($config, $_GET['downvotecomment'], "down");
+	voteComment($config, $_GET['downvotecomment'], "down");
 }
 
 if(isset($_GET['upvotejodel'])){
-	$jodel2upvote = $_GET['upvotejodel'];
-	$jodeljson = getCall("https://jodel.domayntec.ch/api.php/jodels?transform=1&filter=jodelID,eq,$jodel2upvote");
-	$votejson = getCall("https://jodel.domayntec.ch/api.php/commentvotes?transform=1&filter=jodelIDFK,eq,$jodel2upvote");
-	$votes = json_decode($votejson,true);
-	foreach($votes['commentvotes'] as $vote){
-		if($vote['jodlerIDFK'] == $userid){
-			$voted = true;
-		}
-	}
-	if(!$voted){
-	$jodel = json_decode($jodeljson, true);
-	foreach($jodel['jodels'] as $post){
-		$votes = $post['votes_cnt'];
-		$score = $post['score'];
-		$author = $post['jodlerIDFK'];
-		$votes--;
-		$score--;
-	}
-	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
-	$voted = putCall("https://jodel.domayntec.ch/api.php/jodels/$jodel2upvote",$postfields);
-
-	$postfields = "{\n  \n  \"jodlerIDFK\": $userid,\n  \"commentIDFK\": $jodel2upvote\n}";
-	$uservoted = postCall("https://jodel.domayntec.ch/api.php/commentvotes",$postfields);
-
-	$authorkarmajson = getCall("https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerID,eq,$author");
-	$authorkarma = json_decode($authorkarmajson, true);
-	foreach($authorkarma['jodlers'] as $user){
-		$karmaFromAuthor = $user['karma'];
-	}
-
-	$karmaFromAuthor = $karmaFromAuthor + 4;
-	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
-	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/$author", $postfields);
-
-	$karma = $karma + 2;
-	$postfields = "{\n  \n  \"karma\": $karma\n}";
-	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/$userid", $postfields);
-
-	} else {
-	$_SESSION['errorMsg'] = "Already voted";
-}
-header('Location: https://jodel.domayntec.ch/comments.php?showcomment=' .$postID);
+	voteJodel($config, $_GET['upvotejodel'], "up");
 }
 
 if(isset($_GET['downvotejodel'])){
-	$jodel2downvote = $_GET['downvotejodel'];
-	$jodeljson = getCall("https://jodel.domayntec.ch/api.php/jodels?transform=1&filter=jodelID,eq,$jodel2downvote");
-	$votejson = getCall("https://jodel.domayntec.ch/api.php/jodelvotes?transform=1&filter=jodelIDFK,eq,$jodel2downvote");
-	$votes = json_decode($votejson,true);
-	foreach($votes['jodelvotes'] as $vote){
-		if($vote['userIDFK'] == $userid){
-			$voted = true;
-		}
-	}
-	if(!$voted){
-	$jodel = json_decode($jodeljson, true);
-	foreach($jodel['jodels'] as $post){
-		$votes = $post['votes_cnt'];
-		$score = $post['score'];
-		$author = $post['jodlerIDFK'];
-		$votes--;
-		$score--;
-	}
-	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
-	$voted = putCall("https://jodel.domayntec.ch/api.php/jodels/$jodel2downvote",$postfields);
-
-	$postfields = "{\n  \n  \"userIDFK\": $userid,\n  \"jodelIDFK\": $jodel2downvote\n}";
-	$uservoted = postCall("https://jodel.domayntec.ch/api.php/jodelvotes",$postfields);
-
-	$authorkarmajson = getCall("https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerID,eq,$author");
-	$authorkarma = json_decode($authorkarmajson, true);
-	foreach($authorkarma['jodlers'] as $user){
-		$karmaFromAuthor = $user['karma'];
-	}
-
-	$karmaFromAuthor = $karmaFromAuthor - 4;
-	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
-	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/$author", $postfields);
-
-	$karma = $karma - 2;
-	$postfields = "{\n  \n  \"karma\": $karma\n}";
-	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/$userid", $postfields);
-
-	} else {
-	$_SESSION['errorMsg'] = "Already voted";
-}
-header('Location: https://jodel.domayntec.ch/comments.php?showcomment=' .$postID);
+	voteComment($config, $_GET['downvotejodel'], "down");
 }
 
 
