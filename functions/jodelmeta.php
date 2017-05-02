@@ -100,8 +100,12 @@ function getRandomColor($apiroot){
  * @since 0.3
  */
  function getColorOfPost($config, $postID){
-     $callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $postID;
+     $callurl = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $postID;
      $postjson = getCall($callurl);
      $posts = json_decode($postjson, true);
+     foreach($posts['jodeldata'] as $post){
+        $color =  $post['colorhex'];
+     }
+     return $color;
  }
 ?>
