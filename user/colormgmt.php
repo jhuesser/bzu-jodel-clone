@@ -19,8 +19,8 @@
 	if(isset($_GET['addcolor'])){
 		//user wants to add a color
 		//save colorname & hexcode in values
-		$colorname = $_POST['color-text-input'];
-		$colorhex = $_POST['color-color-input'];
+		$colorname = $_POST['colorname'];
+		$colorhex = $_POST['colorcode'];
 		//setup post fields & call URL
 		$postfields = "{\n  \"colordesc\": \"$colorname\",\n  \"colorhex\": \"$colorhex\"\n}";
 		$colorurl = $apiurl . "colors";
