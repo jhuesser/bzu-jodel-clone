@@ -38,10 +38,11 @@
 				$passwordDB = $item['passphrase'];
 				$userid = $item['jodlerID'];
 				$jodlerHRID = $item['jodlerHRID'];
+				$accountstate = $item['account_state'];
 	
 			}
 			//check password
-			if ($user !== false && password_verify($password, $passwordDB)) {
+			if ($user !== false && $accountstate !== 0 && password_verify($password, $passwordDB)) {
 				//Login successfull
  				$_SESSION['userid'] = $userid;
 				$_SESSION['username'] = $jodlerHRID;
