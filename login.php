@@ -45,7 +45,7 @@
 				//Login successfull
  				$_SESSION['userid'] = $userid;
 				$_SESSION['username'] = $jodlerHRID;
-				header('Location: https://jodel.domayntec.ch/jodels.php');
+				header('Location: ' . $config->baseUrl . 'jodels.php');
 	 			// echo '<a href="index.php">openindex</a>';
  			} else {
 	 			//Login failed
