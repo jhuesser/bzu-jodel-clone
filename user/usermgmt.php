@@ -64,8 +64,15 @@
 			?><div class="card card-inverse mb-3 text-center" id="<?php echo $jodler['jodlerID'];?>" style="background-color: #<?php echo $color;?>;">
   		<div class="card-block">
     		<blockquote class="card-blockquote">
-					<?php echo $jodler['jodlerID'] . "<br>" . $jodler['jodlerHRID'] . "<br>" . $acctype->typedesc;
+					<?php echo $jodler['jodlerID'] . "<br>" . $jodler['jodlerHRID'] . "<br>" . $acctype->typedesc . "<br>";
 					?>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['baned'] ?></button>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['jodler'] ?></button>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['mod'] ?></button>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['admin'] ?></button>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button>
+
+			
 					
 				</blockquote>
 		</div> 
