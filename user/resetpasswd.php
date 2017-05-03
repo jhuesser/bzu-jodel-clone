@@ -11,7 +11,7 @@
 
 	//check if user is logged in & has required caps
 	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_reset_paswd'])) {
-		header('Location: https://jodel.domayntec.ch/login.php');
+		header('Location: ' . $config->baseUrl . 'login.php');
 	}
 
 	//set up working variables
@@ -25,7 +25,7 @@
 		$postfields = "{\n  \"passphrase\": \"$password_hash\"\n}";
 		$callurl = $apiroot . "jodlers/" . $user2reset;
 		putCall($callurl, $postfields);
-		header('Location: https://jodel.domayntec.ch/user/resetpasswd.php');
+		header('Location: ' . $config->baseUrl . 'user/resetpasswd.php');
 	}
 
 ?>

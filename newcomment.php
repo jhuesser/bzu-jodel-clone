@@ -88,7 +88,7 @@
 		$authorkarmaupdated = putCall($callurl, $postfields);
 		
 		//redirect to post overview
-		header('Location: https://jodel.domayntec.ch/jodels.php');
+		header('Location: ' . $config->baseUrl . 'jodels.php');
 	}
 
 ?>

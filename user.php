@@ -11,7 +11,7 @@
   if(isset($_GET['logout'])) {
     session_destroy();
     //log out the user ^ and redirect to login \/
-    header('Location: https://jodel.domayntec.ch/login.php');
+    header('Location: ' . $config->baseUrl . 'login.php');
   }
   $userid = $_SESSION['userid'];
 ?>

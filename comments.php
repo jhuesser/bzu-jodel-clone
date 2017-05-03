@@ -14,7 +14,7 @@ $apiroot = $config->apiUrl;
 
 //check if user is logged in. if not, redirect to login page
 if(!isset($_SESSION['userid'])) {
- header('Location: https://jodel.domayntec.ch/login.php');
+ header('Location: ' . $config->baseUrl . 'login.php');
 }
 
 //qurey the ID of the user
