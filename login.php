@@ -7,6 +7,7 @@
 	//Load API functions
 	include 'functions/apicalls.php';
 	$config = include('config.php');
+	$apiroot = $config->apiUrl;
 
 	//If user sent loginform, set values
 	if(isset($_GET['login'])) {
@@ -26,7 +27,7 @@
         	$errorMessage = $config->app_msgs['captcha_fail'];
         } else {
 			//check if username is registered
-			$caller = "https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerHRID,eq," . $username;
+			$caller = $apiroot . "jodlers?transform=1&filter=jodlerHRID,eq," . $username;
 			$resp = getCall($caller);
  			if($resp == '{"jodlers":[]}') {
 	 			//user is not registered
@@ -38,10 +39,11 @@
 				$passwordDB = $item['passphrase'];
 				$userid = $item['jodlerID'];
 				$jodlerHRID = $item['jodlerHRID'];
+				$accountstate = $item['account_state'];
 	
 			}
 			//check password
-			if ($user !== false && password_verify($password, $passwordDB)) {
+			if ($user !== false && $accountstate !== 0 && password_verify($password, $passwordDB)) {
 				//Login successfull
  				$_SESSION['userid'] = $userid;
 				$_SESSION['username'] = $jodlerHRID;
