@@ -9,7 +9,7 @@
 
 	//check if user is logged in & has required caps
 	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_add_color'])) {
-		header('Location: https://jodel.domayntec.ch/login.php');
+		header('Location: ' . $config->baseUrl . '/login.php');
 	}
 
 	//set up working variables
@@ -27,7 +27,7 @@
 		//POST to the api url
 		postCall($colorurl, $postfields);
 		//redirect 
-		header('Location: https://jodel.domayntec.ch/user/colormgmt.php');
+		header('Location: ' . $config->baseUrl . '/user/colormgmt.php');
 	}
 
 	if(isset($_GET['delcol'])){
@@ -39,7 +39,7 @@
 		//Send DELETE call to url
 		$deletedColors = deleteCall($callurl);
 		//redirect
-		header('Location: https://jodel.domayntec.ch/user/colormgmt.php');
+		header('Location: ' . $config->baseUrl . 'user/colormgmt.php');
 	}
 ?>
 <div id="top"></div>

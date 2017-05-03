@@ -5,30 +5,20 @@
 	$config = include('../config.php');
 	$apiroot = $config->apiUrl;
 	include '../functions/jodelmeta.php';
-	$title = "Reset Password | SocialDomayn";
+	include '../functions/admintools.php';
+	$title = "Manage Users | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
 
 	//check if user is logged in & has required caps
 	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_reset_paswd'])) {
-		header('Location: ' . $config->baseUrl . 'login.php');
+		header('Location: https://jodel.domayntec.ch/login.php');
 	}
 
 	//set up working variables
 	$userid = $_SESSION['userid'];
+	?>
 	
-
-	if (isset($_GET['resetpasswd'])){
-		$user2reset = $_POST['user'];
-		$newpasswd = $_POST['passwd'];
-		$password_hash = password_hash($newpasswd, PASSWORD_DEFAULT);
-		$postfields = "{\n  \"passphrase\": \"$password_hash\"\n}";
-		$callurl = $apiroot . "jodlers/" . $user2reset;
-		putCall($callurl, $postfields);
-		header('Location: ' . $config->baseUrl . 'user/resetpasswd.php');
-	}
-
-?>
 
 <div id="top"></div>
 <!-- main menu -->
@@ -63,33 +53,27 @@
 		</h1>
 	</div>
 	<?php
-	
-		$jodlersurl = $apiroot . "jodlers?transform=1";
+	$jodlersurl = $apiroot . "jodlers?transform=1";
 		$jodlersjson = getCall($jodlersurl);
 		$jodlers = json_decode($jodlersjson, true);
 
 		foreach($jodlers['jodlers'] as $jodler){
 			$color = getRandomColor($apiroot);
+			$acctype = getAccountType($config, $jodler['account_state']);
 			//show all colors
 			?><div class="card card-inverse mb-3 text-center" id="<?php echo $jodler['jodlerID'];?>" style="background-color: #<?php echo $color;?>;">
   		<div class="card-block">
     		<blockquote class="card-blockquote">
-					<?php echo $jodler['jodlerHRID'] . "\n" . $jodler['jodlerID'];
+					<?php echo $jodler['jodlerID'] . "<br>" . $jodler['jodlerHRID'] . "<br>" . $acctype->typedesc . "<br>";
 					?>
-					<div class="jodelvotes">
-						<!--delete button -->
-						<form action="?resetpasswd=1" method="POST">
-							<div class="form-group row">
-  								<label for="passwd-text-input" class="col-2 col-form-label">New password</label>
-  								<div class="col-10">
-    								<input class="form-control" type="password" placeholder="New password" name="passwd" id="passwd-text-input">
-  								</div>
-								  <input type="hidden" name="user" value="<?php echo $jodler['jodlerID']; ?>">
-							</div>
-							<button type="submit" class="btn btn-warning">Reset</button>
-						</form>
-					</div>
-					<div class="clear"></div>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['baned'] ?></button>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['jodler'] ?></button>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['mod'] ?></button>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['admin'] ?></button>
+					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button>
+
+			
+					
 				</blockquote>
 		</div> 
 	</div>

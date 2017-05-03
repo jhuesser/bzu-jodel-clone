@@ -62,7 +62,7 @@
 				if(is_numeric($userid)) { 
 					//if ID is a number, user is created
 					$successMsg = $config->app_msgs['acc_created'];
- 					header('Location: https://jodel.domayntec.ch/login.php');
+ 					header('Location: ' . $config->baseUrl . 'login.php');
  					$showFormular = false;
  				} else {
 	 				//something went wrong

@@ -11,7 +11,7 @@
   if(isset($_GET['logout'])) {
     session_destroy();
     //log out the user ^ and redirect to login \/
-    header('Location: https://jodel.domayntec.ch/login.php');
+    header('Location: ' . $config->baseUrl . 'login.php');
   }
   $userid = $_SESSION['userid'];
 ?>
@@ -107,7 +107,7 @@
     }
     if($caps['promote_to_mod'] == true || $caps['promote_to_admin'] == true  || $caps['promote_to_superadmin'] == true || $caps['promote_to_user'] == true || $caps['ban'] == true || $caps['delete_users'] == true || $caps['change_karma'] == true )  {
       //can manage users
-      echo '<a href="#" class="list-group-item list-group-item-action">Usermanagement</a>'; 
+      echo '<a href="user/usermgmt.php" class="list-group-item list-group-item-action">Usermanagement</a>'; 
       $_SESSION['caps_promote_to_mod'] = true;
       $hascaps = true;
     }
