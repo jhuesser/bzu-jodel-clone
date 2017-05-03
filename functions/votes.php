@@ -60,6 +60,14 @@ function voteJodel($config, $jodel2vote, $how2vote){
 		$karmaFromAuthor = $user['karma'];
 	}
 
+	//Get current karma of voter
+	$callurl = $apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $userid;
+	$voterkarmajson = getCall($callurl);
+	$voterkarma = json_decode($voterkarmajson, true);
+	foreach($voterkarma['jodlers'] as $user){
+		$voterKarma = $user['karma'];
+	}
+
 	//incerase karma of the author, update it in DB
 	if ($how2vote == "up"){
 		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
@@ -72,11 +80,11 @@ function voteJodel($config, $jodel2vote, $how2vote){
 
 	//incerase the karma of the voter (current user) and update it in DB
 	if ($how2vote == "up"){
-		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['do_upvote'];
+		$voterKarma = $voterKarma + $config->karma_calc['do_upvote'];
 	} elseif ($how2vote == "down"){
-		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['do_downvote'];
+		$voterKarma = $voterKarma - $config->karma_calc['do_downvote'];
 	}
-	$postfields = "{\n  \n  \"karma\": $karma\n}";
+	$postfields = "{\n  \n  \"karma\": $voterKarma\n}";
 	$callurl = $apiroot . "jodlers/" . $userid;
 	$karmaupdated = putCall($callurl, $postfields);
 
@@ -86,6 +94,79 @@ function voteJodel($config, $jodel2vote, $how2vote){
 }
 //redirect again to jodels.php to show clean URL in browser
 header('Location: https://jodel.domayntec.ch/jodels.php');
+
+
+}
+
+
+/**
+ *
+ * @param array $config The whole config
+ * @return integer $comment2vote The ID of the comment to vote
+ * @return string $how2vote "Up" or "down"
+ *
+ * @author Jonas Hüsser
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ *
+ * @since 0.3
+ */
+function voteComment($config, $comment2vote, $how2vote){
+	$userid = $_SESSION['userid'];
+	$apiroot = $config->apiUrl;
+	$commentsjson = getCall($apiroot . "comments?transform=1&filter=commentID,eq," . $comment2vote);
+	$votejson = getCall($apiroot . "commentvotes?transform=1&filter=commentIDFK,eq," . $comment2vote);
+	$votes = json_decode($votejson,true);
+	foreach($votes['commentvotes'] as $vote){
+		if($vote['jodlerIDFK'] == $userid){
+			$voted = true;
+		}
+	}
+	if(!$voted){
+	$comment = json_decode($commentsjson, true);
+	foreach($comment['comments'] as $post){
+		$votes = $post['votes_cnt'];
+		$score = $post['score'];
+		$author = $post['jodlerIDFK'];
+		if ($how2vote == "up"){
+			$votes++;
+			$score++;
+		} elseif($how2vote == "down"){
+			$votes--;
+			$score--;
+		}
+	}
+	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
+	$voted = putCall("https://jodel.domayntec.ch/api.php/comments/" . $comment2vote,$postfields);
+
+	$postfields = "{\n  \n  \"jodlerIDFK\": $userid,\n  \"commentIDFK\": $comment2vote\n}";
+	$uservoted = postCall("https://jodel.domayntec.ch/api.php/commentvotes", $postfields);
+
+	$authorkarmajson = getCall("https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerID,eq," . $author);
+	$authorkarma = json_decode($authorkarmajson, true);
+	foreach($authorkarma['jodlers'] as $user){
+		$karmaFromAuthor = $user['karma'];
+	}
+	if($how2vote == "up"){
+		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
+	} elseif($how2vote == "down"){
+		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['get_downvote'];
+	}
+	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
+	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/" . $author, $postfields);
+
+	if($how2vote == "up"){
+		$karma = $karma + $config->karma_calc['do_upvote'];
+	} elseif($how2vote == "down"){
+		$karma = $karma - $config->karma_calc['do_downvote'];
+	}
+	$postfields = "{\n  \n  \"karma\": $karma\n}";
+	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/" . $userid, $postfields);
+
+	} else {
+	$_SESSION['errorMsg'] = "Already voted";
+}
+header('Location: https://jodel.domayntec.ch/comments.php?showcomment=' .$postID);
 
 
 }
