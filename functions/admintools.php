@@ -16,7 +16,7 @@
 	 $usertype = (object) array();
 	 switch($acctype){
 		case 0:
-			$type = $config->app_vocabulary['banned'];
+			$type = $config->app_vocabulary['baned'];
 			break;
 		case 1:
 			$type = $config->app_vocabulary['jodler'];
@@ -31,7 +31,7 @@
 			$type = $config->app_vocabulary['superadmin'];
 			break;
 		default:
-			$type = $config->app_vocabulary['banned'];
+			$type = $config->app_vocabulary['baned'];
 			
 	 }
 	 $usertype->typeID = $acctype;
