@@ -70,7 +70,7 @@
 
 		//update the authors karma for creating a comment
 		$karma = $karma + $config->karma_calc['post_comment'];
-		$postfields = "{\n  \n  \"karma\": $karma\n}";
+		$postfields = "{\n  \n  \"karma\": \"$karma\"\n\n}";
 		$callurl = $apiroot . "jodlers/" . $userid;
 		$karmaupdated = putCall($callurl, $postfields);
 
@@ -83,7 +83,7 @@
 		}
 		//incerase karma of author
 		$karmaOfUser = $karmaOfUser + $config->karma_calc['get_comment'];
-		$postfields = "{\n  \n  \"karma\": $karmaOfUser\n}";
+		$postfields = "{\n  \n  \"karma\": \"$karmaOfUser\"\n\n}";
 		$callurl =  $apiroot . "jodlers/" . $author;
 		$authorkarmaupdated = putCall($callurl, $postfields);
 		
