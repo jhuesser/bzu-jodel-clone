@@ -6,6 +6,7 @@
 	$apiroot = $config->apiUrl;
 	include '../functions/jodelmeta.php';
 	include '../functions/admintools.php';
+	include '../functions/usermanipulation.php';
 	$title = "Manage Users | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
@@ -66,11 +67,11 @@
     		<blockquote class="card-blockquote">
 					<?php echo $jodler['jodlerID'] . "<br>" . $jodler['jodlerHRID'] . "<br>" . $acctype->typedesc . "<br>";
 					?>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['baned'] ?></button>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['jodler'] ?></button>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['mod'] ?></button>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['admin'] ?></button>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button>
+					<a href="?ban=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['baned'] ?></button></a>
+					<a href="?active=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['jodler'] ?></button></a>
+					<a href="?mod=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['mod'] ?></button></a>
+					<a href="?admin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['admin'] ?></button></a>
+					<a href="?superadmin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button></a>
 
 			
 					
