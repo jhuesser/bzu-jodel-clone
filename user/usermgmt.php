@@ -6,6 +6,7 @@
 	$apiroot = $config->apiUrl;
 	include '../functions/jodelmeta.php';
 	include '../functions/admintools.php';
+	include '../functions/usermanipulation.php';
 	$title = "Manage Users | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
@@ -17,6 +18,38 @@
 
 	//set up working variables
 	$userid = $_SESSION['userid'];
+	$mycaps = $_SESSION['my_caps'];
+	
+	
+
+	
+	
+	if(isset($_GET['ban'])){
+		$updated = manipulateUser($_GET['ban'], 0, $mycaps, $apiroot);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($_GET['active'])){
+		$updated = manipulateUser($_GET['active'], 1, $mycaps, $apiroot);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($_GET['mod'])){
+		$updated = manipulateUser($_GET['mod'], 2, $mycaps, $apiroot);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($_GET['admin'])){
+		$updated = manipulateUser($_GET['admin'], 3, $mycaps, $apiroot);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($_GET['superadmin'])){
+		$updated = manipulateUser($_GET['superadmin'], 4, $mycaps, $apiroot);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($updated)){
+		if($updated == false){
+			$_SESSION['errorMsg'] = "Something went wrong!";
+		}
+	}
+	
 	?>
 	
 
@@ -65,14 +98,22 @@
   		<div class="card-block">
     		<blockquote class="card-blockquote">
 					<?php echo $jodler['jodlerID'] . "<br>" . $jodler['jodlerHRID'] . "<br>" . $acctype->typedesc . "<br>";
-					?>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['baned'] ?></button>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['jodler'] ?></button>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['mod'] ?></button>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['admin'] ?></button>
-					<button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button>
-
-			
+					if ($mycaps['ban'] == true){
+						?><a href="?ban=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['baned'] ?></button></a><?php
+					}
+					if ($mycaps['promote_to_user'] == true){
+						?><a href="?active=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['jodler'] ?></button></a><?php
+					}
+					if ($mycaps['promote_to_mod'] == true){
+						?><a href="?mod=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['mod'] ?></button></a><?php
+					}
+					if ($mycaps['promote_to_admin'] == true){
+						?><a href="?admin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['admin'] ?></button></a><?php
+					}
+					if ($mycaps['promote_to_superadmin'] == true){
+						?><a href="?superadmin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button></a><?php
+					}
+						?>			
 					
 				</blockquote>
 		</div> 
