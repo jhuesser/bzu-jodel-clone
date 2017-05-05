@@ -54,8 +54,12 @@
 			case "popular":
 				$sort = "popular";
 				break;
+			case "my":
+				$sort = "my";
+				break;
 			default:
 				$sort = "latest";
+		
 		}
 	}
 ?>
@@ -106,6 +110,9 @@
 			break;
 		case "popular":
 			$filter = "&order=votes_cnt,desc";
+			break;
+		case "my":
+			$filter="&filter=jodlerIDFK,eq," . $userid;
 			break;
 		default:
 			$filter = "";
