@@ -112,7 +112,7 @@ $jodeljson = getCall("https://jodel.domayntec.ch/api.php/jodeldata?transform=1&f
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
-				<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+				<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa user-circle-o" aria-hidden="true"></i>';}?>
 
 </blockquote>
   </div>
@@ -161,7 +161,7 @@ foreach($postdata['comments'] as $comment){
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
 				<?php if ($accstate == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
-				<?php if ($jodelauthor == $comment['jodlerIDFK']){echo '<i class="fa fa-user-circle-o" aria-hidden="true"></i> OP';}?>
+				<?php if ($jodelauthor == $comment['jodlerIDFK']){echo '<i class="fa-user-circle" aria-hidden="true"></i> OP';}?>
 				
 			
 		</blockquote>
