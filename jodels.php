@@ -84,7 +84,7 @@
   	</li>
   	<!-- user profile -->
   	<li class="nav-item">
-    	<a class="nav-link" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $karma;?></a>
+    	<a class="nav-link <?php if($sort == 'my'){ echo 'active';}?>" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $karma;?></a>
   	</li>
 </ul>
 <!-- must check in stylesheet -->
