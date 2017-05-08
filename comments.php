@@ -91,7 +91,10 @@ $filter = "&filter=jodelIDFK,eq,$postID";
 $jodeljson = getCall("https://jodel.domayntec.ch/api.php/jodeldata?transform=1&filter=jodelID,eq,$postID");
 		$jodels = json_decode($jodeljson,true);
 		foreach($jodels['jodeldata'] as $jodel) {
-			$colorhex = $jodel['colorhex'];?>
+			$colorhex = $jodel['colorhex'];
+			$jodelauthor = $jodel['jodlerIDFK'];
+			?>
+			
 			<div class="card card-inverse mb-3 text-center" style="background-color: #<?php echo $colorhex;?>;">
   <div class="card-block">
     <blockquote class="card-blockquote">
@@ -109,7 +112,7 @@ $jodeljson = getCall("https://jodel.domayntec.ch/api.php/jodeldata?transform=1&f
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
-				<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+				<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa user-circle" aria-hidden="true"></i>';}?>
 
 </blockquote>
   </div>
@@ -158,6 +161,8 @@ foreach($postdata['comments'] as $comment){
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
 				<?php if ($accstate == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+				<?php if ($jodelauthor == $comment['jodlerIDFK']){echo '<i class="fa fa-trophy" aria-hidden="true"></i> OP';}?>
+				
 			
 		</blockquote>
   </div>

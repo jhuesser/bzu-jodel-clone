@@ -54,8 +54,12 @@
 			case "popular":
 				$sort = "popular";
 				break;
+			case "my":
+				$sort = "my";
+				break;
 			default:
 				$sort = "latest";
+		
 		}
 	}
 ?>
@@ -80,7 +84,7 @@
   	</li>
   	<!-- user profile -->
   	<li class="nav-item">
-    	<a class="nav-link" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $karma;?></a>
+    	<a class="nav-link <?php if($sort == 'my'){ echo 'active';}?>" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $karma;?></a>
   	</li>
 </ul>
 <!-- must check in stylesheet -->
@@ -106,6 +110,9 @@
 			break;
 		case "popular":
 			$filter = "&order=votes_cnt,desc";
+			break;
+		case "my":
+			$filter="&filter=jodlerIDFK,eq," . $userid;
 			break;
 		default:
 			$filter = "";

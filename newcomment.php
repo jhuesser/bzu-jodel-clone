@@ -55,9 +55,11 @@
 			//get number of comments of original post
 			$comments_cnt = $theop['comments_cnt'];
 			$author = $theop['jodlerIDFK'];
+			$score = $theop['score'];
 		}
 		//incerase number of comments of OP
 		$comments_cnt++;
+		$score = $score + $config->postmeta['get_comment'];
 		//insert new comment in DB, $postfields as JSON with all data
 		$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
 		$callurl = $apiroot . "comments";
@@ -65,12 +67,12 @@
 
 		//update comment count of OP in DB
 		$callurl = $apiroot . "jodels/" . $jodel;
-		$postfields = "{\n\t\"comments_cnt\": \"$comments_cnt\"\n\n}";
+		$postfields = "{\n\t\"comments_cnt\": \"$comments_cnt\",\n\t\"score\": \"$score\"\n\n}";
 		$cmntupdated = putCall($callurl, $postfields);
 
 		//update the authors karma for creating a comment
 		$karma = $karma + $config->karma_calc['post_comment'];
-		$postfields = "{\n  \n  \"karma\": $karma\n}";
+		$postfields = "{\n  \n  \"karma\": \"$karma\"\n\n}";
 		$callurl = $apiroot . "jodlers/" . $userid;
 		$karmaupdated = putCall($callurl, $postfields);
 
@@ -83,7 +85,7 @@
 		}
 		//incerase karma of author
 		$karmaOfUser = $karmaOfUser + $config->karma_calc['get_comment'];
-		$postfields = "{\n  \n  \"karma\": $karmaOfUser\n}";
+		$postfields = "{\n  \n  \"karma\": \"$karmaOfUser\"\n\n}";
 		$callurl =  $apiroot . "jodlers/" . $author;
 		$authorkarmaupdated = putCall($callurl, $postfields);
 		
