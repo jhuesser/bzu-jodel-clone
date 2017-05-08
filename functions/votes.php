@@ -36,11 +36,10 @@ function voteJodel($config, $jodel2vote, $how2vote){
 		$author = $post['jodlerIDFK'];
 		if ($how2vote == "up"){
 			$votes++;
-			$score++;
+			$score = $score + $config->postmeta['get_upvote'];
 		} elseif ($how2vote == "down"){
 			$votes--;
-			$score--;
-		}
+			$score = $score - $config->postmeta['get_downvote'];		}
 	}
 	//Update votes & score of post in DB
 	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
@@ -130,10 +129,10 @@ function voteComment($config, $comment2vote, $how2vote){
 		$author = $post['jodlerIDFK'];
 		if ($how2vote == "up"){
 			$votes++;
-			$score++;
+			$score = $score + $config->postmeta['get_upvote'];
 		} elseif($how2vote == "down"){
 			$votes--;
-			$score--;
+			$score = $score - $config->postmeta['get_downvote'];
 		}
 	}
 	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
