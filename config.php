@@ -66,7 +66,10 @@ return (object) array(
 		'needed_downvotes' => -5, //needed downvotes to hide the post
 		'needed_score_mod' => 50,
 		'get_upvote' => 10,
+		'mod_approve' => 20,
+		'get_comment' => 5,
 		'get_downvote' => 10,
+		'mod_deny' => 20,
 		'get_report' => 50
 	),
 
