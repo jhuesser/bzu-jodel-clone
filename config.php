@@ -62,6 +62,14 @@ return (object) array(
 
 	),
 
+	'postmeta' => array(
+		'needed_downvotes' => -5, //needed downvotes to hide the post
+		'needed_score_mod' => 50,
+		'get_upvote' => 10,
+		'get_downvote' => 10,
+		'get_report' => 50
+	),
+
 	'user_caps' => (object) array(
 		'superadmin' => array(
 			'delete_posts' => true,
