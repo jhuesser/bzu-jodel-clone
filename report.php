@@ -40,8 +40,7 @@ $contentID = $_GET['id'];
 if(isset($_GET['reason'])){
 	$reason = $_GET['reason'];
 	$reported = reportContent($config, $type, $contentID, $reason);
-	echo $reported;
-	//header('Location: ' . $apiroot->baseUrl . 'jodels.php');
+	header('Location: ' . $apiroot->baseUrl . 'jodels.php');
 }
 
 $abuseurl = $apiroot . "abuse?transform=1";
