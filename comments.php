@@ -161,7 +161,7 @@ foreach($postdata['comments'] as $comment){
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
-				<a href="#"><i class="fa fa-flag" aria-hidden="true"></i></a>
+				<a href="report.php?type=comment&id=<?php echo $comment['commentID'];?>"><i class="fa fa-flag" aria-hidden="true"></i></a>
 				<?php if ($accstate == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
 				<?php if ($jodelauthor == $comment['jodlerIDFK']){echo '<i class="fa fa-trophy" aria-hidden="true"></i> OP';}?>
 				
