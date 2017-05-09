@@ -88,7 +88,7 @@ $commentsUrl = $apiroot . "comments?transform=1";
 $filter = "&filter=jodelIDFK,eq,$postID";
 
 $caller = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $postID;
-$jodeljson = getCall($callers);
+$jodeljson = getCall($caller);
 		$jodels = json_decode($jodeljson,true);
 		foreach($jodels['jodeldata'] as $jodel) {
 			$colorhex = $jodel['colorhex'];
@@ -112,6 +112,7 @@ $jodeljson = getCall($callers);
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
+				<a href="report.php?type=post&id=<?php echo $jodel['jodelID'];?>"><i class="fa fa-flag" aria-hidden="true"></i></a>
 				<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa user-circle" aria-hidden="true"></i>';}?>
 
 </blockquote>
@@ -160,6 +161,7 @@ foreach($postdata['comments'] as $comment){
 			
 				?>
 				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
+				<a href="#"><i class="fa fa-flag" aria-hidden="true"></i></a>
 				<?php if ($accstate == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
 				<?php if ($jodelauthor == $comment['jodlerIDFK']){echo '<i class="fa fa-trophy" aria-hidden="true"></i> OP';}?>
 				
