@@ -27,9 +27,9 @@ foreach($user['jodlers'] as $jodler){
 	$karma = $jodler['karma'];
 	$accstate = $jodler['account_state'];	
 }
-if($accsstate < 2){
-	die("You shall not pass!");
-}
+//if($accsstate < 2){
+//	die("You shall not pass!");
+//}
 
 $_SESSION['karma'] = $karma;
 $_SESSION['acctype'] = $accstate;
@@ -40,7 +40,7 @@ $contentID = $_GET['id'];
 
 $abuseurl = $apiroot . "abuse?transform=1";
 $absuejson = getCall($abuseurl);
-$abusearray = json_decode($abusejson, true);
+$abusearray = json_decode($absuejson, true);
 
 ?>
 
@@ -49,7 +49,10 @@ $abusearray = json_decode($abusejson, true);
 <?php 
 foreach($abusearray['abuse'] as $abuse){
 	$abusedesc = $abuse['abusedesc'];
+	?>
+		<a href="#" class="list-group-item list-group-item-action"><?php echo $abusedesc; ?></a>
 
+	<?php
 
 }
 
@@ -57,7 +60,7 @@ foreach($abusearray['abuse'] as $abuse){
 
 ?>
 
-	<a href="#" class="list-group-item list-group-item-action">Moderation</a>
+	
 </div>
 <?php
 //$reported = reportContent($config, $type, $contentID, $reason);
