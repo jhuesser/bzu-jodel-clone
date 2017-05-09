@@ -27,9 +27,7 @@ foreach($user['jodlers'] as $jodler){
 	$karma = $jodler['karma'];
 	$accstate = $jodler['account_state'];	
 }
-//if($accsstate < 2){
-//	die("You shall not pass!");
-//}
+
 
 $_SESSION['karma'] = $karma;
 $_SESSION['acctype'] = $accstate;
