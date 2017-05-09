@@ -57,10 +57,10 @@
 	 $apirurl = $config->apiUrl;
 	 $userid = $_SESSION['userid'];
 	 if($content == "post"){
-		 $postfields = "{\n  \n  \"abuseIDFK\": $reason,\n  \"jodelIDFK\": $contentID\n,\n  \"jodlerIDFK\": $userid\n}";
+		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"jodelIDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \"$userid\"\n}";
 
 	 } elseif($content == "comment"){
-		 $postfields = "{\n  \n  \"abuseIDFK\": $reason,\n  \"commentIDFK\": $contentID\n,\n  \"jodlerIDFK\": $userid\n}";
+		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"commentIDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \”$userid\"\n}";
 	 }
 	 $callurl = $apirurl . "/reports";
 	 $resp = postCall($callurl, $postfields);
