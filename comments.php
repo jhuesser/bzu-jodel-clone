@@ -20,7 +20,7 @@ if(!isset($_SESSION['userid'])) {
 //qurey the ID of the user
 $userid = $_SESSION['userid'];
 //Get data about the user & save it in $_SESSION values.
-$userjson = getCall("https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerID,eq,$userid");
+$userjson = getCall( $apiroot . "jodlers?transform=1&filter=jodlerID,eq,$userid");
 $user = json_decode($userjson, true);
 foreach($user['jodlers'] as $jodler){
 	$karma = $jodler['karma'];
@@ -83,12 +83,12 @@ if(isset($_SESSION['errorMsg'])) {
 <?php
 
 }
-$jodelUrl = "https://jodel.domayntec.ch/api.php/jodels?transform=1";
-$commentsUrl = "https://jodel.domayntec.ch/api.php/comments?transform=1";
+$jodelUrl = $apiroot . "jodels?transform=1";
+$commentsUrl = $apiroot . "comments?transform=1";
 $filter = "&filter=jodelIDFK,eq,$postID";
 
-
-$jodeljson = getCall("https://jodel.domayntec.ch/api.php/jodeldata?transform=1&filter=jodelID,eq,$postID");
+$caller = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $postID;
+$jodeljson = getCall($callers);
 		$jodels = json_decode($jodeljson,true);
 		foreach($jodels['jodeldata'] as $jodel) {
 			$colorhex = $jodel['colorhex'];
