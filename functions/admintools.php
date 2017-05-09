@@ -54,14 +54,15 @@
  * @since 0.5
  */
  function reportContent($config, $content, $contentID, $reason){
-	 $apirurl = $config->apiUrl;
+	 $apiurl = $config->apiUrl;
 	 $userid = $_SESSION['userid'];
 	 if($content == "post"){
 		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"jodelDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \"$userid\"\n}";
 
 	 } elseif($content == "comment"){
-		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"commentIDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \”$userid\"\n}";
+		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"commentIDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \"$userid\"\n}";
 	 }
-	 $callurl = $apirurl . "/reports";
+	 $callurl = $apiurl . "reports";
 	 $resp = postCall($callurl, $postfields);
+	 return $resp;
  }
