@@ -12,7 +12,7 @@
 	$apiroot = $config->apiUrl;
 
 	if(!isset($_SESSION['userid'])) {
- 		header('Location: https://jodel.domayntec.ch/login.php');
+ 		header('Location: ' . $config->baseUrl . 'login.php');
 
 	}
 
