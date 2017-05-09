@@ -37,6 +37,11 @@ $_SESSION['acctype'] = $accstate;
 $type = $_GET['type'];
 $contentID = $_GET['id'];
 
+if(isset($_GET['reason'])){
+	$reason = $_GET['reason'];
+	$reported = reportContent($config, $type, $contentID, $reason);
+	header('Location: ' . $apiroot->baseUrl . 'jodels.php');
+}
 
 $abuseurl = $apiroot . "abuse?transform=1";
 $absuejson = getCall($abuseurl);
@@ -49,8 +54,10 @@ $abusearray = json_decode($absuejson, true);
 <?php 
 foreach($abusearray['abuse'] as $abuse){
 	$abusedesc = $abuse['abusedesc'];
-	?>
-		<a href="#" class="list-group-item list-group-item-action"><?php echo $abusedesc; ?></a>
+	
+		$message = "?type=" . $type . "&id=" . $contentID . "&reason=" . $abuse['abuseID'];
+		?>
+		<a href="<?php echo $message ?>" class="list-group-item list-group-item-action"><?php echo $abusedesc; ?></a>
 
 	<?php
 
@@ -63,4 +70,3 @@ foreach($abusearray['abuse'] as $abuse){
 	
 </div>
 <?php
-//$reported = reportContent($config, $type, $contentID, $reason);
