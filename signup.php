@@ -7,6 +7,7 @@
 	include 'functions/header.php';
 	include 'functions/apicalls.php';
 	$config = include('config.php');
+	$apiroot = $config->apiUrl;
 
 	if(isset($_GET['register'])) {
 		//User wants to register
@@ -39,7 +40,7 @@
  			}
 			//check if username is already taken
  			if(!$error) { 
-				$caller = "https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerHRID,eq," . $username;
+				$caller =  $apiroot . "jodlers?transform=1&filter=jodlerHRID,eq," . $username;
 				$resp = getCall($caller);
 				if($resp !== '{"jodlers":[]}') {
 	 				//recived empty JSON
@@ -55,7 +56,7 @@
 				//remove special chars, to avoid injection
 				$username = htmlspecialchars($username, ENT_QUOTES);
 				//register the user
- 				$caller ="https://jodel.domayntec.ch/api.php/jodlers";
+ 				$caller = $apiroot . "jodlers";
  				$postdata = "{\n  \"jodlerHRID\": \"$username\",\n  \"karma\": 50,\n  \"account_state\": 1,\n  \"passphrase\": \"$password_hash\"\n}";
 				$userid = postCall($caller, $postdata);
 				//response is ID of the new user

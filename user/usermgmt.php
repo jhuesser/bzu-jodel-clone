@@ -13,7 +13,7 @@
 
 	//check if user is logged in & has required caps
 	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_reset_paswd'])) {
-		header('Location: https://jodel.domayntec.ch/login.php');
+		header('Location: ' . $config->baseUrl . 'https://jodel.domayntec.ch/login.php');
 	}
 
 	//set up working variables
