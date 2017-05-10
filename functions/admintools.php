@@ -58,9 +58,27 @@
 	 $userid = $_SESSION['userid'];
 	 if($content == "post"){
 		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"jodelDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \"$userid\"\n}";
+		 
+		 $scores = json_decode(getCall($apiurl . "jodels/" . $contentID . "?transform=1", true));
+		 foreach($scores['jodels'] as $jodelscore){
+			 $score = $jodelscore['score'];
+		 }
+		 $score = $score - $config->postmeta['get_report'];
+		 $callurl = $apiurl . "jodels/" . $contentID;
+		 $putfields = "{\n  \n  \"score\": \"$score\"\n \n}";
+		 $scoreupdate = putCall($callurl, $putfields);
 
 	 } elseif($content == "comment"){
 		 $postfields = "{\n\t\"abuseIDFK\": \"$reason\",\n\t\"commentIDFK\": \"$contentID\",\n\t\"jodlerIDFK\": \"$userid\"\n}";
+
+		 $scores = json_decode(getCall($apiurl . "comments/" . $contentID . "?transform=1", true));
+		 foreach($scores['comments'] as $commentscore){
+			 $score = $scommentscore['score'];
+		 }
+		 $score = $score - $config->postmeta['get_report'];
+		 $callurl = $apiurl . "comments/" . $contentID;
+		 $putfields = "{\n  \n  \"score\": \"$score\"\n \n}";
+		 $scoreupdate = putCall($callurl, $putfields);
 	 }
 	 $callurl = $apiurl . "reports";
 	 $resp = postCall($callurl, $postfields);
