@@ -109,7 +109,7 @@ header('Location: ' . $baseurl . 'jodels.php#' . $jodel2vote);
  * @since 0.3
  */
 function voteComment( $comment2vote, $how2vote){
-	global $apiroot;
+	global $apiroot, $baseurl;
 	$userid = $_SESSION['userid'];
 	$apiroot = $config->apiUrl;
 	$commentsjson = getCall($apiroot . "comments?transform=1&filter=commentID,eq," . $comment2vote);
