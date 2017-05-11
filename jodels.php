@@ -122,17 +122,9 @@
 	$posts = getCall($jodelsUrl);
 	$postdata = json_decode($posts, true);
 	//process posts
-	//TODO: I guess this is a performance breaker
+
 	foreach($postdata['jodeldata'] as $post){
-		for($i=0; $i < count($post['jodelID']); $i++){
-			//get numbers of comments on post
-			//TODO: take data from field comments_cnt in jodeldata, store them there too.
-			$callurl = $apiroot . "comments?transform=1&filter=jodelIDFK,eq," . $post['jodelID'];
-			$commentjson = getCall($callurl);
-			$comments = json_decode($commentjson, true);
-			foreach($comments['comments'] as $comment){
-				$comcnt = count($comment['commentID']);
-			}
+
 			//setup layout
 			?>
 			<div class="card card-inverse mb-3 text-center" id="<?php echo $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
@@ -173,7 +165,7 @@
   				</div> <!-- end post card somewhere here -->
 			</div><?php
 							}
-		}
+
 	}	
 
 ?>
