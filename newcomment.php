@@ -13,7 +13,7 @@
 	$userid = $_SESSION['userid'];
 	$post = $_GET['comment'];
 	//get color of post
-	$colorOfPost = getColorOfPost($apiroot, $post);
+	$colorOfPost = getColorOfPost($post);
 	$colid = $colorOfPost->colid;
 	$colorname = $colorOfPost->name;
 	$colorhex = $colorOfPost->hex;
@@ -90,7 +90,7 @@
 		$authorkarmaupdated = putCall($callurl, $postfields);
 		
 		//redirect to post overview
-		header('Location: ' . $config->baseUrl . 'jodels.php');
+		header('Location: ' . $config->baseUrl . 'comments.php?showcomment=' . $jodel . '#' . $posted);
 	}
 
 ?>

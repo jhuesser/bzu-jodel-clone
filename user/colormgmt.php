@@ -14,7 +14,7 @@
 
 	//set up working variables
 	$userid = $_SESSION['userid'];
-	$apiurl = $config->apiUrl;
+	$apiroot = $config->apiUrl;
 
 	if(isset($_GET['addcolor'])){
 		//user wants to add a color
@@ -23,7 +23,7 @@
 		$colorhex = $_POST['colorcode'];
 		//setup post fields & call URL
 		$postfields = "{\n  \"colordesc\": \"$colorname\",\n  \"colorhex\": \"$colorhex\"\n}";
-		$colorurl = $apiurl . "colors";
+		$colorurl = $apiroot . "colors";
 		//POST to the api url
 		postCall($colorurl, $postfields);
 		//redirect 
@@ -35,7 +35,7 @@
 		//get ID of color to delete
 		$colorid = $_GET['delcol'];
 		//setup call URL
-		$callurl = $apiurl . "colors/" . $colorid;
+		$callurl = $apiroot . "colors/" . $colorid;
 		//Send DELETE call to url
 		$deletedColors = deleteCall($callurl);
 		//redirect
@@ -75,7 +75,7 @@
 	</div>
 	<?php
 		//get JSON of all colors, save it in PHP array
-		$colorurl = $apiurl . "colors?transform=1";
+		$colorurl = $apiroot . "colors?transform=1";
 		$colorjson = getCall($colorurl);
 		$colors = json_decode($colorjson, true);
 	?>

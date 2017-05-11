@@ -10,6 +10,7 @@
 	$config = include('config.php');
 	include 'functions/votes.php';
 	$apiroot = $config->apiUrl;
+	$baseurl = $config->baseUrl;
 
 	if(!isset($_SESSION['userid'])) {
  		header('Location: ' . $config->baseUrl . 'login.php');
@@ -31,13 +32,13 @@
 
 	//if joels.php?upvotejodel=$jodelID is called, upvote it
 	if(isset($_GET['upvotejodel'])){
-		voteJodel($config, $_GET['upvotejodel'], "up");
+		voteJodel( $_GET['upvotejodel'], "up");
 		
 	}
 
 	//if jodels.php?downvotejodel=$jodelID ist called, downvote post
 	if(isset($_GET['downvotejodel'])){
-		voteJodel($config, $_GET['downvotejodel'], "down");
+		voteJodel( $_GET['downvotejodel'], "down");
 	
 	}
 	//If jodels.php?sort=$sort is called, post should be sorted
