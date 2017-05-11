@@ -5,9 +5,9 @@ $title = "Report | SocialDomayn";
 $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
-include 'functions/apicalls.php';
-include 'functions/admintools.php';
-$config = include('config.php');
+require 'functions/apicalls.php';
+require 'functions/admintools.php';
+$config = require('config.php');
 $apiroot = $config->apiUrl;
 
 if(!isset($_SESSION['userid'])) {
@@ -27,9 +27,28 @@ foreach($user['jodlers'] as $jodler){
 	$karma = $jodler['karma'];
 	$accstate = $jodler['account_state'];	
 }
-//if($accsstate < 2){
-//	die("You shall not pass!");
-//}
+?>
+
+<!-- main menu-->
+<div id="top"></div>
+
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link" href="jodels.php"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+	</li>
+		<li class="nav-item">
+    <a class="nav-link" href="javascript:window.location.reload();"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+  </li>
+  
+  <li class="nav-item">
+    <a class="nav-link" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $_SESSION['karma'];?></a>
+  </li>
+  
+</ul>
+
+<div class="test"></div>
+<!-- end main menu -->
+<?php
 
 $_SESSION['karma'] = $karma;
 $_SESSION['acctype'] = $accstate;
@@ -51,6 +70,7 @@ $abusearray = json_decode($absuejson, true);
 
 <h1>Please select the reason for reporting this post</h1>
 <div class="list-group">
+<div class="container">
 <?php 
 foreach($abusearray['abuse'] as $abuse){
 	$abusedesc = $abuse['abusedesc'];
@@ -67,6 +87,7 @@ foreach($abusearray['abuse'] as $abuse){
 
 ?>
 
-	
+	</div>
 </div>
 <?php
+include 'functions/footer.php';

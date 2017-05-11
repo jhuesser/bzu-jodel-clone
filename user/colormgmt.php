@@ -1,8 +1,8 @@
 <?php
 	session_start();
 	//Include functions & meta data
-	include '../functions/apicalls.php';
-	$config = include('../config.php');
+	require '../functions/apicalls.php';
+	$config = require('../config.php');
 	$title = "Add color | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
