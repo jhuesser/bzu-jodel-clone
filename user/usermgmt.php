@@ -1,12 +1,12 @@
 <?php
 	session_start();
 	//Include functions & meta data
-	include '../functions/apicalls.php';
-	$config = include('../config.php');
+	require '../functions/apicalls.php';
+	$config = require('../config.php');
 	$apiroot = $config->apiUrl;
-	include '../functions/jodelmeta.php';
-	include '../functions/admintools.php';
-	include '../functions/usermanipulation.php';
+	require '../functions/jodelmeta.php';
+	require '../functions/admintools.php';
+	require '../functions/usermanipulation.php';
 	$title = "Manage Users | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';

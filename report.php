@@ -5,9 +5,9 @@ $title = "Report | SocialDomayn";
 $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
-include 'functions/apicalls.php';
-include 'functions/admintools.php';
-$config = include('config.php');
+require 'functions/apicalls.php';
+require 'functions/admintools.php';
+$config = require('config.php');
 $apiroot = $config->apiUrl;
 
 if(!isset($_SESSION['userid'])) {

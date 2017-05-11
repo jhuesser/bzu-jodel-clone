@@ -5,8 +5,8 @@
 	$stylesheet = "jodel.css";
 	include 'functions/header.php';
 	//Load API functions
-	include 'functions/apicalls.php';
-	$config = include('config.php');
+	require 'functions/apicalls.php';
+	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 	$userid = $_SESSION['userid'];
 

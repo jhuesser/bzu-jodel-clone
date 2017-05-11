@@ -6,9 +6,9 @@
 	$stylesheet = "jodel.css";
 	include 'functions/header.php';
 	//Load API functions
-	include 'functions/apicalls.php';
-	$config = include('config.php');
-	include 'functions/votes.php';
+	require 'functions/apicalls.php';
+	$config = require('config.php');
+	require 'functions/votes.php';
 	$apiroot = $config->apiUrl;
 
 	if(!isset($_SESSION['userid'])) {

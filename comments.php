@@ -6,10 +6,10 @@ $title = "Comments | SocialDomayn";
 $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
-include 'functions/apicalls.php';
-include 'functions/jodelmeta.php';
-$config = include('config.php');
-include 'functions/votes.php';
+require 'functions/apicalls.php';
+require 'functions/jodelmeta.php';
+$config = require('config.php');
+require 'functions/votes.php';
 $apiroot = $config->apiUrl;
 
 //check if user is logged in. if not, redirect to login page
