@@ -126,6 +126,7 @@ function voteComment( $comment2vote, $how2vote){
 		$votes = $post['votes_cnt'];
 		$score = $post['score'];
 		$author = $post['jodlerIDFK'];
+		$postID = $post['jodelIDFK'];
 		if ($how2vote == "up"){
 			$votes++;
 			$score = $score + $config->postmeta['get_upvote'];
