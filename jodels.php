@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	include 'functions/jodelmeta.php';
+	require 'functions/jodelmeta.php';
 	//Set default values for head & load it
 	$title = "Posts | SocialDomayn";
 	$stylesheet = "jodel.css";
@@ -10,6 +10,7 @@
 	$config = require('config.php');
 	require 'functions/votes.php';
 	$apiroot = $config->apiUrl;
+	$baseurl = $config->baseUrl;
 
 	if(!isset($_SESSION['userid'])) {
  		header('Location: ' . $config->baseUrl . 'login.php');
@@ -31,13 +32,13 @@
 
 	//if joels.php?upvotejodel=$jodelID is called, upvote it
 	if(isset($_GET['upvotejodel'])){
-		voteJodel($config, $_GET['upvotejodel'], "up");
+		voteJodel( $_GET['upvotejodel'], "up");
 		
 	}
 
 	//if jodels.php?downvotejodel=$jodelID ist called, downvote post
 	if(isset($_GET['downvotejodel'])){
-		voteJodel($config, $_GET['downvotejodel'], "down");
+		voteJodel( $_GET['downvotejodel'], "down");
 	
 	}
 	//If jodels.php?sort=$sort is called, post should be sorted
@@ -122,17 +123,9 @@
 	$posts = getCall($jodelsUrl);
 	$postdata = json_decode($posts, true);
 	//process posts
-	//TODO: I guess this is a performance breaker
+
 	foreach($postdata['jodeldata'] as $post){
-		for($i=0; $i < count($post['jodelID']); $i++){
-			//get numbers of comments on post
-			//TODO: take data from field comments_cnt in jodeldata, store them there too.
-			$callurl = $apiroot . "comments?transform=1&filter=jodelIDFK,eq," . $post['jodelID'];
-			$commentjson = getCall($callurl);
-			$comments = json_decode($commentjson, true);
-			foreach($comments['comments'] as $comment){
-				$comcnt = count($comment['commentID']);
-			}
+
 			//setup layout
 			?>
 			<div class="card card-inverse mb-3 text-center" id="<?php echo $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
@@ -173,7 +166,7 @@
   				</div> <!-- end post card somewhere here -->
 			</div><?php
 							}
-		}
+
 	}	
 
 ?>

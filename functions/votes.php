@@ -2,7 +2,6 @@
 
 /**
  *
- * @param array $config The whole config
  * @return integer $jodel2vote The ID of the post to vote
  * @return string $how2vote "Up" or "down"
  *
@@ -12,8 +11,8 @@
  *
  * @since 0.3
  */
-function voteJodel($config, $jodel2vote, $how2vote){
-	$apiroot = $config->apiUrl;
+function voteJodel($jodel2vote, $how2vote){
+	global $apiroot, $baseurl;
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2vote;
 	$jodeljson = getCall($callurl);
@@ -92,7 +91,7 @@ function voteJodel($config, $jodel2vote, $how2vote){
 	$_SESSION['errorMsg'] = "Already voted";
 }
 //redirect again to jodels.php to show clean URL in browser
-header('Location: https://jodel.domayntec.ch/jodels.php');
+header('Location: ' . $baseurl . 'jodels.php#' . $jodel2vote);
 
 
 }
@@ -100,7 +99,6 @@ header('Location: https://jodel.domayntec.ch/jodels.php');
 
 /**
  *
- * @param array $config The whole config
  * @return integer $comment2vote The ID of the comment to vote
  * @return string $how2vote "Up" or "down"
  *
@@ -110,7 +108,8 @@ header('Location: https://jodel.domayntec.ch/jodels.php');
  *
  * @since 0.3
  */
-function voteComment($config, $comment2vote, $how2vote){
+function voteComment( $comment2vote, $how2vote){
+	global $apiroot, $baseurl;
 	$userid = $_SESSION['userid'];
 	$apiroot = $config->apiUrl;
 	$commentsjson = getCall($apiroot . "comments?transform=1&filter=commentID,eq," . $comment2vote);
@@ -127,6 +126,7 @@ function voteComment($config, $comment2vote, $how2vote){
 		$votes = $post['votes_cnt'];
 		$score = $post['score'];
 		$author = $post['jodlerIDFK'];
+		$postID = $post['jodelIDFK'];
 		if ($how2vote == "up"){
 			$votes++;
 			$score = $score + $config->postmeta['get_upvote'];
@@ -165,7 +165,7 @@ function voteComment($config, $comment2vote, $how2vote){
 	} else {
 	$_SESSION['errorMsg'] = "Already voted";
 }
-header('Location: ' . $config->baseUrl . 'comments.php?showcomment=' .$postID);
+header('Location: ' . $baseurl . 'comments.php?showcomment=' . $postID . '#' . $comment2vote);
 
 
 }
