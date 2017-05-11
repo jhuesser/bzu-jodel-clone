@@ -73,7 +73,7 @@
 <form action="?post=1" method="POST">
 	<div class="form-group">
 		<label for="jodel">Enter your message</label>
-		<textarea class="form-control" rows="10" name="jodel" placeholder="Your post" style="color:white;background-color:#<?php echo $colhex;?>"></textarea>
+		<textarea class="form-control" rows="10" name="jodel" placeholder="Your post" style="color:white;background-color:#<?php echo $colorhex;?>"></textarea>
 	</div>
 	<!-- save the color in a hidden field -->
 	<input type="hidden" name="color" value="<?php echo $colornmb;?>">
