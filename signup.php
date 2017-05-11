@@ -5,8 +5,8 @@
 	$title = "Sign up | SocialDomayn";
 	$stylesheet = "login.css";
 	include 'functions/header.php';
-	include 'functions/apicalls.php';
-	$config = include('config.php');
+	require 'functions/apicalls.php';
+	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 
 	if(isset($_GET['register'])) {
@@ -111,3 +111,4 @@
 	</div>
 </div>
 <!-- end form -->
+<?php include 'functions/footer.php';

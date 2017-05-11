@@ -6,10 +6,10 @@ $title = "Comments | SocialDomayn";
 $stylesheet = "jodel.css";
 include 'functions/header.php';
 //Load API functions
-include 'functions/apicalls.php';
-include 'functions/jodelmeta.php';
-$config = include('config.php');
-include 'functions/votes.php';
+require 'functions/apicalls.php';
+require 'functions/jodelmeta.php';
+$config = require('config.php');
+require 'functions/votes.php';
 $apiroot = $config->apiUrl;
 $baseurl = $config->baseUrl;
 
@@ -181,3 +181,5 @@ foreach($postdata['comments'] as $comment){
 <div class="newcomment"><a href="newcomment.php?comment=<?php echo $postID;?>">New comment</a></i></div>
 
 
+<?php
+include 'functions/footer.php';

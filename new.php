@@ -5,8 +5,9 @@
 	$stylesheet = "jodel.css";
 	include 'functions/header.php';
 	//Load API functions
-	include 'functions/apicalls.php';
-	$config = include('config.php');
+	require 'functions/apicalls.php';
+	require 'functions/jodelmeta.php';
+	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 	$userid = $_SESSION['userid'];
 
@@ -65,27 +66,7 @@
 <div class="test"></div>
 <!-- end main menu -->
 <?php
-	//get all colors and count them
-	$callurl = $apiroot . "colors?transform=1";
-	$allcolorsjson = getCall($callurl);
-	$allcolors = json_decode($allcolorsjson, true);
-	//init array to store every colorID
-	$colorIDs = array();
-	foreach($allcolors['colors'] as $allcols){
-		//add every colorID to array
-		array_push($colorIDs,$allcols['colorID']);
-	}
-	//select random ID from array. This is the color to use
-	$colornmb = $colorIDs[mt_rand(0, count($colorIDs) - 1)];
-	//get details about the color
-	$callurl = $apiroot . "colors?transform=1&filter=colorID,eq," . $colornmb;
-	$colors = getCall($callurl);
-	$color = json_decode($colors, true);
-	foreach($color['colors'] as $col){
-		//save color name and hex code in local values
-		$colorname= $col['colordesc'];
-		$colhex = $col['colorhex'];
-	}
+	$colorhex = getRandomColor();
 ?>
 
 <!-- post form -->
@@ -100,5 +81,5 @@
 </form>
 <!-- end post form -->
 
-
+<?php include 'functions/footer.php';
 

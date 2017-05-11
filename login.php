@@ -5,8 +5,8 @@
 	$stylesheet = "login.css";
 	include 'functions/header.php';
 	//Load API functions
-	include 'functions/apicalls.php';
-	$config = include('config.php');
+	require 'functions/apicalls.php';
+	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 
 	//If user sent loginform, set values
@@ -85,3 +85,5 @@
 </div>
 
 <!-- end login form -->
+<?php
+include 'functions/footer.php';
