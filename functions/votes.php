@@ -126,7 +126,7 @@ function voteComment( $comment2vote, $how2vote){
 		$votes = $post['votes_cnt'];
 		$score = $post['score'];
 		$author = $post['jodlerIDFK'];
-		$postID = $post['jodelIDFK'];
+		$postID = $post['jodeIDFK'];
 		if ($how2vote == "up"){
 			$votes++;
 			$score = $score + $config->postmeta['get_upvote'];
@@ -135,10 +135,10 @@ function voteComment( $comment2vote, $how2vote){
 			$score = $score - $config->postmeta['get_downvote'];
 		}
 	}
-	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
+	$postfields = "{\n  \n  \"votes_cnt\": \"$votes\",\n  \"score\": \"$score\"\n}";
 	$voted = putCall($apiroot . "comments/" . $comment2vote,$postfields);
 
-	$postfields = "{\n  \n  \"jodlerIDFK\": $userid,\n  \"commentIDFK\": $comment2vote\n}";
+	$postfields = "{\n  \n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$comment2vote\"\n}";
 	$uservoted = postCall($apiroot . "commentvotes", $postfields);
 
 	$authorkarmajson = getCall($apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $author);
@@ -151,7 +151,7 @@ function voteComment( $comment2vote, $how2vote){
 	} elseif($how2vote == "down"){
 		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['get_downvote'];
 	}
-	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
+	$postfields = "{\n  \n  \"karma\": \"$karmaFromAuthor\"\n}";
 	$karmaupdated = putCall($apiroot . "jodlers/" . $author, $postfields);
 
 	if($how2vote == "up"){
