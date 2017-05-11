@@ -5,9 +5,9 @@
 	$stylesheet = "jodel.css";
 	include 'functions/header.php';
 	//Load all requred functions & config
-	include 'functions/apicalls.php';
-	$config = include('config.php');
-	include 'functions/jodelmeta.php';
+	require 'functions/apicalls.php';
+	$config = require('config.php');
+	require 'functions/jodelmeta.php';
 	$apiroot = $config->apiUrl;
 	//get session info & post to show comments from
 	$userid = $_SESSION['userid'];
