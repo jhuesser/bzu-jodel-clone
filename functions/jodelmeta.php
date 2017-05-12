@@ -63,7 +63,8 @@ return $timeago;
 
 }
 
-function getRandomColor($apiroot){
+function getRandomColor(){
+    global $apiroot;
     $allcolorsurl = $apiroot . "colors?transform=1";
 	$allcolorsjson = getCall($allcolorsurl);
 	$allcolors = json_decode($allcolorsjson, true);
@@ -99,7 +100,8 @@ function getRandomColor($apiroot){
  *
  * @since 0.3
  */
- function getColorOfPost($apiroot, $postID){
+ function getColorOfPost( $postID){
+     global $apiroot;
      $callurl = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $postID;
      $postjson = getCall($callurl);
      $posts = json_decode($postjson, true);

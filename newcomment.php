@@ -5,15 +5,15 @@
 	$stylesheet = "jodel.css";
 	include 'functions/header.php';
 	//Load all requred functions & config
-	include 'functions/apicalls.php';
-	$config = include('config.php');
-	include 'functions/jodelmeta.php';
+	require 'functions/apicalls.php';
+	$config = require('config.php');
+	require 'functions/jodelmeta.php';
 	$apiroot = $config->apiUrl;
 	//get session info & post to show comments from
 	$userid = $_SESSION['userid'];
 	$post = $_GET['comment'];
 	//get color of post
-	$colorOfPost = getColorOfPost($apiroot, $post);
+	$colorOfPost = getColorOfPost($post);
 	$colid = $colorOfPost->colid;
 	$colorname = $colorOfPost->name;
 	$colorhex = $colorOfPost->hex;
@@ -55,9 +55,11 @@
 			//get number of comments of original post
 			$comments_cnt = $theop['comments_cnt'];
 			$author = $theop['jodlerIDFK'];
+			$score = $theop['score'];
 		}
 		//incerase number of comments of OP
 		$comments_cnt++;
+		$score = $score + $config->postmeta['get_comment'];
 		//insert new comment in DB, $postfields as JSON with all data
 		$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
 		$callurl = $apiroot . "comments";
@@ -65,7 +67,7 @@
 
 		//update comment count of OP in DB
 		$callurl = $apiroot . "jodels/" . $jodel;
-		$postfields = "{\n\t\"comments_cnt\": \"$comments_cnt\"\n\n}";
+		$postfields = "{\n\t\"comments_cnt\": \"$comments_cnt\",\n\t\"score\": \"$score\"\n\n}";
 		$cmntupdated = putCall($callurl, $postfields);
 
 		//update the authors karma for creating a comment
@@ -88,7 +90,7 @@
 		$authorkarmaupdated = putCall($callurl, $postfields);
 		
 		//redirect to post overview
-		header('Location: ' . $config->baseUrl . 'jodels.php');
+		header('Location: ' . $config->baseUrl . 'comments.php?showcomment=' . $jodel . '#' . $posted);
 	}
 
 ?>
@@ -119,3 +121,5 @@
 	<button type="submit" class="btn btn-warning">Submit</button>
 </form>
 <!-- end post form -->
+<?php
+include 'functions/footer.php';

@@ -2,7 +2,6 @@
 
 /**
  *
- * @param array $config The whole config
  * @return integer $jodel2vote The ID of the post to vote
  * @return string $how2vote "Up" or "down"
  *
@@ -12,8 +11,8 @@
  *
  * @since 0.3
  */
-function voteJodel($config, $jodel2vote, $how2vote){
-	$apiroot = $config->apiUrl;
+function voteJodel($jodel2vote, $how2vote){
+	global $apiroot, $baseurl;
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2vote;
 	$jodeljson = getCall($callurl);
@@ -36,11 +35,10 @@ function voteJodel($config, $jodel2vote, $how2vote){
 		$author = $post['jodlerIDFK'];
 		if ($how2vote == "up"){
 			$votes++;
-			$score++;
+			$score = $score + $config->postmeta['get_upvote'];
 		} elseif ($how2vote == "down"){
 			$votes--;
-			$score--;
-		}
+			$score = $score - $config->postmeta['get_downvote'];		}
 	}
 	//Update votes & score of post in DB
 	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
@@ -93,7 +91,7 @@ function voteJodel($config, $jodel2vote, $how2vote){
 	$_SESSION['errorMsg'] = "Already voted";
 }
 //redirect again to jodels.php to show clean URL in browser
-header('Location: https://jodel.domayntec.ch/jodels.php');
+header('Location: ' . $baseurl . 'jodels.php#' . $jodel2vote);
 
 
 }
@@ -101,7 +99,6 @@ header('Location: https://jodel.domayntec.ch/jodels.php');
 
 /**
  *
- * @param array $config The whole config
  * @return integer $comment2vote The ID of the comment to vote
  * @return string $how2vote "Up" or "down"
  *
@@ -111,7 +108,8 @@ header('Location: https://jodel.domayntec.ch/jodels.php');
  *
  * @since 0.3
  */
-function voteComment($config, $comment2vote, $how2vote){
+function voteComment( $comment2vote, $how2vote){
+	global $apiroot, $baseurl;
 	$userid = $_SESSION['userid'];
 	$apiroot = $config->apiUrl;
 	$commentsjson = getCall($apiroot . "comments?transform=1&filter=commentID,eq," . $comment2vote);
@@ -128,21 +126,22 @@ function voteComment($config, $comment2vote, $how2vote){
 		$votes = $post['votes_cnt'];
 		$score = $post['score'];
 		$author = $post['jodlerIDFK'];
+		$postID = $post['jodelIDFK'];
 		if ($how2vote == "up"){
 			$votes++;
-			$score++;
+			$score = $score + $config->postmeta['get_upvote'];
 		} elseif($how2vote == "down"){
 			$votes--;
-			$score--;
+			$score = $score - $config->postmeta['get_downvote'];
 		}
 	}
 	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
-	$voted = putCall("https://jodel.domayntec.ch/api.php/comments/" . $comment2vote,$postfields);
+	$voted = putCall($apiroot . "comments/" . $comment2vote,$postfields);
 
 	$postfields = "{\n  \n  \"jodlerIDFK\": $userid,\n  \"commentIDFK\": $comment2vote\n}";
-	$uservoted = postCall("https://jodel.domayntec.ch/api.php/commentvotes", $postfields);
+	$uservoted = postCall($apiroot . "commentvotes", $postfields);
 
-	$authorkarmajson = getCall("https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerID,eq," . $author);
+	$authorkarmajson = getCall($apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $author);
 	$authorkarma = json_decode($authorkarmajson, true);
 	foreach($authorkarma['jodlers'] as $user){
 		$karmaFromAuthor = $user['karma'];
@@ -153,7 +152,7 @@ function voteComment($config, $comment2vote, $how2vote){
 		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['get_downvote'];
 	}
 	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
-	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/" . $author, $postfields);
+	$karmaupdated = putCall($apiroot . "jodlers/" . $author, $postfields);
 
 	if($how2vote == "up"){
 		$karma = $karma + $config->karma_calc['do_upvote'];
@@ -161,12 +160,12 @@ function voteComment($config, $comment2vote, $how2vote){
 		$karma = $karma - $config->karma_calc['do_downvote'];
 	}
 	$postfields = "{\n  \n  \"karma\": $karma\n}";
-	$karmaupdated = putCall("https://jodel.domayntec.ch/api.php/jodlers/" . $userid, $postfields);
+	$karmaupdated = putCall($apiroot . "jodlers/" . $userid, $postfields);
 
 	} else {
 	$_SESSION['errorMsg'] = "Already voted";
 }
-header('Location: https://jodel.domayntec.ch/comments.php?showcomment=' .$postID);
+header('Location: ' . $baseurl . 'comments.php?showcomment=' . $postID . '#' . $comment2vote);
 
 
 }

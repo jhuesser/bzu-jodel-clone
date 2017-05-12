@@ -1,19 +1,19 @@
 <?php
 	session_start();
 	//Include functions & meta data
-	include '../functions/apicalls.php';
-	$config = include('../config.php');
+	require '../functions/apicalls.php';
+	$config = require('../config.php');
 	$apiroot = $config->apiUrl;
-	include '../functions/jodelmeta.php';
-	include '../functions/admintools.php';
-	include '../functions/usermanipulation.php';
+	require '../functions/jodelmeta.php';
+	require '../functions/admintools.php';
+	require '../functions/usermanipulation.php';
 	$title = "Manage Users | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
 
 	//check if user is logged in & has required caps
 	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_reset_paswd'])) {
-		header('Location: https://jodel.domayntec.ch/login.php');
+		header('Location: ' . $config->baseUrl . 'https://jodel.domayntec.ch/login.php');
 	}
 
 	//set up working variables
@@ -25,23 +25,23 @@
 	
 	
 	if(isset($_GET['ban'])){
-		$updated = manipulateUser($_GET['ban'], 0, $mycaps, $apiroot);
+		$updated = manipulateUser($_GET['ban'], 0, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['active'])){
-		$updated = manipulateUser($_GET['active'], 1, $mycaps, $apiroot);
+		$updated = manipulateUser($_GET['active'], 1, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['mod'])){
-		$updated = manipulateUser($_GET['mod'], 2, $mycaps, $apiroot);
+		$updated = manipulateUser($_GET['mod'], 2, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['admin'])){
-		$updated = manipulateUser($_GET['admin'], 3, $mycaps, $apiroot);
+		$updated = manipulateUser($_GET['admin'], 3, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['superadmin'])){
-		$updated = manipulateUser($_GET['superadmin'], 4, $mycaps, $apiroot);
+		$updated = manipulateUser($_GET['superadmin'], 4, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($updated)){
@@ -91,7 +91,7 @@
 		$jodlers = json_decode($jodlersjson, true);
 
 		foreach($jodlers['jodlers'] as $jodler){
-			$color = getRandomColor($apiroot);
+			$color = getRandomColor();
 			$acctype = getAccountType($config, $jodler['account_state']);
 			//show all colors
 			?><div class="card card-inverse mb-3 text-center" id="<?php echo $jodler['jodlerID'];?>" style="background-color: #<?php echo $color;?>;">

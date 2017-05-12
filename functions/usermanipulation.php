@@ -5,7 +5,6 @@
  * @param int $user The user to manipulate
  * @param int $role The new role of the user
  * @param array $mycaps The caps of the admin
- * @param string $apiroot Root URL of the API
  * @return int The formated time interval
  *
  * @author Jonas Hüsser
@@ -14,7 +13,8 @@
  *
  * @since 0.5
  */
- function manipulateUser($user, $role, $mycaps, $apiroot){
+ function manipulateUser($user, $role, $mycaps){
+	 global $apiroot;
 	 $execute = false;
 	 switch($role){
 		case 0:

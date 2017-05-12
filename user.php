@@ -1,8 +1,8 @@
 <?php
   session_start();
   //include required functions & config, set meta data (title, stylesheet)
-  include 'functions/apicalls.php';
-  $config = include('config.php');
+  require 'functions/apicalls.php';
+  $config = require('config.php');
   $title = "My profile | SocialDomayn";
   $stylesheet = "jodel.css";
   include 'functions/header.php';
