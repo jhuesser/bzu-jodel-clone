@@ -49,7 +49,10 @@
 				$_SESSION['username'] = $jodlerHRID;
 				header('Location: ' . $config->baseUrl . 'jodels.php');
 	 			// echo '<a href="index.php">openindex</a>';
- 			} else {
+ 			} elseif ($accountstate == 0){
+				$errorMessage = "You're banned";
+			 } 
+			 else {
 	 			//Login failed
 				$errorMessage = $config->app_msgs['login_fail'];
 			}
