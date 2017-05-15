@@ -66,7 +66,9 @@
 <div class="test"></div>
 <!-- end main menu -->
 <?php
-	$colorhex = getRandomColor();
+	$colorarray = getRandomColor();
+	$colorhex = $colorarray['colorhex'];
+	$colornmb = $colorarray['colorID'];
 ?>
 
 <!-- post form -->
