@@ -68,6 +68,7 @@ function getRandomColor(){
     $allcolorsurl = $apiroot . "colors?transform=1";
 	$allcolorsjson = getCall($allcolorsurl);
 	$allcolors = json_decode($allcolorsjson, true);
+    $resultcolor = array();
 	//init array to store every colorID
 	$colorIDs = array();
 	foreach($allcolors['colors'] as $allcols){
@@ -82,10 +83,11 @@ function getRandomColor(){
 	$color = json_decode($colors, true);
 	foreach($color['colors'] as $col){
 		//save color name and hex code in local values
-		$colorname= $col['colordesc'];
-		$colhex = $col['colorhex'];
+        $resultcolor['colorID'] = $col['colorID'];
+		$resultcolor['colorname'] = $col['colordesc'];
+		$resultcolor['colorhex'] = $col['colorhex'];
 	}
-    return $colhex;
+    return $resultcolor;
 }
 
 /**
