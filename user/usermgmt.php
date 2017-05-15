@@ -91,7 +91,8 @@
 		$jodlers = json_decode($jodlersjson, true);
 
 		foreach($jodlers['jodlers'] as $jodler){
-			$color = getRandomColor();
+			$colors = getRandomColor();
+			$color = $colors['colorhex'];
 			$acctype = getAccountType($config, $jodler['account_state']);
 			//show all colors
 			?><div class="card card-inverse mb-3 text-center" id="<?php echo $jodler['jodlerID'];?>" style="background-color: #<?php echo $color;?>;">
