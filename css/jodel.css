@@ -50,6 +50,10 @@
 	color: white;
 	text-decoration: none;
 }
+.jodelmeta a:hover{
+	text-decoration: none;
+	color: lightgrey;
+}
 
 .newpost {
 	

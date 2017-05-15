@@ -11,6 +11,7 @@ require 'functions/jodelmeta.php';
 $config = require('config.php');
 require 'functions/votes.php';
 $apiroot = $config->apiUrl;
+$baseurl = $config->baseUrl;
 
 //check if user is logged in. if not, redirect to login page
 if(!isset($_SESSION['userid'])) {
@@ -38,21 +39,21 @@ if(isset($_GET['showcomment'])){
 }
 
 if(isset($_GET['upvotecomment'])){
-	voteComment($config, $_GET['upvotecomment'], "up");
+	voteComment( $_GET['upvotecomment'], "up");
 	
 }
 
 
 if(isset($_GET['downvotecomment'])){
-	voteComment($config, $_GET['downvotecomment'], "down");
+	voteComment( $_GET['downvotecomment'], "down");
 }
 
 if(isset($_GET['upvotejodel'])){
-	voteJodel($config, $_GET['upvotejodel'], "up");
+	voteJodel( $_GET['upvotejodel'], "up");
 }
 
 if(isset($_GET['downvotejodel'])){
-	voteComment($config, $_GET['downvotejodel'], "down");
+	voteJodel( $_GET['downvotejodel'], "down");
 }
 
 
@@ -137,7 +138,7 @@ foreach($postdata['comments'] as $comment){
 
 
 
-		?><div class="card card-inverse mb-3 text-center" style="background-color: #<?php echo $colorhex;?>;">
+		?><div class="card card-inverse mb-3 text-center" id="<?php echo $comment['commentID'];?>" style="background-color: #<?php echo $colorhex;?>;">
   <div class="card-block">
     <blockquote class="card-blockquote">
 		<?php
@@ -180,3 +181,5 @@ foreach($postdata['comments'] as $comment){
 <div class="newcomment"><a href="newcomment.php?comment=<?php echo $postID;?>">New comment</a></i></div>
 
 
+<?php
+include 'functions/footer.php';

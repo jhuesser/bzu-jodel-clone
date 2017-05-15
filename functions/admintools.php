@@ -47,22 +47,42 @@
  * @param int $reason Reason of reporting
  * @return mixed ID of report or null if failed
  *
- * @author Jonas H�sser
+ * @author Jonas Hüsser
  *
  * @SuppressWarnings(PHPMD.ElseExpression)
  *
  * @since 0.5
  */
- function reportContent($config, $content, $contentID, $reason){
-	 $apiurl = $config->apiUrl;
+ function reportContent( $content, $contentID, $reason){
+	 global $apiroot;
 	 $userid = $_SESSION['userid'];
 	 if($content == "post"){
 		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"jodelDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \"$userid\"\n}";
+		 $callurl = $apiroot . "jodels?filter=jodelID,eq," . $contentID . "&transform=1";
+		 $jodeljson = getCall($callurl);
+		 $scores = json_decode($jodeljson, true);
+		 foreach($scores['jodels'] as $jodelscore){
+			 $score = $jodelscore['score'];
+		 }
+		 $newscore = $score - $config->postmeta['get_report'];
+		 $callurl = $apiroot . "jodels/" . $contentID;
+		 $putfields = "{\n  \n  \"score\": \"$newscore\"\n \n}";
+		 $scoreupdate = putCall($callurl, $putfields);
 
 	 } elseif($content == "comment"){
-		 $postfields = "{\n\t\"abuseIDFK\": \"$reason\",\n\t\"commentIDFK\": \"$contentID\",\n\t\"jodlerIDFK\": \"$userid\"\n}";
+		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"commentIDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \"$userid\"\n}";
+		 $callurl = $apiroot . "comments?filter=commentID,eq," . $contentID . "&transform=1";
+		 $commentjson = getCall($callurl);
+		 $scores = json_decode($commentjson, true);
+		 foreach($scores['comments'] as $commentscore){
+			 $score = $commentscore['score'];
+		 }
+		 $newscore = $score - $config->postmeta['get_report'];
+		 $callurl = $apiroot . "comments/" . $contentID;
+		 $putfields = "{\n  \n  \"score\": \"$newscore\"\n \n}";
+		 $scoreupdate = putCall($callurl, $putfields);
 	 }
-	 $callurl = $apiurl . "reports";
+	 $callurl = $apiroot . "reports";
 	 $resp = postCall($callurl, $postfields);
 	 return $resp;
  }

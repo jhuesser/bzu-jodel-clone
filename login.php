@@ -85,3 +85,5 @@
 </div>
 
 <!-- end login form -->
+<?php
+include 'functions/footer.php';

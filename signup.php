@@ -111,3 +111,4 @@
 	</div>
 </div>
 <!-- end form -->
+<?php include 'functions/footer.php';
