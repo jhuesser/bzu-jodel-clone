@@ -78,6 +78,7 @@
 			break;
 			case "idc":
 			//TODO: handling of "i don't know'.
+			header('Location: ' . $baseurl . 'user/mod.php');
 			
 			break;
 		}
