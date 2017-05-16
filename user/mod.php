@@ -19,18 +19,44 @@
 
 
 	if(isset($_GET['type']) && isset($_GET['approve']) || isset($_GET['deny']) || isset($_GET['idc'])){
+		$type = $_GET['type'];
+
+		if($type == "post"){
+			$middle = "jodeldata";
+			$filter = "filter=jodelID,eq,";
+		} elseif($type = "comments"){
+			$middle = "comments";
+			$filter = "filter=commentID,eq,";
+		}
+
 		if(isset($_GET['approve'])){
 			$action = "approve";
+			$post = $_GET['approve'];
 		}
 		if(isset($_GET['deny'])){
 			$action = "deny";
+			$post = $_GET['deny'];
+
 		}
 		if(isset($_GET['idc'])){
 			$action = "idc";
+			$post = $_GET['idc'];
+
 		}
 
 		switch($action){
 			case "approve":
+				$scorejson = getCall($apiroot . $middle . "?transform=1&" . $filter . $post);
+				$scorearray = json_decode($scorejson,true);
+				foreach($scorearray[$middle] as $scorehandler){
+					$score = $scorehandler['score'];
+				}
+				$newscore = $score + $config->postmeta['mod_approve'];
+				$putfields = "{\n  \"score\": \"$newscore\"\n}";
+				if($middle = "jodeldata"){
+					$middle = "jodels";
+				}
+				$approved = putCall($apiroot . $middle, $putfields);
 			
 			break;
 			case "deny":
