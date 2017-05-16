@@ -53,4 +53,19 @@
 		$reporturl = $apiroot . "reports?transform=1";
 		$reportjson = getCall($reporturl);
 		$reports = json_decode($reportjson, true);
+
+		foreach($reports['reports'] as $report){
+			if($report['jodelDFK'] != null){
+				$type = "post";
+				$callurl = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $report['jodelDFK'];
+			} elseif($report['commentIDFK'] != null){	
+				$type = "comment";	
+				$callurl = "comments?transform=1&filter=commentID,eq," . $report['commentIDFK'];	
+			}
+			
+
+
+		}
 	?>
+
+	
