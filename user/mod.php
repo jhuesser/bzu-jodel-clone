@@ -16,6 +16,7 @@
 	//set up working variables
 	$userid = $_SESSION['userid'];
 	$apiroot = $config->apiUrl;
+	$baseurl = $config->baseUrl;
 
 
 	if(isset($_GET['type']) && isset($_GET['approve']) || isset($_GET['deny']) || isset($_GET['idc'])){
@@ -56,10 +57,23 @@
 				if($middle = "jodeldata"){
 					$middle = "jodels";
 				}
-				$approved = putCall($apiroot . $middle, $putfields);
+				$approved = putCall($apiroot . $middle . "/" . $post, $putfields);
+				header('Location: ' . $baseurl . 'user/mod.php');
 			
 			break;
 			case "deny":
+			$scorejson = getCall($apiroot . $middle . "?transform=1&" . $filter . $post);
+				$scorearray = json_decode($scorejson,true);
+				foreach($scorearray[$middle] as $scorehandler){
+					$score = $scorehandler['score'];
+				}
+				$newscore = $score - $config->postmeta['mod_deny'];
+				$putfields = "{\n  \"score\": \"$newscore\"\n}";
+				if($middle = "jodeldata"){
+					$middle = "jodels";
+				}
+				$approved = putCall($apiroot . $middle . "/" . $post, $putfields);
+				header('Location: ' . $baseurl . 'user/mod.php');
 
 			break;
 			case "idc":
