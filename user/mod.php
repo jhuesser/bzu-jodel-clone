@@ -81,7 +81,8 @@
 
 			break;
 			case "idc":
-			//TODO: handling of "i don't know'.
+			$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				$moded = postCall($apiroot . "moderated", $postfields);
 			
 			break;
 		}
