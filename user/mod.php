@@ -9,7 +9,7 @@
 	include '../functions/header.php';
 
 	//check if user is logged in & has required caps
-	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_add_color'])) {
+	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_mod_posts'])) {
 		header('Location: ' . $config->baseUrl . '/login.php');
 	}
 
