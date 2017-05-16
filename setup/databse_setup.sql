@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 06. Mai 2017 um 23:16
--- Server-Version: 10.1.22-MariaDB
+-- Erstellungszeit: 16. Mai 2017 um 16:26
+-- Server-Version: 10.1.23-MariaDB
 -- PHP-Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Datenbank: `jodel`
 --
-CREATE DATABASE IF NOT EXISTS `jodel` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `jodel`;
 
 -- --------------------------------------------------------
 
@@ -142,6 +140,34 @@ CREATE TABLE `jodlers` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `moderated`
+--
+
+CREATE TABLE `moderated` (
+  `modID` int(11) NOT NULL,
+  `jodlerIDFK` int(11) NOT NULL,
+  `jodelIDFK` int(11) DEFAULT NULL,
+  `commentIDFK` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Stellvertreter-Struktur des Views `reportdata`
+-- (Siehe unten für die tatsächliche Ansicht)
+--
+CREATE TABLE `reportdata` (
+`reportID` int(11)
+,`commentIDFK` int(11)
+,`jodelDFK` int(11)
+,`jodlerIDFK` int(11)
+,`abusedesc` varchar(255)
+,`jodel` varchar(3000)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `reports`
 --
 
@@ -161,6 +187,15 @@ CREATE TABLE `reports` (
 DROP TABLE IF EXISTS `jodeldata`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`username`@`localhost` SQL SECURITY DEFINER VIEW `jodeldata`  AS  select `jodels`.`jodelID` AS `jodelID`,`jodels`.`jodlerIDFK` AS `jodlerIDFK`,`jodels`.`jodel` AS `jodel`,`jodels`.`votes_cnt` AS `votes_cnt`,`jodels`.`comments_cnt` AS `comments_cnt`,`jodels`.`score` AS `score`,`jodels`.`createdate` AS `createdate`,`colors`.`colorID` AS `colorID`,`colors`.`colordesc` AS `colordesc`,`colors`.`colorhex` AS `colorhex`,`jodlers`.`account_state` AS `account_state` from ((`jodlers` left join `jodels` on((`jodels`.`jodlerIDFK` = `jodlers`.`jodlerID`))) left join `colors` on((`jodels`.`colorIDFK` = `colors`.`colorID`))) where (`jodels`.`jodelID` <> 'null') order by `jodels`.`jodelID` desc ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur des Views `reportdata`
+--
+DROP TABLE IF EXISTS `reportdata`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`username`@`localhost` SQL SECURITY DEFINER VIEW `reportdata`  AS  select `reports`.`reportID` AS `reportID`,`reports`.`commentIDFK` AS `commentIDFK`,`reports`.`jodelDFK` AS `jodelDFK`,`reports`.`jodlerIDFK` AS `jodlerIDFK`,`abuse`.`abusedesc` AS `abusedesc`,`jodels`.`jodel` AS `jodel` from ((`jodels` left join `reports` on((`reports`.`jodelDFK` = `jodels`.`jodelID`))) left join `abuse` on((`reports`.`abuseIDFK` = `abuse`.`abuseID`))) where (`reports`.`reportID` <> 'null') ;
 
 --
 -- Indizes der exportierten Tabellen
@@ -222,6 +257,15 @@ ALTER TABLE `jodlers`
   ADD UNIQUE KEY `username` (`jodlerHRID`);
 
 --
+-- Indizes für die Tabelle `moderated`
+--
+ALTER TABLE `moderated`
+  ADD PRIMARY KEY (`modID`),
+  ADD KEY `jodlerIDFK` (`jodlerIDFK`),
+  ADD KEY `jodelIDFK` (`jodelIDFK`),
+  ADD KEY `commentIDFK` (`commentIDFK`);
+
+--
 -- Indizes für die Tabelle `reports`
 --
 ALTER TABLE `reports`
@@ -239,42 +283,47 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT für Tabelle `abuse`
 --
 ALTER TABLE `abuse`
-  MODIFY `abuseID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `abuseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT für Tabelle `colors`
 --
 ALTER TABLE `colors`
-  MODIFY `colorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `colorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT für Tabelle `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `commentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `commentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 --
 -- AUTO_INCREMENT für Tabelle `commentvotes`
 --
 ALTER TABLE `commentvotes`
-  MODIFY `voteID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `voteID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 --
 -- AUTO_INCREMENT für Tabelle `jodels`
 --
 ALTER TABLE `jodels`
-  MODIFY `jodelID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=521;
+  MODIFY `jodelID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=553;
 --
 -- AUTO_INCREMENT für Tabelle `jodelvotes`
 --
 ALTER TABLE `jodelvotes`
-  MODIFY `voteID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `voteID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
 --
 -- AUTO_INCREMENT für Tabelle `jodlers`
 --
 ALTER TABLE `jodlers`
   MODIFY `jodlerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 --
+-- AUTO_INCREMENT für Tabelle `moderated`
+--
+ALTER TABLE `moderated`
+  MODIFY `modID` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT für Tabelle `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `reportID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `reportID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 --
 -- Constraints der exportierten Tabellen
 --
@@ -307,6 +356,14 @@ ALTER TABLE `jodels`
 ALTER TABLE `jodelvotes`
   ADD CONSTRAINT `jodelvotes_ibfk_1` FOREIGN KEY (`jodelIDFK`) REFERENCES `jodels` (`jodelID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `jodelvotes_ibfk_2` FOREIGN KEY (`userIDFK`) REFERENCES `jodlers` (`jodlerID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `moderated`
+--
+ALTER TABLE `moderated`
+  ADD CONSTRAINT `moderated_ibfk_1` FOREIGN KEY (`jodlerIDFK`) REFERENCES `jodlers` (`jodlerID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `moderated_ibfk_2` FOREIGN KEY (`jodelIDFK`) REFERENCES `jodels` (`jodelID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `moderated_ibfk_3` FOREIGN KEY (`commentIDFK`) REFERENCES `comments` (`commentID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `reports`
