@@ -156,11 +156,13 @@
 				$reason = $reasonhandler['abusedesc'];
 			}
 
-			if($type == "post" && !in_array($post['jodelID'], $modposts)){
+			if($type == "post"){
 
 				foreach($contentarray['jodeldata'] as $post){
-				?>
+				
+				if(!in_array($post['jodelID'], $modposts)){
 
+				?>
 				<div class="reason">
 					<?php echo "This post is reported beacause of " . $reason . ".";?>
 				</div>
@@ -197,7 +199,7 @@
 			</div>
 
 			<?php
-
+				}
 
 
 			}}
