@@ -102,7 +102,7 @@
   <?php 
     if($caps['mod_posts'] == true){
       //is mod
-      echo '<a href="#" class="list-group-item list-group-item-action">Moderation</a>'; 
+      echo '<a href="user/mod.php" class="list-group-item list-group-item-action">Moderation</a>'; 
       $_SESSION['caps_mod_posts'] = true;
       $hascaps = true;
     }
