@@ -2,8 +2,9 @@
 	session_start();
 	//Include functions & meta data
 	require '../functions/apicalls.php';
+	require '../functions/jodelmeta.php';
 	$config = require('../config.php');
-	$title = "Add color | SocialDomayn";
+	$title = "Moderation | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
 
@@ -60,9 +61,44 @@
 				$callurl = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $report['jodelDFK'];
 			} elseif($report['commentIDFK'] != null){	
 				$type = "comment";	
-				$callurl = "comments?transform=1&filter=commentID,eq," . $report['commentIDFK'];	
+				$callurl = $apiroot . "comments?transform=1&filter=commentID,eq," . $report['commentIDFK'];	
 			}
 			
+			$contentjson = getCall($callurl);
+			$contentarray = json_decode($contentjson, true);
+
+			if($type == "post"){
+
+				foreach($contentarray['jodeldata'] as $post){
+				?>
+				<div class="card card-inverse mb-3 text-center" id="<?php echo $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
+  				<div class="card-block">
+    				<blockquote class="card-blockquote">
+					<?php
+							//post isn't downvoted
+		 						echo $post['jodel'];?>
+		 						<!-- voting and number of votes -->
+								<div class="jodelvotes">
+									<a href="#"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
+									<?php echo $post['votes_cnt'] . "<br>";?>
+									<a href="#"<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+								</div>
+								<div class="clear"></div>
+								<!-- end voting and number of votes -->
+								<!-- post metadata -->
+								<div class="jodelmeta">
+									<?php
+										$timeago = jodelage($post['createdate']);
+									?>
+									<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><span id="<?php echo 'time-' . $post['jodelID'];?>"><?php echo $timeago;?></span>
+									<?php echo " " ;?><a href="comments.php?showcomment=<?php echo $post['jodelID'];?>"><i class="fa fa-comment" aria-hidden="true"></i><?php echo $post['comments_cnt'];?></a>
+									<?php if ($post['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+								<!-- end post metadata -->
+					</blockquote>
+  				</div> <!-- end post card somewhere here -->
+			</div>
+			<?php
+			}}
 
 
 		}
