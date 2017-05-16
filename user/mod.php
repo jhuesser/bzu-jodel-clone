@@ -107,9 +107,15 @@
 					</blockquote>
   				</div> <!-- end post card somewhere here -->
 			</div>
+			<div class="mod-buttons">
+				<i class="fa fa-check-circle" aria-hidden="true"></i>
+				<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+				<i class="fa fa-times-circle" aria-hidden="true"></i>
+			</div>
+
 			<?php
 
-			
+
 
 			}}
 
