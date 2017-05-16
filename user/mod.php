@@ -75,7 +75,7 @@
 				}
 				$denied = putCall($apiroot . $middle . "/" . $post, $putfields);
 				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
-				//$moded = postCall($apiroot . "moderated", $postfields);
+				$moded = postCall($apiroot . "moderated", $postfields);
 
 				
 
