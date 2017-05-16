@@ -60,7 +60,6 @@
 				$approved = putCall($apiroot . $middle . "/" . $post, $putfields);
 				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
 				$moded = postCall($apiroot . "moderated", $postfields);
-				header('Location: ' . $baseurl . 'user/mod.php');
 			
 			break;
 			case "deny":
@@ -77,15 +76,16 @@
 				$denied = putCall($apiroot . $middle . "/" . $post, $putfields);
 				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
 				$moded = postCall($apiroot . "moderated", $postfields);
-				header('Location: ' . $baseurl . 'user/mod.php');
+
+				
 
 			break;
 			case "idc":
 			//TODO: handling of "i don't know'.
-			header('Location: ' . $baseurl . 'user/mod.php');
 			
 			break;
 		}
+		header('Location: ' . $baseurl . 'user/mod.php');
 	}
 
 ?>
