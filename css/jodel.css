@@ -79,6 +79,21 @@ text-decoration: none;
 	color: grey;
 }
 
+.mod-approve{
+	color: green;
+}
+
+.mod-deny{
+	color: red;
+}
+.mod-idc{
+	color: blue;
+}
+
+.mod-buttons{
+	text-align: center;
+	font-size: 80px;
+}
 .newcomment{
 	text-align: center;
 	position: fixed; 
