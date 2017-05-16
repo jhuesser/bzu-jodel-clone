@@ -89,6 +89,12 @@
 		if(isset($newscore)){
 			if($newscore <= $config->postmeta['post_deleted_score']){
 				$deleted = deleteCall($apiroot. $middle . "/" . $post);
+			} elseif($newscore >= $config->postmeta['post_approved_score']){
+				$reportsOfPost = getCall($apiroot . "/reports?transform=1&filter=jodelIDFK,eq," . $post);
+				$reportsOfPostArray = json_decode($reportsOfPost, true);
+				foreach($reportsOfPostArray['reports'] as $report){
+					$deleted = deleteCall($apiroot . "reports/" . $report['reportID']);
+				}
 			}
 		}
 		header('Location: ' . $baseurl . 'user/mod.php');
