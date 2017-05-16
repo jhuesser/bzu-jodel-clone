@@ -58,6 +58,8 @@
 					$middle = "jodels";
 				}
 				$approved = putCall($apiroot . $middle . "/" . $post, $putfields);
+				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				$moded = postCall($apiroot . "moderated", $postfields);
 				header('Location: ' . $baseurl . 'user/mod.php');
 			
 			break;
@@ -122,6 +124,20 @@
 		$reportjson = getCall($reporturl);
 		$reports = json_decode($reportjson, true);
 
+		$jodeljson = getCall($apiroot . "/moderated?transform=&filter=jodlerIDFK,eq," . $userid);
+		$jodelarray = json_decode($jodeljson, true);
+		$modposts = array();
+		foreach($jodelarray['moderated'] as $moded){
+			array_push($modposts, $moded['jodelIDFK']);
+		}
+
+		$commentjson = getCall($apiroot . "/moderated?transform=&filter=commentIDFK,eq," . $userid);
+		$commentarray = json_decode($commentjson, true);
+		$modcom = array();
+		foreach($commentarray['moderated'] as $moded){
+			array_push($modcom, $moded['commentIDFK']);
+		}
+
 		foreach($reports['reports'] as $report){
 			if($report['jodelDFK'] != null){
 				$type = "post";
@@ -140,7 +156,7 @@
 				$reason = $reasonhandler['abusedesc'];
 			}
 
-			if($type == "post"){
+			if($type == "post" && !in_array($post['jodelID'], $modposts)){
 
 				foreach($contentarray['jodeldata'] as $post){
 				?>
