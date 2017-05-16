@@ -108,9 +108,9 @@
   				</div> <!-- end post card somewhere here -->
 			</div>
 			<div class="mod-buttons">
-				<i class="fa fa-times-circle mod-deny" aria-hidden="true"></i>
-				<i class="fa fa-dot-circle-o mod-idc" aria-hidden="true"></i>
-				<i class="fa fa-check-circle mod-approve" aria-hidden="true"></i>	
+				<a href="?deny=<?php echo $post['jodelID']?>"><i class="fa fa-times-circle mod-deny" aria-hidden="true"></i></a>
+				<a href="?idc=<?php echo $post['jodelID']?>"><i class="fa fa-dot-circle-o mod-idc" aria-hidden="true"></i></a>
+				<a href="?approve=<?php echo $post['jodelID']?>"><i class="fa fa-check-circle mod-approve" aria-hidden="true"></i></a>	
 			</div>
 
 			<?php
