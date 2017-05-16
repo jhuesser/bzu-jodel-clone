@@ -9,7 +9,7 @@
 	include '../functions/header.php';
 
 	//check if user is logged in & has required caps
-	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_add_color'])) {
+	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_mod_posts'])) {
 		header('Location: ' . $config->baseUrl . '/login.php');
 	}
 
@@ -58,7 +58,8 @@
 					$middle = "jodels";
 				}
 				$approved = putCall($apiroot . $middle . "/" . $post, $putfields);
-				header('Location: ' . $baseurl . 'user/mod.php');
+				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				$moded = postCall($apiroot . "moderated", $postfields);
 			
 			break;
 			case "deny":
@@ -72,16 +73,32 @@
 				if($middle = "jodeldata"){
 					$middle = "jodels";
 				}
-				$approved = putCall($apiroot . $middle . "/" . $post, $putfields);
-				header('Location: ' . $baseurl . 'user/mod.php');
+				$denied = putCall($apiroot . $middle . "/" . $post, $putfields);
+				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				$moded = postCall($apiroot . "moderated", $postfields);
+
+				
 
 			break;
 			case "idc":
-			//TODO: handling of "i don't know'.
-			header('Location: ' . $baseurl . 'user/mod.php');
+			$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				$moded = postCall($apiroot . "moderated", $postfields);
 			
 			break;
 		}
+
+		if(isset($newscore)){
+			if($newscore <= $config->postmeta['post_deleted_score']){
+				$deleted = deleteCall($apiroot. $middle . "/" . $post);
+			} elseif($newscore >= $config->postmeta['post_approved_score']){
+				$reportsOfPost = getCall($apiroot . "/reports?transform=1&filter=jodelDFK,eq," . $post);
+				$reportsOfPostArray = json_decode($reportsOfPost, true);
+				foreach($reportsOfPostArray['reports'] as $report){
+					$deleted = deleteCall($apiroot . "reports/" . $report['reportID']);
+				}
+			}
+		}
+		header('Location: ' . $baseurl . 'user/mod.php');
 	}
 
 ?>
@@ -122,6 +139,20 @@
 		$reportjson = getCall($reporturl);
 		$reports = json_decode($reportjson, true);
 
+		$jodeljson = getCall($apiroot . "/moderated?transform=1&filter=jodlerIDFK,eq," . $userid);
+		$jodelarray = json_decode($jodeljson, true);
+		$modposts = array();
+		foreach($jodelarray['moderated'] as $moded){
+			array_push($modposts, $moded['jodelIDFK']);
+		}
+
+		$commentjson = getCall($apiroot . "/moderated?transform=1&filter=commentIDFK,eq," . $userid);
+		$commentarray = json_decode($commentjson, true);
+		$modcom = array();
+		foreach($commentarray['moderated'] as $moded){
+			array_push($modcom, $moded['commentIDFK']);
+		}
+
 		foreach($reports['reports'] as $report){
 			if($report['jodelDFK'] != null){
 				$type = "post";
@@ -143,8 +174,10 @@
 			if($type == "post"){
 
 				foreach($contentarray['jodeldata'] as $post){
-				?>
+				
+				if(!in_array($post['jodelID'], $modposts)){
 
+				?>
 				<div class="reason">
 					<?php echo "This post is reported beacause of " . $reason . ".";?>
 				</div>
@@ -181,7 +214,7 @@
 			</div>
 
 			<?php
-
+				}
 
 
 			}}
