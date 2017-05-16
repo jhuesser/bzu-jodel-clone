@@ -67,10 +67,20 @@
 			$contentjson = getCall($callurl);
 			$contentarray = json_decode($contentjson, true);
 
+			$reasonjson = getCall($apiroot . "abuse?transform=1&filter=abuseID,eq," . $report['abuseIDFK']);
+			$reasonarray = json_decode($reasonjson, true);
+			foreach($reasonarray['abuse'] as $reasonhandler){
+				$reason = $reasonhandler['abusedesc'];
+			}
+
 			if($type == "post"){
 
 				foreach($contentarray['jodeldata'] as $post){
 				?>
+
+				<div class="reason">
+					<?php echo "This post is reported beacause of " . $reason . ".";?>
+				</div>
 				<div class="card card-inverse mb-3 text-center" id="<?php echo $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
   				<div class="card-block">
     				<blockquote class="card-blockquote">
@@ -98,6 +108,9 @@
   				</div> <!-- end post card somewhere here -->
 			</div>
 			<?php
+
+			
+
 			}}
 
 

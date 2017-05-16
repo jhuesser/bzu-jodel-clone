@@ -113,3 +113,7 @@ text-decoration: none;
 *:-ms-input-placeholder { /* Internet Explorer 10-11 */
    color:    white !important;
 }
+
+.reason {
+	text-align: center;
+}
