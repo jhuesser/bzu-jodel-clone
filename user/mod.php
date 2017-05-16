@@ -75,7 +75,7 @@
 				}
 				$denied = putCall($apiroot . $middle . "/" . $post, $putfields);
 				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
-				$moded = postCall($apiroot . "moderated", $postfields);
+				//$moded = postCall($apiroot . "moderated", $postfields);
 
 				
 
@@ -84,6 +84,12 @@
 			//TODO: handling of "i don't know'.
 			
 			break;
+		}
+
+		if(isset($newscore)){
+			if($newscore <= $config->postmeta['post_deleted_score']){
+				$deleted = deleteCall($apiroot. $middle . "/" . $post);
+			}
 		}
 		header('Location: ' . $baseurl . 'user/mod.php');
 	}
