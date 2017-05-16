@@ -17,6 +17,31 @@
 	$userid = $_SESSION['userid'];
 	$apiroot = $config->apiUrl;
 
+
+	if(isset($_GET['type']) && isset($_GET['approve']) || isset($_GET['deny']) || isset($_GET['idc'])){
+		if(isset($_GET['approve'])){
+			$action = "approve";
+		}
+		if(isset($_GET['deny'])){
+			$action = "deny";
+		}
+		if(isset($_GET['idc'])){
+			$action = "idc";
+		}
+
+		switch($action){
+			case "approve":
+			
+			break;
+			case "deny":
+
+			break;
+			case "idc":
+			
+			break;
+		}
+	}
+
 ?>
 <div id="top"></div>
 <!-- main menu -->
@@ -108,9 +133,9 @@
   				</div> <!-- end post card somewhere here -->
 			</div>
 			<div class="mod-buttons">
-				<a href="?deny=<?php echo $post['jodelID']?>"><i class="fa fa-times-circle mod-deny" aria-hidden="true"></i></a>
-				<a href="?idc=<?php echo $post['jodelID']?>"><i class="fa fa-dot-circle-o mod-idc" aria-hidden="true"></i></a>
-				<a href="?approve=<?php echo $post['jodelID']?>"><i class="fa fa-check-circle mod-approve" aria-hidden="true"></i></a>	
+				<a href="?deny=<?php echo $post['jodelID'];?>&type=<?php echo $type;?>"><i class="fa fa-times-circle mod-deny" aria-hidden="true"></i></a>
+				<a href="?idc=<?php echo $post['jodelID'];?>&type=<?php echo $type;?>"><i class="fa fa-dot-circle-o mod-idc" aria-hidden="true"></i></a>
+				<a href="?approve=<?php echo $post['jodelID'];?>&type=<?php echo $type;?>"><i class="fa fa-check-circle mod-approve" aria-hidden="true"></i></a>	
 			</div>
 
 			<?php
