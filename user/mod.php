@@ -77,6 +77,7 @@
 
 			break;
 			case "idc":
+			//TODO: handling of "i don't know'.
 			
 			break;
 		}
