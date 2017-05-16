@@ -82,12 +82,22 @@ text-decoration: none;
 .mod-approve{
 	color: green;
 }
+.mod-approve:hover{
+	color: #07c300;
+}
 
 .mod-deny{
+	color: #c10000;
+}
+.mod-deny:hover{
 	color: red;
 }
+
 .mod-idc{
-	color: blue;
+	color: #0101ab;
+}
+.mod-idc:hover{
+	color:blue;
 }
 
 .mod-buttons{
