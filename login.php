@@ -49,7 +49,7 @@
 				$_SESSION['username'] = $jodlerHRID;
 				header('Location: ' . $config->baseUrl . 'jodels.php');
 	 			// echo '<a href="index.php">openindex</a>';
- 			} elseif ($accountstate == 0){
+			 } elseif (isset($accountstate) && $accountstate == 0){
 				$errorMessage = "User no longer in system.";
 			 } 
 			 else {
