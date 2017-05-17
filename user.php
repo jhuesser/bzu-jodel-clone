@@ -56,8 +56,8 @@
   </h1>
     <div class="list-group">
     <a href="<?php echo $config->baseUrl;?>jodels.php?sort=my" class="list-group-item list-group-item-action">My <?php echo $config->app_vocabulary['posts'];?></a>
-    <a href="#" class="list-group-item list-group-item-action">My <?php echo $config->app_vocabulary['comments'];?></a>
-    <a href="#" class="list-group-item list-group-item-action">My votes</a>
+    <a href="<?php echo $config->baseUrl;?>jodels.php?sort=mycomms" class="list-group-item list-group-item-action">My <?php echo $config->app_vocabulary['comments'];?></a>
+    <a href="<?php echo $config->baseUrl;?>jodels.php?sort=myvotes" class="list-group-item list-group-item-action">My votes</a>
 </div>
 <!-- end user functions -->
 

@@ -58,6 +58,12 @@
 			case "my":
 				$sort = "my";
 				break;
+			case "mycomms":
+				$sort= "mycomms";
+				break;
+			case "myvotes":
+				$sort = "myvotes";
+				break;
 			default:
 				$sort = "latest";
 		
@@ -85,7 +91,7 @@
   	</li>
   	<!-- user profile -->
   	<li class="nav-item">
-    	<a class="nav-link <?php if($sort == 'my'){ echo 'active';}?>" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $karma;?></a>
+    	<a class="nav-link <?php if($sort == 'my' || $sort =='mycomms' || $sort =='myvotes'){ echo 'active';}?>" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $karma;?></a>
   	</li>
 </ul>
 <!-- must check in stylesheet -->
@@ -114,6 +120,26 @@
 			break;
 		case "my":
 			$filter="&filter=jodlerIDFK,eq," . $userid;
+			break;
+		case "mycomms":
+			$commenturl = $apiroot . "comments?transform=1,filter=jodlerIDFK,eq," . $userid;
+			$commentsjson = getCall($commenturl);
+			$comments = json_decode($commentsjson, true);
+			$filter = "";
+			foreach($comments['comments'] as $comment){
+				$filter .= "&filter[]=jodelID,eq," . $comment['jodelIDFK'];
+			}
+			$filter .= "&satisfy=any";
+			break;
+		case "myvotes":
+			$voteurl = $apiroot . "jodelvotes?transform=1&userIDFK,eq," . $userid;
+			$votesjson = getCall($voteurl);
+			$votes = json_decode($votesjson, true);
+			$filter = "";
+			foreach($votes['jodelvotes'] as $vote){
+				$filter .= "&filter[]=jodelID,eq," . $vote['jodelIDFK'];
+			}
+			$filter .= "&satisfy=any";
 			break;
 		default:
 			$filter = "";
