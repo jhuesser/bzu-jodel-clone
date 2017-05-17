@@ -20,7 +20,17 @@
 	$userid = $_SESSION['userid'];
 	$mycaps = $_SESSION['my_caps'];
 	
-	
+	if(isset($_GET['deluser'])){
+		//user wants to delete a color
+		//get ID of color to delete
+		$user = $_GET['deluser'];
+		//setup call URL
+		$callurl = $apiroot . "jodlers/" . $user;
+		//Send DELETE call to url
+		$deleteduser = deleteCall($callurl);
+		//redirect
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
 
 	
 	
@@ -115,7 +125,11 @@
 						?><a href="?superadmin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button></a><?php
 					}
 						?>			
-					
+					<div class="jodelvotes">
+						<!--delete button -->
+							<a href="?deluser=<?php echo $jodler['jodlerID'];?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+					</div>
+					<div class="clear"></div>
 				</blockquote>
 		</div> 
 	</div>
