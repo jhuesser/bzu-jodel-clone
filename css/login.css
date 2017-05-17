@@ -11,3 +11,41 @@
 	color: white;
 	border: 1px solid orange;
 }
+
+
+.test {
+	padding-top: 70px;
+}
+.clear {
+	clear: both;
+}
+
+.nav {
+	background-color: orange;
+	position: fixed;
+	z-index: 100;
+	width: 100%;
+	
+	
+}
+
+.nav-link {
+	color: white;
+}
+.active {
+	color: orange;
+	background-color: white;
+}
+
+.active:hover {
+	color: orange !important;
+	background-color: white;
+}
+
+.nav-link:hover {
+	color: lightgrey;
+}
+
+.jodelvotes {
+	float: right;
+}
