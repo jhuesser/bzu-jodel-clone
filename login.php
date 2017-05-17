@@ -60,14 +60,7 @@
 		
 
 	}
-	if(isset($errorMessage)) {
-			//display login message
-			?>
- 			<div class="alert alert-danger" role="alert">
-  				<strong>Holy guacamole!</strong> <?php echo $errorMessage;?>
-			</div>
-			<?php
-		}
+
 
 ?>
 <div id="top"></div>
@@ -80,7 +73,16 @@
 </ul>
 <!-- end main menu -->
 <div class="test"></div>
-
+<?php
+	if(isset($errorMessage)) {
+			//display login message
+			?>
+ 			<div class="alert alert-danger" role="alert">
+  				<strong>Holy guacamole!</strong> <?php echo $errorMessage;?>
+			</div>
+			<?php
+		}
+?>
 <div class="alert alert-warning" role="alert">
   <strong>Warning!</strong> This is a test environment. Every user that is not approved by the admins / developer gets banned.
 </div>
