@@ -57,7 +57,10 @@
 				$errorMessage = $config->app_msgs['login_fail'];
 			}
 		}
-		if(isset($errorMessage)) {
+		
+
+	}
+	if(isset($errorMessage)) {
 			//display login message
 			?>
  			<div class="alert alert-danger" role="alert">
@@ -66,9 +69,21 @@
 			<?php
 		}
 
-	}
-
 ?>
+<div id="top"></div>
+<!-- main menu -->
+<ul class="nav ">
+	<li class="nav-item">
+		<img src="img/domaynW.png" alt="DomaynTec Logo" width="30%">
+	</li>
+  
+</ul>
+<!-- end main menu -->
+<div class="test"></div>
+
+<div class="alert alert-warning" role="alert">
+  <strong>Warning!</strong> This is a test environment. Every user that is not approved by the admins / developer gets banned.
+</div>
 <!-- login form -->
 <div class="container">
 	<div class="wrapper">
