@@ -153,22 +153,12 @@
 	foreach($postdata['jodeldata'] as $post){
 
 			//setup layout
+			if($post['votes_cnt'] > $config->postmeta['needed_downvotes']){
 			?>
 			<div class="card card-inverse mb-3 text-center" id="<?php echo $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
   				<div class="card-block">
     				<blockquote class="card-blockquote">
-						<?php
-							if($post['votes_cnt'] < -5){
-							//post is downvoted by the community.
-							//TODO: set required downvotes to config
-							//TODO: Don't display this posts in stream
-							echo "This post was voted out by the community";
-						?>
-					</blockquote>
-  				</div>
-			</div>
-						<?php
-							} else{
+						<?php				
 								//post isn't downvoted
 		 						echo $post['jodel'];?>
 		 						<!-- voting and number of votes -->
