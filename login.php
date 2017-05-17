@@ -50,7 +50,7 @@
 				header('Location: ' . $config->baseUrl . 'jodels.php');
 	 			// echo '<a href="index.php">openindex</a>';
  			} elseif ($accountstate == 0){
-				$errorMessage = "You're banned";
+				$errorMessage = "User no longer in system.";
 			 } 
 			 else {
 	 			//Login failed
