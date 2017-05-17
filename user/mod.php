@@ -9,8 +9,9 @@
 	include '../functions/header.php';
 
 	//check if user is logged in & has required caps
-	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_mod_posts'])) {
-		header('Location: ' . $config->baseUrl . '/login.php');
+	$mycaps = $_SESSION['my_caps'];
+	if(!isset($_SESSION['userid']) || $mycaps['mod_posts' == false]) {
+		header('Location: ' . $config->baseUrl . 'user.php');
 	}
 
 	//set up working variables
