@@ -118,7 +118,7 @@
     }
     if($caps['delete_posts'] == true || $caps['change_post_score'] == true || $caps['change_votes'] == true || $caps['edit_posts'] == true){
       //can manage posts
-    echo '<a href="#" class="list-group-item list-group-item-action">Postmanagement</a>'; 
+    echo '<a href="user/postmgmt.php" class="list-group-item list-group-item-action">Postmanagement</a>'; 
     $hascaps = true;
     }
     if($caps['add_color'] == true){
