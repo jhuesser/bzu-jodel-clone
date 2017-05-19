@@ -57,6 +57,12 @@
 		<?php
 	}
 
+if(isset($_GET['del'])){
+	$post2del = $_GET['del'];
+	$callurl = $apiroot . "jodels/" . $post2del;
+	$deleted = deleteCall($callurl);
+	header('Location: ' . $baseurl . 'user/postmgmt.php');
+}
 
 
 if(isset($_GET['update'])){
@@ -171,7 +177,7 @@ if(isset($_GET['update'])){
 						</div>
 								<button type="submit" class="btn btn-warning">Submit</button>
 					</form>
-
+						<a href="?del=<?php echo $post['jodelID'];?>"><button type="button" class="btn btn-warning">Delete</button></a>
 								<!-- end post metadata -->
 					</blockquote>
   				</div> <!-- end post card somewhere here -->
