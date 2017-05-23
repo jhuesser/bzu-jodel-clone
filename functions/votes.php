@@ -136,7 +136,7 @@ function voteComment( $comment2vote, $how2vote){
 		}
 	}
 	$postfields = "{\n  \n  \"votes_cnt\": \"$votes\",\n  \"score\": \"$score\"\n}";
-	$voted = putCall($apiroot . "comments/" . $comment2vote,$postfields);
+	$voted = postCall($apiroot . "comments/" . $comment2vote,$postfields);
 
 	$postfields = "{\n  \n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$comment2vote\"\n}";
 	$uservoted = postCall($apiroot . "commentvotes", $postfields);
