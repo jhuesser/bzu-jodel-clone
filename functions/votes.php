@@ -12,7 +12,7 @@
  * @since 0.3
  */
 function voteJodel($jodel2vote, $how2vote){
-	global $apiroot, $baseurl;
+	global $apiroot, $baseurl, $config;
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2vote;
 	$jodeljson = getCall($callurl);
@@ -41,12 +41,12 @@ function voteJodel($jodel2vote, $how2vote){
 			$score = $score - $config->postmeta['get_downvote'];		}
 	}
 	//Update votes & score of post in DB
-	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
+	$postfields = "{\n  \n  \"votes_cnt\": \"$votes\",\n  \"score\": \"$score\"\n}";
 	$callurl = $apiroot . "jodels/" . $jodel2vote;
 	$voted = putCall($callurl,$postfields);
 	$userid = $_SESSION['userid'];
 	//Wirte to DB, that this user now voted on this post
-	$postfields = "{\n  \n  \"userIDFK\": $userid,\n  \"jodelIDFK\": $jodel2vote\n}";
+	$postfields = "{\n  \n  \"userIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$jodel2vote\"\n}";
 	$callurl = $apiroot . "jodelvotes";
 	$uservoted = postCall($callurl,$postfields);
 
@@ -70,9 +70,9 @@ function voteJodel($jodel2vote, $how2vote){
 	if ($how2vote == "up"){
 		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
 	} elseif ($how2vote == "down"){
-		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_downvote'];
+		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['get_downvote'];
 	}
-	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
+	$postfields = "{\n  \n  \"karma\": \"$karmaFromAuthor\"\n}";
 	$callurl = $apiroot . "jodlers/" . $author;
 	$karmaupdated = putCall($callurl, $postfields);
 
@@ -82,7 +82,7 @@ function voteJodel($jodel2vote, $how2vote){
 	} elseif ($how2vote == "down"){
 		$voterKarma = $voterKarma - $config->karma_calc['do_downvote'];
 	}
-	$postfields = "{\n  \n  \"karma\": $voterKarma\n}";
+	$postfields = "{\n  \n  \"karma\": \"$voterKarma\"\n}";
 	$callurl = $apiroot . "jodlers/" . $userid;
 	$karmaupdated = putCall($callurl, $postfields);
 
@@ -109,7 +109,7 @@ header('Location: ' . $baseurl . 'jodels.php#' . $jodel2vote);
  * @since 0.3
  */
 function voteComment( $comment2vote, $how2vote){
-	global $apiroot, $baseurl;
+	global $apiroot, $baseurl, $config;
 	$userid = $_SESSION['userid'];
 	$apiroot = $config->apiUrl;
 	$commentsjson = getCall($apiroot . "comments?transform=1&filter=commentID,eq," . $comment2vote);
