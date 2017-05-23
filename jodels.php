@@ -9,6 +9,7 @@
 	require 'functions/apicalls.php';
 	$config = require('config.php');
 	require 'functions/votes.php';
+	require 'functions/usermanipulation.php';
 	$apiroot = $config->apiUrl;
 	$baseurl = $config->baseUrl;
 
@@ -29,6 +30,17 @@
 	}
 	$_SESSION['karma'] = $karma;
 	$_SESSION['acctype'] = $accstate;
+
+	echo "karma: " . $karma . "<br>config: " . $config->karma_calc['promote_mod'] . "<br> accstate" . $accstate . "<br>";
+	if($karma >= $config->karma_calc['promote_to_mod'] && $accstate == 1){
+		$mycaps['promote_to_mod'] == true;
+		echo "caps: " . $mycaps . "<br>mycaps " . $mycaps['promote_to_mod'] . "<br>";
+		$updated = manipulateUser($userid, 2, $mycaps);
+		echo $updated . "<br>";
+		//unset($mycaps);
+		echo $mycaps . "<br>" . $mycaps['promote_to_mod'] . "<br>";
+
+	}
 
 	//if joels.php?upvotejodel=$jodelID is called, upvote it
 	if(isset($_GET['upvotejodel'])){
