@@ -28,7 +28,7 @@
 		if($type == "post"){
 			$middle = "jodeldata";
 			$filter = "filter=jodelID,eq,";
-		} elseif($type = "comments"){
+		} elseif($type = "comment"){
 			$middle = "comments";
 			$filter = "filter=commentID,eq,";
 		}
@@ -63,12 +63,12 @@
 				$newscore = $score + $config->postmeta['mod_approve'];
 				$putfields = "{\n  \"score\": \"$newscore\"\n}";
 				//change API URLe from view to table (for POST calls)
-				if($middle = "jodeldata"){
+				if($middle == "jodeldata"){
 					$middle = "jodels";
 				}
 				//register new score & mod report to DB
 				$approved = putCall($apiroot . $middle . "/" . $post, $putfields);
-				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
 				$moded = postCall($apiroot . "moderated", $postfields);
 				break;
 			case "deny":
@@ -76,21 +76,20 @@
 				//calculate new score
 				$newscore = $score - $config->postmeta['mod_deny'];
 				$putfields = "{\n  \"score\": \"$newscore\"\n}";
+				echo "putfields: ". $putfields . "<br>middle: " . $middle;
 				//switch view --> table
-				if($middle = "jodeldata"){
+				if($middle == "jodeldata"){
 					$middle = "jodels";
 				}
 				//save to DB
 				$denied = putCall($apiroot . $middle . "/" . $post, $putfields);
-				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
 				$moded = postCall($apiroot . "moderated", $postfields);
-
-				
-
+			
 			break;
 			case "idc":
 				//mod doesn't know what to do, just save modreport in DB
-				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
 				$moded = postCall($apiroot . "moderated", $postfields);
 				break;
 		}
@@ -159,7 +158,7 @@
 			array_push($modposts, $moded['jodelIDFK']);
 		}
 		//get all comments this mod has already voted on
-		$commentjson = getCall($apiroot . "moderated?transform=1&filter=commentIDFK,eq," . $userid);
+		$commentjson = getCall($apiroot . "moderated?transform=1&filter=jodlerIDFK,eq," . $userid);
 		$commentarray = json_decode($commentjson, true);
 		$modcom = array();
 		foreach($commentarray['moderated'] as $moded){
@@ -196,7 +195,7 @@
 						<div class="reason">
 							<?php echo "This post is reported beacause of " . $reason . ".";?>
 						</div>
-						<div class="card card-inverse mb-3 text-center" id="<?php echo $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
+						<div class="card card-inverse mb-3 text-center" id="<?php echo "post-" . $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
   							<div class="card-block">
     							<blockquote class="card-blockquote">
 									<?php
@@ -237,10 +236,61 @@
 			} //print post
 			
 			} elseif($type == "comment") {
+
+				foreach($contentarray['comments'] as $comment){
+					//but only if this mod didn't vote already
+					if(!in_array($comment['commentID'], $modcom)){
+						//get some details of the parent post
+						$parentID = $comment['jodelIDFK'];
+						$parentpostjson = getCall($apiroot . "jodeldata/?transform=1&filter=jodelID,eq," . $parentID);
+						$parentpost = json_decode($parentpostjson, true);
+						foreach($parentpost['jodeldata'] as $post){
+							$comments_cnt = $post['comments_cnt'];
+							$colorhex = $post['colorhex'];
+						}
+
+						?>
+						<div class="reason">
+							<?php echo "This comment is reported beacause of " . $reason . ".";?>
+						</div>
+						<div class="card card-inverse mb-3 text-center" id="<?php echo "com-" . $comment['commentID'];?>" style="background-color: #<?php echo $colorhex;?>;">
+  							<div class="card-block">
+    							<blockquote class="card-blockquote">
+									<?php
+									echo $comment['comment'];?>
+		 							<!-- number of votes -->
+									<div class="jodelvotes">
+										<a href="#"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
+										<?php echo $comment['votes_cnt'] . "<br>";?>
+										<a href="#"<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+									</div>
+									<div class="clear"></div>
+									<!-- end number of votes -->
+									<!-- post metadata -->
+									<div class="jodelmeta">
+										<?php
+											$timeago = jodelage($comment['timestamp']);
+										?>
+										<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><span id="<?php echo 'time-' . $comment['comment'];?>"><?php echo $timeago;?></span>
+										<?php echo " " ;?><a href="../comments.php?showcomment=<?php echo $comment['jodelIDFK'];?>"><i class="fa fa-comment" aria-hidden="true"></i><?php echo $comments_cnt;?></a>
+									</div>
+									<!-- end post metadata -->
+								</blockquote>
+  							</div> <!-- end post card somewhere here -->
+						</div>
+						<div class="mod-buttons">
+							<a href="?deny=<?php echo $comment['commentID'];?>&type=<?php echo $type;?>"><i class="fa fa-times-circle mod-deny" aria-hidden="true"></i></a>
+							<a href="?idc=<?php echo $comment['commentID'];?>&type=<?php echo $type;?>"><i class="fa fa-dot-circle-o mod-idc" aria-hidden="true"></i></a>
+							<a href="?approve=<?php echo $comment['commentID'];?>&type=<?php echo $type;?>"><i class="fa fa-check-circle mod-approve" aria-hidden="true"></i></a>	
+						</div>
+
+					<?php
 			
 			}
 
 
+		}
+			}
 		}
 	?>
 
