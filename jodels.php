@@ -31,11 +31,13 @@
 	$_SESSION['karma'] = $karma;
 	$_SESSION['acctype'] = $accstate;
 
+	//If a user is a normal user and has enough reputation, promote to mod
 	if($karma >= $config->karma_calc['promote_mod'] && $accstate == 1){
+		//set dummy caps for manipulateUserFunction
 		$mycaps = array();
 		$mycaps['promote_to_mod'] = true;
 		$updated = manipulateUser($userid, 2, $mycaps);
-		echo $updated . "<br>";
+		//destroy caps to aviod abuse
 		unset($mycaps);
 
 	}
