@@ -8,3 +8,14 @@ This webapp is a clone of the famous studend app jodel (jodel.com). This is a pr
 ![Closed Pull Requests](https://img.shields.io/github/issues-pr-closed-raw/jhuesser/bzu-jodel-clone.svg)
 ![Release](https://img.shields.io/github/release/jhuesser/bzu-jodel-clone/all.svg)
 ![Downloads](https://img.shields.io/github/downloads/jhuesser/bzu-jodel-clone/total.svg)
+![404](https://img.shields.io/badge/404-badge%20not%20found-red.svg)
+![Glutenfree](https://img.shields.io/badge/gluten-free-brightgreen.svg)
+![Nuts](https://img.shields.io/badge/may%20contains%20traces%20of%20-nutes%20and%20peanuts-yellow.svg)
+![Built by](https://img.shields.io/badge/built%20by-sys%20admins-blue.svg)
+![Awsome](https://img.shields.io/badge/awsome%20level-swiss-red.svg)
+![license](https://img.shields.io/github/license/jhuesser/bzu-jodel-clone.svg)
+
+![DomaynTec Logo](http://www.domayntec.ch/wp-content/uploads/2016/02/schriftzug-2.png)
+
+# Screenshots
+![Screenshot](http://www.domayntec.ch/wp-content/uploads/2017/05/socialdomayn.png)

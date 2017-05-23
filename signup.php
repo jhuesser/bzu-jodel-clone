@@ -5,8 +5,9 @@
 	$title = "Sign up | SocialDomayn";
 	$stylesheet = "login.css";
 	include 'functions/header.php';
-	include 'functions/apicalls.php';
-	$config = include('config.php');
+	require 'functions/apicalls.php';
+	$config = require('config.php');
+	$apiroot = $config->apiUrl;
 
 	if(isset($_GET['register'])) {
 		//User wants to register
@@ -39,7 +40,7 @@
  			}
 			//check if username is already taken
  			if(!$error) { 
-				$caller = "https://jodel.domayntec.ch/api.php/jodlers?transform=1&filter=jodlerHRID,eq," . $username;
+				$caller =  $apiroot . "jodlers?transform=1&filter=jodlerHRID,eq," . $username;
 				$resp = getCall($caller);
 				if($resp !== '{"jodlers":[]}') {
 	 				//recived empty JSON
@@ -55,7 +56,7 @@
 				//remove special chars, to avoid injection
 				$username = htmlspecialchars($username, ENT_QUOTES);
 				//register the user
- 				$caller ="https://jodel.domayntec.ch/api.php/jodlers";
+ 				$caller = $apiroot . "jodlers";
  				$postdata = "{\n  \"jodlerHRID\": \"$username\",\n  \"karma\": 50,\n  \"account_state\": 1,\n  \"passphrase\": \"$password_hash\"\n}";
 				$userid = postCall($caller, $postdata);
 				//response is ID of the new user
@@ -71,7 +72,22 @@
  			} 
 		}
 
-		if(isset($errorMsg)) {
+		
+		}
+
+?>
+<div id="top"></div>
+<!-- main menu -->
+<ul class="nav ">
+	<li class="nav-item">
+		<img src="img/domaynW.png" alt="DomaynTec Logo" width="30%">
+	</li>
+  
+</ul>
+<!-- end main menu -->
+<div class="test"></div>
+<?php
+if(isset($errorMsg)) {
 			//Show error message
 			?>
 			<div class="alert alert-danger" role="alert">
@@ -85,12 +101,11 @@
   				<strong>Perfect!</strong> <?php echo $successMsg;?>
 			</div>
 			<?php
-		}
+	}?>
 
-
-	}
-?>
-
+<div class="alert alert-warning" role="alert">
+  <strong>Warning!</strong> This is a test environment. Every user that is not approved by the admins / developer gets banned.
+</div>
 <!-- signup form -->
 <div class="container">
 	<div class="wrapper">
@@ -110,3 +125,4 @@
 	</div>
 </div>
 <!-- end form -->
+<?php include 'functions/footer.php';

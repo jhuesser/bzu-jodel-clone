@@ -1,20 +1,21 @@
 <?php
 	session_start();
 	//Include functions & meta data
-	include '../functions/apicalls.php';
-	$config = include('../config.php');
+	require '../functions/apicalls.php';
+	$config = require('../config.php');
 	$title = "Add color | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
 
 	//check if user is logged in & has required caps
-	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_add_color'])) {
-		header('Location: ' . $config->baseUrl . '/login.php');
+	$mycaps = $_SESSION['my_caps'];
+	if(!isset($_SESSION['userid']) || $mycaps['add_color'] == false) {
+		header('Location: ' . $config->baseUrl . 'user.php');
 	}
 
 	//set up working variables
 	$userid = $_SESSION['userid'];
-	$apiurl = $config->apiUrl;
+	$apiroot = $config->apiUrl;
 
 	if(isset($_GET['addcolor'])){
 		//user wants to add a color
@@ -23,7 +24,7 @@
 		$colorhex = $_POST['colorcode'];
 		//setup post fields & call URL
 		$postfields = "{\n  \"colordesc\": \"$colorname\",\n  \"colorhex\": \"$colorhex\"\n}";
-		$colorurl = $apiurl . "colors";
+		$colorurl = $apiroot . "colors";
 		//POST to the api url
 		postCall($colorurl, $postfields);
 		//redirect 
@@ -35,7 +36,7 @@
 		//get ID of color to delete
 		$colorid = $_GET['delcol'];
 		//setup call URL
-		$callurl = $apiurl . "colors/" . $colorid;
+		$callurl = $apiroot . "colors/" . $colorid;
 		//Send DELETE call to url
 		$deletedColors = deleteCall($callurl);
 		//redirect
@@ -75,7 +76,7 @@
 	</div>
 	<?php
 		//get JSON of all colors, save it in PHP array
-		$colorurl = $apiurl . "colors?transform=1";
+		$colorurl = $apiroot . "colors?transform=1";
 		$colorjson = getCall($colorurl);
 		$colors = json_decode($colorjson, true);
 	?>

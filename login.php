@@ -5,8 +5,8 @@
 	$stylesheet = "login.css";
 	include 'functions/header.php';
 	//Load API functions
-	include 'functions/apicalls.php';
-	$config = include('config.php');
+	require 'functions/apicalls.php';
+	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 
 	//If user sent loginform, set values
@@ -49,12 +49,32 @@
 				$_SESSION['username'] = $jodlerHRID;
 				header('Location: ' . $config->baseUrl . 'jodels.php');
 	 			// echo '<a href="index.php">openindex</a>';
- 			} else {
+			 } elseif (isset($accountstate) && $accountstate == 0){
+				$errorMessage = "User no longer in system.";
+			 } 
+			 else {
 	 			//Login failed
 				$errorMessage = $config->app_msgs['login_fail'];
 			}
 		}
-		if(isset($errorMessage)) {
+		
+
+	}
+
+
+?>
+<div id="top"></div>
+<!-- main menu -->
+<ul class="nav ">
+	<li class="nav-item">
+		<img src="img/domaynW.png" alt="DomaynTec Logo" width="30%">
+	</li>
+  
+</ul>
+<!-- end main menu -->
+<div class="test"></div>
+<?php
+	if(isset($errorMessage)) {
 			//display login message
 			?>
  			<div class="alert alert-danger" role="alert">
@@ -62,10 +82,10 @@
 			</div>
 			<?php
 		}
-
-	}
-
 ?>
+<div class="alert alert-warning" role="alert">
+  <strong>Warning!</strong> This is a test environment. Every user that is not approved by the admins / developer gets banned.
+</div>
 <!-- login form -->
 <div class="container">
 	<div class="wrapper">
@@ -85,3 +105,5 @@
 </div>
 
 <!-- end login form -->
+<?php
+include 'functions/footer.php';

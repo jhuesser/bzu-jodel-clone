@@ -5,7 +5,7 @@
  * @param int $acctype ID of user to check
  * @return string The account type
  *
- * @author Jonas Hüsser
+ * @author Jonas Hï¿½sser
  *
  * @SuppressWarnings(PHPMD.ElseExpression)
  *
@@ -37,4 +37,52 @@
 	 $usertype->typeID = $acctype;
 	 $usertype->typedesc = $type;
 	 return $usertype;
+ }
+
+ /**
+ *
+ * @param string $config The config
+ * @param string $content post or comment
+ * @param int $contentID ID of post or comment
+ * @param int $reason Reason of reporting
+ * @return mixed ID of report or null if failed
+ *
+ * @author Jonas HÃ¼sser
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ *
+ * @since 0.5
+ */
+ function reportContent( $content, $contentID, $reason){
+	 global $apiroot;
+	 $userid = $_SESSION['userid'];
+	 if($content == "post"){
+		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"jodelDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \"$userid\"\n}";
+		 $callurl = $apiroot . "jodels?filter=jodelID,eq," . $contentID . "&transform=1";
+		 $jodeljson = getCall($callurl);
+		 $scores = json_decode($jodeljson, true);
+		 foreach($scores['jodels'] as $jodelscore){
+			 $score = $jodelscore['score'];
+		 }
+		 $newscore = $score - $config->postmeta['get_report'];
+		 $callurl = $apiroot . "jodels/" . $contentID;
+		 $putfields = "{\n  \n  \"score\": \"$newscore\"\n \n}";
+		 $scoreupdate = putCall($callurl, $putfields);
+
+	 } elseif($content == "comment"){
+		 $postfields = "{\n  \n  \"abuseIDFK\": \"$reason\",\n  \"commentIDFK\": \"$contentID\"\n,\n  \"jodlerIDFK\": \"$userid\"\n}";
+		 $callurl = $apiroot . "comments?filter=commentID,eq," . $contentID . "&transform=1";
+		 $commentjson = getCall($callurl);
+		 $scores = json_decode($commentjson, true);
+		 foreach($scores['comments'] as $commentscore){
+			 $score = $commentscore['score'];
+		 }
+		 $newscore = $score - $config->postmeta['get_report'];
+		 $callurl = $apiroot . "comments/" . $contentID;
+		 $putfields = "{\n  \n  \"score\": \"$newscore\"\n \n}";
+		 $scoreupdate = putCall($callurl, $putfields);
+	 }
+	 $callurl = $apiroot . "reports";
+	 $resp = postCall($callurl, $postfields);
+	 return $resp;
  }
