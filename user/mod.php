@@ -215,10 +215,17 @@
 			</div>
 
 			<?php
+				
 				}
 
 
-			}}
+			}
+			} else {?>
+					<div class="alert alert-warning" role="alert">
+  <strong>Wow!</strong> There are no post to moderate at the moment. Keep up the good work!
+</div><?php
+			
+			}
 
 
 		}
