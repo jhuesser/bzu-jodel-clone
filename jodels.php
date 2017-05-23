@@ -31,14 +31,12 @@
 	$_SESSION['karma'] = $karma;
 	$_SESSION['acctype'] = $accstate;
 
-	echo "karma: " . $karma . "<br>config: " . $config->karma_calc['promote_mod'] . "<br> accstate" . $accstate . "<br>";
-	if($karma >= $config->karma_calc['promote_to_mod'] && $accstate == 1){
-		$mycaps['promote_to_mod'] == true;
-		echo "caps: " . $mycaps . "<br>mycaps " . $mycaps['promote_to_mod'] . "<br>";
+	if($karma >= $config->karma_calc['promote_mod'] && $accstate == 1){
+		$mycaps = array();
+		$mycaps['promote_to_mod'] = true;
 		$updated = manipulateUser($userid, 2, $mycaps);
 		echo $updated . "<br>";
-		//unset($mycaps);
-		echo $mycaps . "<br>" . $mycaps['promote_to_mod'] . "<br>";
+		unset($mycaps);
 
 	}
 
