@@ -10,8 +10,9 @@
 	include '../functions/header.php';
 
 	//check if user is logged in & has required caps
-	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_reset_paswd'])) {
-		header('Location: ' . $config->baseUrl . 'login.php');
+	$mycaps = $_SESSION['my_caps'];
+	if(!isset($_SESSION['userid']) || $mycaps['reset_paswd'] == false) {
+		header('Location: ' . $config->baseUrl . 'user.php');
 	}
 
 	//set up working variables
@@ -69,7 +70,8 @@
 		$jodlers = json_decode($jodlersjson, true);
 
 		foreach($jodlers['jodlers'] as $jodler){
-			$color = getRandomColor($apiroot);
+			$colors = getRandomColor();
+			$color = $colors['colorhex'];
 			//show all colors
 			?><div class="card card-inverse mb-3 text-center" id="<?php echo $jodler['jodlerID'];?>" style="background-color: #<?php echo $color;?>;">
   		<div class="card-block">
