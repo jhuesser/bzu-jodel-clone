@@ -185,7 +185,7 @@ function voteComment( $comment2vote, $how2vote){
 		//user has already voted on this post
 	$_SESSION['errorMsg'] = "Already voted";
 }
-//header('Location: ' . $baseurl . 'comments.php?showcomment=' . $postID . '#' . $comment2vote);
+header('Location: ' . $baseurl . 'comments.php?showcomment=' . $postID . '#' . $comment2vote);
 
 
 }
