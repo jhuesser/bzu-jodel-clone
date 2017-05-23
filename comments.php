@@ -35,30 +35,33 @@ if(isset($_GET['showcomment'])){
 
 
 } else {
-	die("You need to select a post");
+	die("You need to select a post. <a href=\"index.php\">Go back</a>.");
 }
 
 if(isset($_GET['upvotecomment'])){
+	//upvote a comment
 	voteComment( $_GET['upvotecomment'], "up");
-	
 }
 
 
 if(isset($_GET['downvotecomment'])){
+	//Downvote a comment
 	voteComment( $_GET['downvotecomment'], "down");
 }
 
 if(isset($_GET['upvotejodel'])){
+	//upvote post
 	voteJodel( $_GET['upvotejodel'], "up");
 }
 
 if(isset($_GET['downvotejodel'])){
+	//downvote post
 	voteJodel( $_GET['downvotejodel'], "down");
 }
 
 
 ?>
-
+<!-- main menu -->
 <div id="top"></div>
 <ul class="nav justify-content-center">
 		<li class="nav-item">
@@ -73,6 +76,8 @@ if(isset($_GET['downvotejodel'])){
   </li>
 </ul>
 <div class="test"></div>
+<!-- end of main menu -->
+
 <?php
 if(isset($_SESSION['errorMsg'])) {
  ?>
@@ -84,97 +89,92 @@ if(isset($_SESSION['errorMsg'])) {
 <?php
 
 }
+//set API URLs and filters
 $jodelUrl = $apiroot . "jodels?transform=1";
 $commentsUrl = $apiroot . "comments?transform=1";
 $filter = "&filter=jodelIDFK,eq,$postID";
 
+//get post to show comments from
 $caller = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $postID;
 $jodeljson = getCall($caller);
-		$jodels = json_decode($jodeljson,true);
-		foreach($jodels['jodeldata'] as $jodel) {
-			$colorhex = $jodel['colorhex'];
-			$jodelauthor = $jodel['jodlerIDFK'];
-			?>
-			
-			<div class="card card-inverse mb-3 text-center" style="background-color: #<?php echo $colorhex;?>;">
-  <div class="card-block">
-    <blockquote class="card-blockquote">
-<?php echo $jodel['jodel'];?>
+//save post in array
+$jodels = json_decode($jodeljson,true);
+foreach($jodels['jodeldata'] as $jodel) {
+	//get some data about the post
+	$colorhex = $jodel['colorhex'];
+	$jodelauthor = $jodel['jodlerIDFK'];
+	?>
+	<!-- show post -->
+	<div class="card card-inverse mb-3 text-center" style="background-color: #<?php echo $colorhex;?>;">
+		<div class="card-block">
+  	  		<blockquote class="card-blockquote">
+				<?php echo $jodel['jodel'];?>
 
-<div class="jodelvotes">
+				<div class="jodelvotes">
 			
-				<a href="?showcomment=<?php echo $jodel['jodelID'];?>&upvotejodel=<?php echo $jodel['jodelID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
-				<?php echo $jodel['votes_cnt'] . "<br>";?>
-				<a href="?showcomment=<?php echo $jodel['jodelID'];?>&downvotejodel=<?php echo $jodel['jodelID'];?>"<i class="fa fa-angle-down" aria-hidden="true"></i></a>
-			</div>
-			<div class="jodelmeta">
-				<?php
-				$timeago = jodelage($jodel['createdate']);
+					<a href="?showcomment=<?php echo $jodel['jodelID'];?>&upvotejodel=<?php echo $jodel['jodelID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
+					<?php echo $jodel['votes_cnt'] . "<br>";?>
+					<a href="?showcomment=<?php echo $jodel['jodelID'];?>&downvotejodel=<?php echo $jodel['jodelID'];?>"<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+				</div>
+				<div class="jodelmeta">
+					<?php
+					$timeago = jodelage($jodel['createdate']);
 			
-				?>
-				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
-				<a href="report.php?type=post&id=<?php echo $jodel['jodelID'];?>"><i class="fa fa-flag" aria-hidden="true"></i></a>
-				<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa user-circle" aria-hidden="true"></i>';}?>
-
-</blockquote>
-  </div>
-</div><?php
+					?>
+					<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
+					<a href="report.php?type=post&id=<?php echo $jodel['jodelID'];?>"><i class="fa fa-flag" aria-hidden="true"></i></a>
+					<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+				</div>
+			</blockquote>
+  		</div>
+	</div>
+<!-- end show post -->
+<?php
 		}
 
-
+//get comments of post
 $comments = getCall($commentsUrl . $filter);
-
+//save comments in array
 $postdata = json_decode($comments, true);
 foreach($postdata['comments'] as $comment){
-	for($i=0; $i < count($comment['commentID']); $i++){
+	if($comment['votes_cnt'] > $config->postmeta['needed_downvotes']){
+		//get infos about the comment
 		$jodelID = $comment['jodelIDFK'];
-		
+		//lookup comment author		
 		$authorurl = $apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $comment['jodlerIDFK'];
 		$authorjson = getCall($authorurl);
 		$author = json_decode($authorjson, true);
 		foreach($author['jodlers'] as $user){
+			//get account state of the author
 			$accstate = $user['account_state'];
 		}
-
-
-
-		?><div class="card card-inverse mb-3 text-center" id="<?php echo $comment['commentID'];?>" style="background-color: #<?php echo $colorhex;?>;">
-  <div class="card-block">
-    <blockquote class="card-blockquote">
+		?>
+		<!-- show comment -->
+		<div class="card card-inverse mb-3 text-center" id="<?php echo $comment['commentID'];?>" style="background-color: #<?php echo $colorhex;?>;">
+  			<div class="card-block">
+    			<blockquote class="card-blockquote">
+					<?php
+		 			echo $comment['comment'];?>
+					<div class="jodelvotes">
+						<a href="?showcomment=<?php echo $postID; ?>&upvotecomment=<?php echo $comment['commentID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
+						<?php echo $comment['votes_cnt'] . "<br>";?>
+						<a href="?showcomment=<?php echo $postID; ?>&downvotecomment=<?php echo $comment['commentID'];?>"<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+					</div>
+					<div class="jodelmeta">
+						<?php
+						$timeago = jodelage($comment['timestamp']);
+						?>
+						<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
+						<a href="report.php?type=comment&id=<?php echo $comment['commentID'];?>"><i class="fa fa-flag" aria-hidden="true"></i></a>
+						<?php if ($accstate == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+						<?php if ($jodelauthor == $comment['jodlerIDFK']){echo '<i class="fa fa-trophy" aria-hidden="true"></i> OP';}?>
+					</div>
+				</blockquote>
+  			</div>
+		</div>
 		<?php
-			if($comment['votes_cnt'] < -5){
-				echo "This post was voted out by the community";
-				?></blockquote>
-  </div>
-</div><?php
-			} else{
-		 echo $comment['comment'];?>
-		<div class="jodelvotes">
-			
-				<a href="?showcomment=<?php echo $postID; ?>&upvotecomment=<?php echo $comment['commentID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
-				<?php echo $comment['votes_cnt'] . "<br>";?>
-				<a href="?showcomment=<?php echo $postID; ?>&downvotecomment=<?php echo $comment['commentID'];?>"<i class="fa fa-angle-down" aria-hidden="true"></i></a>
-			</div>
-			<div class="jodelmeta">
-				<?php
-			
-				$timeago = jodelage($comment['timestamp']);
-			
-				?>
-				<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
-				<a href="report.php?type=comment&id=<?php echo $comment['commentID'];?>"><i class="fa fa-flag" aria-hidden="true"></i></a>
-				<?php if ($accstate == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
-				<?php if ($jodelauthor == $comment['jodlerIDFK']){echo '<i class="fa fa-trophy" aria-hidden="true"></i> OP';}?>
-				
-			
-		</blockquote>
-  </div>
-</div><?php
-
-
-
 	}
-}
+
 }
 ?>
 
