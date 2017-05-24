@@ -25,7 +25,7 @@ fi
 find $workingdir -name '*.php' -print | cpio -pvdumB $wwwroot
 
 read -p "Enter your mysql username: " username
-read -p -s "Enter your mysql password: " password
+read -s -p "Enter your mysql password: " password
 read -p "Enter the mysql hostname: " hostname
 
 sed -i -e "s/myuser/${username}/g" ${workingdir}/setup/database_setup.sql
