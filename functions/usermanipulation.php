@@ -28,7 +28,7 @@
 			}
 			break;
 		case 2:
-			 if($mycaps['promote_to_mod'] == true){
+			 if($mycaps['promote_to_mod'] == true ){
 			 $execute = true;
 			}
 			break;
