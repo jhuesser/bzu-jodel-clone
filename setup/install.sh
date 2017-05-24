@@ -22,8 +22,15 @@ then
 	wwwroot=$tempwww
 fi
 
-mkdir -p $wwwroot/functions
-mkdir -p $wwwroot/user
-mkdir -p $wwwroot/css
+find $workingdir -name '*.php' -print | cpio -pvdumB $wwwroot
 
-#find $workingdir -name "*.php" -exec cp -i {} -t $wwwroot \;
+read -p "Enter your mysql username" username
+read -p "Enter your mysql password" password
+read -p "Enter the mysql hostname" hostname
+
+sed -i -e 's/myuser/${username}/g' ${workingdir}/setup/database_setup.sql
+sed -i -e 's/myuser/${username}/g' ${workingdir}/setup/database_setup.sql
+
+mysql -h $hostname -u $username -p$password < ${workingdir}/setup/database_setup.sql
+
+echo "Don't forget to edit your config.php file"

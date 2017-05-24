@@ -186,7 +186,7 @@ CREATE TABLE `reports` (
 --
 DROP TABLE IF EXISTS `jodeldata`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`username`@`localhost` SQL SECURITY DEFINER VIEW `jodeldata`  AS  select `jodels`.`jodelID` AS `jodelID`,`jodels`.`jodlerIDFK` AS `jodlerIDFK`,`jodels`.`jodel` AS `jodel`,`jodels`.`votes_cnt` AS `votes_cnt`,`jodels`.`comments_cnt` AS `comments_cnt`,`jodels`.`score` AS `score`,`jodels`.`createdate` AS `createdate`,`colors`.`colorID` AS `colorID`,`colors`.`colordesc` AS `colordesc`,`colors`.`colorhex` AS `colorhex`,`jodlers`.`account_state` AS `account_state` from ((`jodlers` left join `jodels` on((`jodels`.`jodlerIDFK` = `jodlers`.`jodlerID`))) left join `colors` on((`jodels`.`colorIDFK` = `colors`.`colorID`))) where (`jodels`.`jodelID` <> 'null') order by `jodels`.`jodelID` desc ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`myuser`@`myhost` SQL SECURITY DEFINER VIEW `jodeldata`  AS  select `jodels`.`jodelID` AS `jodelID`,`jodels`.`jodlerIDFK` AS `jodlerIDFK`,`jodels`.`jodel` AS `jodel`,`jodels`.`votes_cnt` AS `votes_cnt`,`jodels`.`comments_cnt` AS `comments_cnt`,`jodels`.`score` AS `score`,`jodels`.`createdate` AS `createdate`,`colors`.`colorID` AS `colorID`,`colors`.`colordesc` AS `colordesc`,`colors`.`colorhex` AS `colorhex`,`jodlers`.`account_state` AS `account_state` from ((`jodlers` left join `jodels` on((`jodels`.`jodlerIDFK` = `jodlers`.`jodlerID`))) left join `colors` on((`jodels`.`colorIDFK` = `colors`.`colorID`))) where (`jodels`.`jodelID` <> 'null') order by `jodels`.`jodelID` desc ;
 
 -- --------------------------------------------------------
 
@@ -195,7 +195,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`username`@`localhost` SQL SECURITY DEFINER V
 --
 DROP TABLE IF EXISTS `reportdata`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`username`@`localhost` SQL SECURITY DEFINER VIEW `reportdata`  AS  select `reports`.`reportID` AS `reportID`,`reports`.`commentIDFK` AS `commentIDFK`,`reports`.`jodelDFK` AS `jodelDFK`,`reports`.`jodlerIDFK` AS `jodlerIDFK`,`abuse`.`abusedesc` AS `abusedesc`,`jodels`.`jodel` AS `jodel` from ((`jodels` left join `reports` on((`reports`.`jodelDFK` = `jodels`.`jodelID`))) left join `abuse` on((`reports`.`abuseIDFK` = `abuse`.`abuseID`))) where (`reports`.`reportID` <> 'null') ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`myuser`@`myhost` SQL SECURITY DEFINER VIEW `reportdata`  AS  select `reports`.`reportID` AS `reportID`,`reports`.`commentIDFK` AS `commentIDFK`,`reports`.`jodelDFK` AS `jodelDFK`,`reports`.`jodlerIDFK` AS `jodlerIDFK`,`abuse`.`abusedesc` AS `abusedesc`,`jodels`.`jodel` AS `jodel` from ((`jodels` left join `reports` on((`reports`.`jodelDFK` = `jodels`.`jodelID`))) left join `abuse` on((`reports`.`abuseIDFK` = `abuse`.`abuseID`))) where (`reports`.`reportID` <> 'null') ;
 
 --
 -- Indizes der exportierten Tabellen
