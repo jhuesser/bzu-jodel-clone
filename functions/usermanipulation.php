@@ -47,7 +47,7 @@
 	 }
  
 	if($execute == true){
-		$callurl = $apiroot . "/jodlers/" . $user;
+		$callurl = $apiroot . "jodlers/" . $user;
 		$postfields = "{\n  \n  \"account_state\": \"$role\"\n\n}";
 		$changes = putCall($callurl, $postfields);
 	} 

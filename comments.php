@@ -12,6 +12,7 @@ $config = require('config.php');
 require 'functions/votes.php';
 $apiroot = $config->apiUrl;
 $baseurl = $config->baseUrl;
+$mainaction = true;
 
 //check if user is logged in. if not, redirect to login page
 if(!isset($_SESSION['userid'])) {
@@ -39,27 +40,30 @@ if(isset($_GET['showcomment'])){
 }
 
 if(isset($_GET['upvotecomment'])){
+	$mainaction = false;
 	//upvote a comment
 	voteComment( $_GET['upvotecomment'], "up");
 }
 
 
 if(isset($_GET['downvotecomment'])){
+	$mainaction = false;
 	//Downvote a comment
 	voteComment( $_GET['downvotecomment'], "down");
 }
 
 if(isset($_GET['upvotejodel'])){
+	$mainaction = false;
 	//upvote post
 	voteJodel( $_GET['upvotejodel'], "up");
 }
 
 if(isset($_GET['downvotejodel'])){
+	$mainaction = false;
 	//downvote post
 	voteJodel( $_GET['downvotejodel'], "down");
 }
-
-
+if($mainaction == true){
 ?>
 <!-- main menu -->
 <div id="top"></div>
@@ -183,3 +187,4 @@ foreach($postdata['comments'] as $comment){
 
 <?php
 include 'functions/footer.php';
+}
