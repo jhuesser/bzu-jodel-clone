@@ -12,7 +12,7 @@
 	require 'functions/usermanipulation.php';
 	$apiroot = $config->apiUrl;
 	$baseurl = $config->baseUrl;
-
+	$mainaction = true;
 	if(!isset($_SESSION['userid'])) {
  		header('Location: ' . $config->baseUrl . 'login.php');
 
@@ -44,15 +44,18 @@
 
 	//if joels.php?upvotejodel=$jodelID is called, upvote it
 	if(isset($_GET['upvotejodel'])){
+		$mainaction = false;
 		voteJodel( $_GET['upvotejodel'], "up");
 		
 	}
 
 	//if jodels.php?downvotejodel=$jodelID ist called, downvote post
 	if(isset($_GET['downvotejodel'])){
+		$mainaction = false;
 		voteJodel( $_GET['downvotejodel'], "down");
 	
 	}
+	if($mainaction == true){
 	//If jodels.php?sort=$sort is called, post should be sorted
 	if(isset($_GET['sort'])){
 		$parameter = $_GET['sort'];
@@ -81,6 +84,7 @@
 		
 		}
 	}
+	
 ?>
 <!-- Top / Main Navigation -->
 <div id="top"></div>
@@ -204,3 +208,4 @@
 <?php
 //include footer
 include 'functions/footer.php';
+	}

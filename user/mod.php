@@ -7,6 +7,7 @@
 	$title = "Moderation | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
+	$mainaction = true;
 
 	//check if user is logged in & has required caps
 	$mycaps = $_SESSION['my_caps'];
@@ -21,6 +22,7 @@
 
 	//if content is moderated
 	if(isset($_GET['type']) && isset($_GET['approve']) || isset($_GET['deny']) || isset($_GET['idc'])){
+		$mainaction = false;
 		//get type of the content
 		$type = $_GET['type'];
 
@@ -111,7 +113,7 @@
 		}
 		header('Location: ' . $baseurl . 'user/mod.php');
 	}
-
+if($mainaction == true){
 ?>
 <div id="top"></div>
 <!-- main menu -->
@@ -292,6 +294,9 @@
 		}
 			}
 		}
+
+		include '../functions/footer.php';
+}
 	?>
 
 	

@@ -9,7 +9,10 @@
 	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 
+	$mainaction = true;
+
 	if(isset($_GET['register'])) {
+		$mainaction = false;
 		//User wants to register
 		//set local values for easy handling
  		$error = false;
@@ -74,6 +77,7 @@
 
 		
 		}
+		if($mainaction == true){
 
 ?>
 <div id="top"></div>
@@ -126,3 +130,4 @@ if(isset($errorMsg)) {
 </div>
 <!-- end form -->
 <?php include 'functions/footer.php';
+		}

@@ -7,6 +7,7 @@
 	$title = "Postmanagement | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
+	$mainaction = true;
 
 	//check if user is logged in & has required caps
 	$mycaps = $_SESSION['my_caps'];
@@ -59,6 +60,7 @@
 	}
 //delete a post
 if(isset($_GET['del'])){
+	$mainaction = false;
 	//get post to delete and setup delete URL for API, call it, redirect back
 	$post2del = $_GET['del'];
 	$callurl = $apiroot . "jodels/" . $post2del;
@@ -68,6 +70,7 @@ if(isset($_GET['del'])){
 
 //update a post
 if(isset($_GET['update'])){
+	$mainaction = false;
 	//get all values and do not allow injections
 	$postid = $_POST['jodelID'];
 	$author =  htmlspecialchars($_POST['author'], ENT_QUOTES);
@@ -87,7 +90,7 @@ if(isset($_GET['update'])){
 }
 
 
-
+	if($mainaction == false){
 
 	?>
 	<div class="container">
@@ -194,4 +197,4 @@ if(isset($_GET['update'])){
   				</div> <!-- end post card somewhere here -->
 			</div><?php
 
-	}
+	}}

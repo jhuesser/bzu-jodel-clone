@@ -8,6 +8,7 @@
 	$title = "Reset Password | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
+	$mainaction = true;
 
 	//check if user is logged in & has required caps
 	$mycaps = $_SESSION['my_caps'];
@@ -20,6 +21,7 @@
 	
 
 	if (isset($_GET['resetpasswd'])){
+		$mainaction == false;
 		$user2reset = $_POST['user'];
 		$newpasswd = $_POST['passwd'];
 		$password_hash = password_hash($newpasswd, PASSWORD_DEFAULT);
@@ -28,7 +30,7 @@
 		putCall($callurl, $postfields);
 		header('Location: ' . $config->baseUrl . 'user/resetpasswd.php');
 	}
-
+	if($mainaction == true){
 ?>
 
 <div id="top"></div>
@@ -99,4 +101,4 @@
 		}
 		//include footer
 		include '../functions/footer.php';
-		
+	}	

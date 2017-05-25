@@ -10,6 +10,7 @@
 	$title = "Manage Users | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
+	$mainaction = true;
 
 	//check if user is logged in & has required caps
 	$mycaps = $_SESSION['my_caps'];
@@ -22,6 +23,7 @@
 	$mycaps = $_SESSION['my_caps'];
 	
 	if(isset($_GET['deluser'])){
+		$mainaction = false;
 		//user wants to delete a color
 		//get ID of color to delete
 		$user = $_GET['deluser'];
@@ -36,30 +38,37 @@
 	
 	
 	if(isset($_GET['ban'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['ban'], 0, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['active'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['active'], 1, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['mod'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['mod'], 2, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['admin'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['admin'], 3, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['superadmin'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['superadmin'], 4, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($updated)){
+		$mainaction = false;
 		if($updated == false){
 			$_SESSION['errorMsg'] = "Something went wrong!";
 		}
 	}
+	if($mainaction == false){
 	
 	?>
 	
@@ -138,4 +147,4 @@
 		}
 		//include footer
 		include '../functions/footer.php';
-		
+	}

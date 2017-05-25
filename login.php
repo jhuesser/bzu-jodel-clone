@@ -9,8 +9,10 @@
 	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 
+	$mainaction = true;
 	//If user sent loginform, set values
 	if(isset($_GET['login'])) {
+		$mainaction = false;
  		$username = $_POST['username'];
  		$password = $_POST['password'];
  		//check if captcha is solved
@@ -60,7 +62,7 @@
 		
 
 	}
-
+	if($mainaction == true){
 
 ?>
 <div id="top"></div>
@@ -107,3 +109,4 @@
 <!-- end login form -->
 <?php
 include 'functions/footer.php';
+	}
