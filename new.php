@@ -32,6 +32,7 @@
 		//new post created
 		//encode special chars to avoid injection
 		$jodel = htmlspecialchars($_POST['jodel'], ENT_QUOTES);
+		$jodel = trim(preg_replace('/\s\s+/', ' ', $jodel));
 		//set color as local value
 		$color = $_POST['color'];
 		//insert new post in DB, $postfields as JSON with all data
