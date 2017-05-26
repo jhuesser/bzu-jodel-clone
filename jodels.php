@@ -10,6 +10,7 @@
 	$config = require('config.php');
 	require 'functions/votes.php';
 	require 'functions/usermanipulation.php';
+	require 'functions/admintools.php';
 	$apiroot = $config->apiUrl;
 	$baseurl = $config->baseUrl;
 	$mainaction = true;
@@ -167,6 +168,9 @@
 	//process posts
 
 	foreach($postdata['jodeldata'] as $post){
+		if($post['score'] <= $config->postmeta['needed_score_mod']){
+			$reported = reportContent( "post", $post['jodelID'], $config->postmeta['system_mod_id']);
+		}
 
 			//setup layout
 			if($post['votes_cnt'] > $config->postmeta['needed_downvotes']){
