@@ -65,6 +65,7 @@ return (object) array(
 	'postmeta' => array(
 		'needed_downvotes' => -5, //needed downvotes to hide the post
 		'needed_score_mod' => 50,
+		'system_mod_id' => 10,
 		'get_upvote' => 10,
 		'mod_approve' => 20,
 		'get_comment' => 5,

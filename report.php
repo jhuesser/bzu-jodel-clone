@@ -81,6 +81,7 @@ $abusearray = json_decode($absuejson, true);
 <?php 
 foreach($abusearray['abuse'] as $abuse){
 	//list all reasons
+	if($abuseID != $config->postmeta['system_mod_id']){
 	$abusedesc = $abuse['abusedesc'];
 	
 		$message = "?type=" . $type . "&id=" . $contentID . "&reason=" . $abuse['abuseID'];
@@ -88,6 +89,7 @@ foreach($abusearray['abuse'] as $abuse){
 		<a href="<?php echo $message ?>" class="list-group-item list-group-item-action"><?php echo $abusedesc; ?></a>
 
 	<?php
+	}
 
 }
 
