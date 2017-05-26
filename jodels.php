@@ -167,8 +167,17 @@
 	$postdata = json_decode($posts, true);
 	//process posts
 
+/*
+	$reportjson = getCall($apiroot . "reports?transform=1");
+	$reports = json_decode($reportjson, true);
+	$postAndResons = array();
+	foreach($reports['reports'] as $report){
+		$postAndResons[$report['jodelIDFK']] = $report['abuseIDFK'];
+	}
+	*/
+
 	foreach($postdata['jodeldata'] as $post){
-		if($post['score'] <= $config->postmeta['needed_score_mod']){
+		if($post['score'] <= $config->postmeta['needed_score_mod'] /* && $postAndResons[$post['jodelID']] != $config->postmeta['system_mod_id']*/){			
 			$reported = reportContent( "post", $post['jodelID'], $config->postmeta['system_mod_id']);
 		}
 

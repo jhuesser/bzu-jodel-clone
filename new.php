@@ -7,6 +7,7 @@
 	//Load API functions
 	require 'functions/apicalls.php';
 	require 'functions/jodelmeta.php';
+	require 'functions/admintools.php';
 	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 	$userid = $_SESSION['userid'];
@@ -45,6 +46,20 @@
 		$callurl = $apiroot . "jodlers/" . $userid;
 		$karmaupdated = putCall($callurl, $postfields);
 		//redirect to post overview
+
+		//scan for blacklistet words
+		/*$blacklistjson = getCall($apiroot . "blacklist?transform=1");
+		$blacklist = json_decode($blacklistjson, true);
+		$keywords = array();
+		foreach($blacklist['blacklist'] as $item){
+			array_push($keywords,$item['itemName']);
+		}
+		foreach($keywords as $keyword){
+			if(strpos($jodel, $keyword) !== false){
+				$reported = reportContent( "post", $posted, $config->postmeta['system_mod_id']);
+			}
+		}*/
+
 		header('Location: ' . $config->baseUrl . 'jodels.php');
 	}
 
