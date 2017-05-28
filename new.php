@@ -29,6 +29,12 @@
 	$_SESSION['acctype'] = $accstate;
 
 	if(isset($_GET['post'])){
+		if(isset($_FILES["imageFile"])){
+			echo "true";
+		} else{
+			echo "false";
+		}
+/*
 		//new post created
 		//encode special chars to avoid injection
 		$jodel = htmlspecialchars($_POST['jodel'], ENT_QUOTES);
@@ -45,8 +51,8 @@
 		$callurl = $apiroot . "jodlers/" . $userid;
 		$karmaupdated = putCall($callurl, $postfields);
 		//redirect to post overview
-		header('Location: ' . $config->baseUrl . 'jodels.php');
-	}
+		//header('Location: ' . $config->baseUrl . 'jodels.php');
+	*/}
 
 ?>
 
@@ -73,10 +79,11 @@
 ?>
 
 <!-- post form -->
-<form action="?post=1" method="POST">
+<form action="?post=1" method="POST" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="jodel">Enter your message</label>
-		<textarea class="form-control" rows="10" name="jodel" placeholder="Your post" style="color:white;background-color:#<?php echo $colorhex;?>"></textarea>
+		<textarea class="form-control" rows="10" name="jodel" placeholder="Your post" style="color:white;background-color:#<?php echo $colorhex;?>" required="true"></textarea>
+		<input type="file" name="imageFile" id="imageFile">
 	</div>
 	<!-- save the color in a hidden field -->
 	<input type="hidden" name="color" value="<?php echo $colornmb;?>">
