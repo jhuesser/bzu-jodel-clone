@@ -70,11 +70,9 @@
 		//set color as local value
 		$color = $_POST['color'];
 		//insert new post in DB, $postfields as JSON with all data
-		if($imageID == null){
-			echo "images";
+		if($imageID !== null){
 			$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n \"imageIDFK\": \"$imageID\",\n  \"jodel\": \"$jodel\"\n}";
 		} else {
-			echo "no images";
 		$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n  \"jodel\": \"$jodel\"\n}";
 		}
 		$callurl = $apiroot . "jodels";
