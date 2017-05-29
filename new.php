@@ -57,11 +57,12 @@
 			if ($uploadOk == 1) {
 					move_uploaded_file($_FILES["imageFile"]["tmp_name"], $targetfile);
 			}
+			//save image location to DB
+			$callurl = $apiroot . "images";
+			$postfields = "{\n \"path\": \"$targetfile\" \n}";
+			$imageID = postCall($callurl, $postfields);
 		
-		} else{
-			echo "false";
-		}
-/*
+		} 
 		//new post created
 		//encode special chars to avoid injection
 		$jodel = htmlspecialchars($_POST['jodel'], ENT_QUOTES);
@@ -69,7 +70,7 @@
 		//set color as local value
 		$color = $_POST['color'];
 		//insert new post in DB, $postfields as JSON with all data
-		$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n  \"jodel\": \"$jodel\"\n}";
+		$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n \"imageIDFK\": \"$imageID\",\n  \"jodel\": \"$jodel\"\n}";
 		$callurl = $apiroot . "jodels";
 		$posted = postCall($callurl, $postfields);
 		//update the authors karma for creating a post
@@ -78,8 +79,8 @@
 		$callurl = $apiroot . "jodlers/" . $userid;
 		$karmaupdated = putCall($callurl, $postfields);
 		//redirect to post overview
-		//header('Location: ' . $config->baseUrl . 'jodels.php');
-	*/}
+		header('Location: ' . $config->baseUrl . 'jodels.php');
+	}
 
 ?>
 
