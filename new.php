@@ -30,7 +30,34 @@
 
 	if(isset($_GET['post'])){
 		if(isset($_FILES["imageFile"])){
-			echo "true";
+			$uploaddir = "uploads/jodel-images/";
+			$targetfile = $uploaddir . basename($_FILES["imageFile"]["name"]);
+			$uploadOk = 1;
+			$imageFileType = pathinfo($targetfile,PATHINFO_EXTENSION);
+			$check = getimagesize($_FILES["imageFile"]["tmp_name"]);
+			if($check == false) {
+				$uploadOk = 0;
+			}
+			//if file exists
+			if (file_exists($targetfile)) {
+    			$uploadOk = 0;
+			}
+
+			 // Check file size
+			if ($_FILES["fileToUpload"]["size"] > 500000) {
+    			echo "Sorry, your file is too large.";
+    			$uploadOk = 0;
+			}
+
+			// Allow certain file formats
+			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+    			$uploadOk = 0;
+			}
+
+			if ($uploadOk == 1) {
+					move_uploaded_file($_FILES["imageFile"]["tmp_name"], $targetfile);
+			}
+		
 		} else{
 			echo "false";
 		}
