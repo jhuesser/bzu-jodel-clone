@@ -70,7 +70,13 @@
 		//set color as local value
 		$color = $_POST['color'];
 		//insert new post in DB, $postfields as JSON with all data
-		$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n \"imageIDFK\": \"$imageID\",\n  \"jodel\": \"$jodel\"\n}";
+		if($imageID == null){
+			echo "images";
+			$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n \"imageIDFK\": \"$imageID\",\n  \"jodel\": \"$jodel\"\n}";
+		} else {
+			echo "no images";
+		$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n  \"jodel\": \"$jodel\"\n}";
+		}
 		$callurl = $apiroot . "jodels";
 		$posted = postCall($callurl, $postfields);
 		//update the authors karma for creating a post

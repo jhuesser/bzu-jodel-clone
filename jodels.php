@@ -180,7 +180,12 @@
     				<blockquote class="card-blockquote">
 						<?php				
 								//post isn't downvoted
-		 						echo $post['jodel'];?>
+		 						echo $post['jodel'];
+								 if(isset($post['path'])){
+									 echo '<img src="' . $post['path'] . '" alt="jodelimage">';
+								 }
+								 
+								 ?>
 		 						<!-- voting and number of votes -->
 								<div class="jodelvotes">
 									<a href="?upvotejodel=<?php echo $post['jodelID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
