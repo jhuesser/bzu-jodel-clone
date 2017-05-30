@@ -18,5 +18,9 @@ engines:
     # High complexity in CiInfo#toArray()
     - 8f1ff5077ea52a5fee818bde73a0dbb7
     - efc665f3aa41cbbd0bbd0ec9c945a453
+ratings:
+  paths:
+  - "**.php"
+  - "**.css"
 exclude_paths:
 - functions/class.upload.php
