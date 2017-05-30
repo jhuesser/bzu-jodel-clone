@@ -8,7 +8,9 @@
 	require 'functions/apicalls.php';
 	$config = require('config.php');
 	require 'functions/jodelmeta.php';
+	require 'functions/class.upload.php';
 	$apiroot = $config->apiUrl;
+	$uploaddir = $config->image_upload_dir;
 	//get session info & post to show comments from
 	$userid = $_SESSION['userid'];
 	$post = $_GET['comment'];
@@ -41,6 +43,29 @@
 
 	//user wants to post a comment
 	if(isset($_GET['post'])){
+		if(isset($_FILES["imageFile"])){
+			echo "images";
+				$filename = $_FILES['imageFile']['name'];
+			$handle = new upload($_FILES['imageFile']);
+			if ($handle->uploaded) {
+				//$handle->file_new_name_body   = $_FILES['imageFile']['name'];
+  				$handle->image_resize         = true;
+				$handle->image_y              = 300;
+				$handle->image_ratio_x        = true;
+				$handle->process($uploaddir);
+				if ($handle->processed) {
+					echo 'image resized';
+    				$handle->clean();
+  				} else {
+    				echo 'error : ' . $handle->error;
+  				}
+			}
+			//save image location to DB
+			$callurl = $apiroot . "images";
+			$postfields = "{\n \"path\": \"$filename\" \n}";
+			$imageID = postCall($callurl, $postfields);
+
+		}
 		//get ID of post to post comment to
 		$jodel = $_GET['comment'];
 		//encode special chars to avoid injection
@@ -62,7 +87,11 @@
 		$comments_cnt++;
 		$score = $score + $config->postmeta['get_comment'];
 		//insert new comment in DB, $postfields as JSON with all data
-		$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
+		if($imageID !== null){
+			$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"imageIDFK\": \"$imageID\",\n\t\"comment\": \"$comment\"\n\n}";
+		} else {
+			$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
+		}
 		$callurl = $apiroot . "comments";
 		$posted = postCall($callurl, $postfields);
 
@@ -91,7 +120,7 @@
 		$authorkarmaupdated = putCall($callurl, $postfields);
 		
 		//redirect to post overview
-		header('Location: ' . $config->baseUrl . 'comments.php?showcomment=' . $jodel . '#' . $posted);
+		//header('Location: ' . $config->baseUrl . 'comments.php?showcomment=' . $jodel . '#' . $posted);
 	}
 
 ?>
@@ -119,6 +148,7 @@
 	</div>
 	<!-- save the color in a hidden field -->
 	<input type="hidden" name="color" value="<?php echo $colid;?>">
+		<input type="file" name="imageFile" id="imageFile">
 	<button type="submit" class="btn btn-warning">Submit</button>
 </form>
 <!-- end post form -->
