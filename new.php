@@ -7,8 +7,10 @@
 	//Load API functions
 	require 'functions/apicalls.php';
 	require 'functions/jodelmeta.php';
+	require 'functions/class.upload.php';
 	$config = require('config.php');
 	$apiroot = $config->apiUrl;
+	$uploaddir = $config->image_upload_dir;
 	$userid = $_SESSION['userid'];
 
 	if(!isset($_SESSION['userid'])) {
@@ -29,6 +31,28 @@
 	$_SESSION['acctype'] = $accstate;
 
 	if(isset($_GET['post'])){
+		if(isset($_FILES["imageFile"])){
+			$filename = $_FILES['imageFile']['name'];
+			$handle = new upload($_FILES['imageFile']);
+			if ($handle->uploaded) {
+				//$handle->file_new_name_body   = $_FILES['imageFile']['name'];
+  				$handle->image_resize         = true;
+				$handle->image_y              = 300;
+				$handle->image_ratio_x        = true;
+				$handle->process($uploaddir);
+				if ($handle->processed) {
+					echo 'image resized';
+    				$handle->clean();
+  				} else {
+    				echo 'error : ' . $handle->error;
+  				}
+			}
+			//save image location to DB
+			$callurl = $apiroot . "images";
+			$postfields = "{\n \"path\": \"$filename\" \n}";
+			$imageID = postCall($callurl, $postfields);
+		
+		} 
 		//new post created
 		//encode special chars to avoid injection
 		$jodel = htmlspecialchars($_POST['jodel'], ENT_QUOTES);
@@ -36,7 +60,11 @@
 		//set color as local value
 		$color = $_POST['color'];
 		//insert new post in DB, $postfields as JSON with all data
+		if($imageID !== null){
+			$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n \"imageIDFK\": \"$imageID\",\n  \"jodel\": \"$jodel\"\n}";
+		} else {
 		$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n  \"jodel\": \"$jodel\"\n}";
+		}
 		$callurl = $apiroot . "jodels";
 		$posted = postCall($callurl, $postfields);
 		//update the authors karma for creating a post
@@ -73,10 +101,11 @@
 ?>
 
 <!-- post form -->
-<form action="?post=1" method="POST">
+<form action="?post=1" method="POST" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="jodel">Enter your message</label>
-		<textarea class="form-control" rows="10" name="jodel" placeholder="Your post" style="color:white;background-color:#<?php echo $colorhex;?>"></textarea>
+		<textarea class="form-control" rows="10" name="jodel" placeholder="Your post" style="color:white;background-color:#<?php echo $colorhex;?>" required="true"></textarea>
+		<input type="file" name="imageFile" id="imageFile">
 	</div>
 	<!-- save the color in a hidden field -->
 	<input type="hidden" name="color" value="<?php echo $colornmb;?>">
