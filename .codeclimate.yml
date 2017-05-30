@@ -1,2 +1,5 @@
+PHP: true
+CSS: true
+
 exclude_paths:
 - functions/class.upload.php
