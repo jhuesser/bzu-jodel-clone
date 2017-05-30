@@ -6,7 +6,7 @@ engines:
       languages:
       - php
   phpcodesniffer:
-    enabled: true
+    enabled: false
   phpmd:
     enabled: true
     checks:
