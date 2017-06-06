@@ -113,7 +113,15 @@ foreach($jodels['jodeldata'] as $jodel) {
 	<div class="card card-inverse mb-3 text-center" style="background-color: #<?php echo $colorhex;?>;">
 		<div class="card-block">
   	  		<blockquote class="card-blockquote">
-				<?php echo $jodel['jodel'];?>
+				<?php 
+				
+				echo $jodel['jodel'];
+				if(isset($jodel['path'])){
+					?><img src="<?php echo $uploaddir . $jodel['path'];?>" alt="jodelimg">
+					<?php
+				}
+				
+				?>
 
 				<div class="jodelvotes">
 			
@@ -167,7 +175,7 @@ foreach($postdata['comments'] as $comment){
 						 foreach($images['images'] as $image){
 							 $path = $image['path'];
 						 }
-						 echo '<br><img src="' . $uploaddir . $path . 'alt="commentImage">';
+						 echo '<br><img src="' . $uploaddir . $path . '" alt="commentImage">';
 					 }
 					 ?>
 					

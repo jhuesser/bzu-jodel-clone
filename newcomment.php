@@ -141,7 +141,7 @@
 <div class="test"></div>
 <!-- end main menu -->
 
-<form action="?post=1&comment=<?php echo $post;?>" method="POST">
+<form action="?post=1&comment=<?php echo $post;?>" method="POST" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="comment">Enter your message</label>
 		<textarea class="form-control" rows="10" name="comment" placeholder="Your post" style="color:white;background-color:#<?php echo $colorhex;?>"></textarea>
