@@ -32,13 +32,16 @@
 
 	if(isset($_GET['post'])){
 		if(isset($_FILES["imageFile"])){
-			$filename = $_FILES['imageFile']['name'];
+			$epoch = time();
+			$filename = $epoch . $_FILES['imageFile']['name'];
+			$withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
 			$handle = new upload($_FILES['imageFile']);
 			if ($handle->uploaded) {
-				//$handle->file_new_name_body   = $_FILES['imageFile']['name'];
+				$handle->file_new_name_body   = $withoutExt;
   				$handle->image_resize         = true;
 				$handle->image_y              = 300;
 				$handle->image_ratio_x        = true;
+				//$handle->file_auto_rename = true;
 				$handle->process($uploaddir);
 				if ($handle->processed) {
 					echo 'image resized';
