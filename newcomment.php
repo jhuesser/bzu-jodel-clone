@@ -43,17 +43,19 @@
 
 	//user wants to post a comment
 	if(isset($_GET['post'])){
-		if(isset($_FILES["imageFile"])){
-				$epoch = time();
-				$filename = $epoch .  $_FILES['imageFile']['name'];
-				$withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
+		if(isset($_FILES["imageFile"]) && $_FILES['imageFile']['name'] != ""){
+			$epoch = time();
+			$filename = $epoch . $_FILES['imageFile']['name'];
+			$withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
 			$handle = new upload($_FILES['imageFile']);
 			if ($handle->uploaded) {
 				$handle->file_new_name_body   = $withoutExt;
   				$handle->image_resize         = true;
 				$handle->image_y              = 300;
+				$handle->file_safe_name = true;
+				$handle->allowed = array('image/*');
 				$handle->image_ratio_x        = true;
-			//	$handle->file_auto_rename = true;
+				//$handle->file_auto_rename = true;
 				$handle->process($uploaddir);
 				if ($handle->processed) {
 					echo 'image resized';
@@ -66,8 +68,8 @@
 			$callurl = $apiroot . "images";
 			$postfields = "{\n \"path\": \"$filename\" \n}";
 			$imageID = postCall($callurl, $postfields);
-
-		}
+		
+		} 
 		//get ID of post to post comment to
 		$jodel = $_GET['comment'];
 		//encode special chars to avoid injection
@@ -121,9 +123,11 @@
 		$callurl =  $apiroot . "jodlers/" . $author;
 		$authorkarmaupdated = putCall($callurl, $postfields);
 		
+		
 		//redirect to post overview
-		//header('Location: ' . $config->baseUrl . 'comments.php?showcomment=' . $jodel . '#' . $posted);
+		header('Location: ' . $config->baseUrl . 'comments.php?showcomment=' . $jodel . '#' . $posted);
 	}
+	
 
 ?>
 
