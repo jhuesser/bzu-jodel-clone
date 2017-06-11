@@ -8,7 +8,9 @@
 	require 'functions/apicalls.php';
 	$config = require('config.php');
 	require 'functions/jodelmeta.php';
+	require 'functions/class.upload.php';
 	$apiroot = $config->apiUrl;
+	$uploaddir = $config->image_upload_dir;
 	//get session info & post to show comments from
 	$userid = $_SESSION['userid'];
 	$post = $_GET['comment'];
@@ -41,13 +43,51 @@
 
 	//user wants to post a comment
 	if(isset($_GET['post'])){
-		//get ID of post to post comment to
+				//get ID of post to post comment to
 		$jodel = $_GET['comment'];
 		//encode special chars to avoid injection
 		$comment = htmlspecialchars($_POST['comment'], ENT_QUOTES);
 		$comment = trim(preg_replace('/\s\s+/', ' ', $comment));
 		//set color as local value
 		$color = $_POST['color'];
+		$colorhex = $_POST['colhex'];
+		
+
+
+		if(isset($_FILES["imageFile"]) && $_FILES['imageFile']['name'] != ""){
+			$epoch = time();
+			$filename = $epoch . "-" . $_FILES['imageFile']['name'];
+			$withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
+			//encode is done by upload class
+			$comment = $_POST['comment'];
+			$handle = new upload($_FILES['imageFile']);
+			if ($handle->uploaded) {
+				$handle->file_new_name_body   = $withoutExt;
+  				$handle->image_resize         = true;
+				$handle->image_y              = 300;
+				$handle->file_safe_name = true;
+				$handle->allowed = array('image/*');
+				$handle->image_text = $comment;
+				$handle->image_text_background = $colorhex;
+				$handle->image_text_x = 1;
+				$handle->image_text_y = rand(1, 299);
+				$handle->image_ratio_x        = true;
+				//$handle->file_auto_rename = true;
+				$handle->process($uploaddir);
+				if ($handle->processed) {
+					echo 'image resized';
+    				$handle->clean();
+  				} else {
+    				echo 'error : ' . $handle->error;
+  				}
+			}
+			//save image location to DB
+			$callurl = $apiroot . "images";
+			$postfields = "{\n \"path\": \"$filename\" \n}";
+			$imageID = postCall($callurl, $postfields);
+		
+		} 
+
 		//get data from original post
 		$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel;
 		$orgpostjson = getCall($callurl);
@@ -62,7 +102,12 @@
 		$comments_cnt++;
 		$score = $score + $config->postmeta['get_comment'];
 		//insert new comment in DB, $postfields as JSON with all data
-		$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
+
+		if($imageID !== null){
+			$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"imageIDFK\": \"$imageID\",\n\t\"comment\": \"$comment\"\n\n}";
+		} else {
+			$postfields = "{\n\t\"jodlerIDFK\": \"$userid\",\n\t\"colorIDFK\": \"$color\",\n\t\"jodelIDFK\": \"$jodel\",\n\t\"comment\": \"$comment\"\n\n}";
+		}
 		$callurl = $apiroot . "comments";
 		$posted = postCall($callurl, $postfields);
 
@@ -90,9 +135,11 @@
 		$callurl =  $apiroot . "jodlers/" . $author;
 		$authorkarmaupdated = putCall($callurl, $postfields);
 		
+		
 		//redirect to post overview
 		header('Location: ' . $config->baseUrl . 'comments.php?showcomment=' . $jodel . '#' . $posted);
 	}
+	
 
 ?>
 
@@ -112,13 +159,15 @@
 <div class="test"></div>
 <!-- end main menu -->
 
-<form action="?post=1&comment=<?php echo $post;?>" method="POST">
+<form action="?post=1&comment=<?php echo $post;?>" method="POST" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="comment">Enter your message</label>
 		<textarea class="form-control" rows="10" name="comment" placeholder="Your post" style="color:white;background-color:#<?php echo $colorhex;?>"></textarea>
 	</div>
 	<!-- save the color in a hidden field -->
 	<input type="hidden" name="color" value="<?php echo $colid;?>">
+	<input type="hidden" name="colhex" value="<?php echo $colorhex;?>">
+		<input type="file" name="imageFile" id="imageFile">
 	<button type="submit" class="btn btn-warning">Submit</button>
 </form>
 <!-- end post form -->

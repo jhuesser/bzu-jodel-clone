@@ -13,6 +13,7 @@
 	require 'functions/admintools.php';
 	$apiroot = $config->apiUrl;
 	$baseurl = $config->baseUrl;
+	$uploaddir = $config->image_upload_dir;
 	$mainaction = true;
 	if(!isset($_SESSION['userid'])) {
  		header('Location: ' . $config->baseUrl . 'login.php');
@@ -189,7 +190,14 @@
     				<blockquote class="card-blockquote">
 						<?php				
 								//post isn't downvoted
-		 						echo $post['jodel'];?>
+								if(!isset($post['path'])){
+		 						echo $post['jodel'];
+								} else {
+								 
+									 echo '<br><img src="' . $uploaddir . $post['path'] . '" alt="jodelimage">';
+								 }
+								 
+								 ?>
 		 						<!-- voting and number of votes -->
 								<div class="jodelvotes">
 									<a href="?upvotejodel=<?php echo $post['jodelID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
