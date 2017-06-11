@@ -12,6 +12,7 @@ $config = require('config.php');
 require 'functions/votes.php';
 $apiroot = $config->apiUrl;
 $baseurl = $config->baseUrl;
+$uploaddir = $config->image_upload_dir;
 $mainaction = true;
 
 //check if user is logged in. if not, redirect to login page
@@ -112,7 +113,15 @@ foreach($jodels['jodeldata'] as $jodel) {
 	<div class="card card-inverse mb-3 text-center" style="background-color: #<?php echo $colorhex;?>;">
 		<div class="card-block">
   	  		<blockquote class="card-blockquote">
-				<?php echo $jodel['jodel'];?>
+				<?php 
+				
+				echo $jodel['jodel'];
+				if(isset($jodel['path'])){
+					?><img src="<?php echo $uploaddir . $jodel['path'];?>" alt="jodelimg">
+					<?php
+				}
+				
+				?>
 
 				<div class="jodelvotes">
 			
@@ -158,7 +167,18 @@ foreach($postdata['comments'] as $comment){
   			<div class="card-block">
     			<blockquote class="card-blockquote">
 					<?php
-		 			echo $comment['comment'];?>
+		 			echo $comment['comment'];
+					 if(isset($comment['imageIDFK'])){
+						 $imageurl = $apiroot . "images?transform=1&filter=imageID,eq," .  $comment['imageIDFK'];
+						 $imagejson = getCall($imageurl);
+						 $images = json_decode($imagejson, true);
+						 foreach($images['images'] as $image){
+							 $path = $image['path'];
+						 }
+						 echo '<br><img src="' . $uploaddir . $path . '" alt="commentImage">';
+					 }
+					 ?>
+					
 					<div class="jodelvotes">
 						<a href="?showcomment=<?php echo $postID; ?>&upvotecomment=<?php echo $comment['commentID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
 						<?php echo $comment['votes_cnt'] . "<br>";?>
