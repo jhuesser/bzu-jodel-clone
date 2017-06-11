@@ -181,8 +181,10 @@
     				<blockquote class="card-blockquote">
 						<?php				
 								//post isn't downvoted
+								if(!isset($post['path'])){
 		 						echo $post['jodel'];
-								 if(isset($post['path'])){
+								} else {
+								 
 									 echo '<br><img src="' . $uploaddir . $post['path'] . '" alt="jodelimage">';
 								 }
 								 

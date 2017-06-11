@@ -31,10 +31,22 @@
 	$_SESSION['acctype'] = $accstate;
 
 	if(isset($_GET['post'])){
+
+		//new post created
+		//encode special chars to avoid injection
+		$jodel = htmlspecialchars($_POST['jodel'], ENT_QUOTES);
+		$jodel = trim(preg_replace('/\s\s+/', ' ', $jodel));
+		//set color as local value
+		$color = $_POST['color'];
+		$colorhex = $_POST['colhex'];
+
+
 		if(isset($_FILES["imageFile"]) && $_FILES['imageFile']['name'] != ""){
 			$epoch = time();
-			$filename = $epoch . $_FILES['imageFile']['name'];
+			$filename = $epoch . "-" . $_FILES['imageFile']['name'];
 			$withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
+			//direct text input, upload functions does the rest
+			$jodel = $_POST['jodel'];
 			$handle = new upload($_FILES['imageFile']);
 			if ($handle->uploaded) {
 				$handle->file_new_name_body   = $withoutExt;
@@ -42,6 +54,10 @@
 				$handle->image_y              = 300;
 				$handle->file_safe_name = true;
 				$handle->allowed = array('image/*');
+				$handle->image_text = $jodel;
+				$handle->image_text_background = $colorhex;
+				$handle->image_text_x = 1;
+				$handle->image_text_y = rand(1, 299);
 				$handle->image_ratio_x        = true;
 				//$handle->file_auto_rename = true;
 				$handle->process($uploaddir);
@@ -58,12 +74,7 @@
 			$imageID = postCall($callurl, $postfields);
 		
 		} 
-		//new post created
-		//encode special chars to avoid injection
-		$jodel = htmlspecialchars($_POST['jodel'], ENT_QUOTES);
-		$jodel = trim(preg_replace('/\s\s+/', ' ', $jodel));
-		//set color as local value
-		$color = $_POST['color'];
+		
 		//insert new post in DB, $postfields as JSON with all data
 		if($imageID !== null){
 			$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"colorIDFK\": \"$color\",\n \"imageIDFK\": \"$imageID\",\n  \"jodel\": \"$jodel\"\n}";
@@ -114,6 +125,7 @@
 	</div>
 	<!-- save the color in a hidden field -->
 	<input type="hidden" name="color" value="<?php echo $colornmb;?>">
+	<input type="hidden" name="colhex" value="<?php echo $colorhex;?>">
 	<button type="submit" class="btn btn-warning">Submit</button>
 </form>
 <!-- end post form -->

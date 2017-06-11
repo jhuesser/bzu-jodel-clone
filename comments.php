@@ -114,9 +114,10 @@ foreach($jodels['jodeldata'] as $jodel) {
 		<div class="card-block">
   	  		<blockquote class="card-blockquote">
 				<?php 
+				if(!isset($jodel['path'])){
 				
 				echo $jodel['jodel'];
-				if(isset($jodel['path'])){
+				}else{
 					?><img src="<?php echo $uploaddir . $jodel['path'];?>" alt="jodelimg">
 					<?php
 				}
@@ -167,8 +168,9 @@ foreach($postdata['comments'] as $comment){
   			<div class="card-block">
     			<blockquote class="card-blockquote">
 					<?php
+					 if(!isset($comment['imageIDFK'])){
 		 			echo $comment['comment'];
-					 if(isset($comment['imageIDFK'])){
+					} else {
 						 $imageurl = $apiroot . "images?transform=1&filter=imageID,eq," .  $comment['imageIDFK'];
 						 $imagejson = getCall($imageurl);
 						 $images = json_decode($imagejson, true);
