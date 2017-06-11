@@ -9,8 +9,10 @@
 	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 
+	$mainaction = true;
 	//If user sent loginform, set values
 	if(isset($_GET['login'])) {
+		$mainaction = false;
  		$username = $_POST['username'];
  		$password = $_POST['password'];
  		//check if captcha is solved
@@ -49,12 +51,32 @@
 				$_SESSION['username'] = $jodlerHRID;
 				header('Location: ' . $config->baseUrl . 'jodels.php');
 	 			// echo '<a href="index.php">openindex</a>';
- 			} else {
+			 } elseif (isset($accountstate) && $accountstate == 0){
+				$errorMessage = "User no longer in system.";
+			 } 
+			 else {
 	 			//Login failed
 				$errorMessage = $config->app_msgs['login_fail'];
 			}
 		}
-		if(isset($errorMessage)) {
+		
+
+	}
+	if($mainaction == true){
+
+?>
+<div id="top"></div>
+<!-- main menu -->
+<ul class="nav ">
+	<li class="nav-item">
+		<img src="img/domaynW.png" alt="DomaynTec Logo" width="30%">
+	</li>
+  
+</ul>
+<!-- end main menu -->
+<div class="test"></div>
+<?php
+	if(isset($errorMessage)) {
 			//display login message
 			?>
  			<div class="alert alert-danger" role="alert">
@@ -62,10 +84,10 @@
 			</div>
 			<?php
 		}
-
-	}
-
 ?>
+<div class="alert alert-warning" role="alert">
+  <strong>Warning!</strong> This is a test environment. Every user that is not approved by the admins / developer gets banned.
+</div>
 <!-- login form -->
 <div class="container">
 	<div class="wrapper">
@@ -87,3 +109,4 @@
 <!-- end login form -->
 <?php
 include 'functions/footer.php';
+	}

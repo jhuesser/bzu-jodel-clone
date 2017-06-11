@@ -56,8 +56,8 @@
   </h1>
     <div class="list-group">
     <a href="<?php echo $config->baseUrl;?>jodels.php?sort=my" class="list-group-item list-group-item-action">My <?php echo $config->app_vocabulary['posts'];?></a>
-    <a href="#" class="list-group-item list-group-item-action">My <?php echo $config->app_vocabulary['comments'];?></a>
-    <a href="#" class="list-group-item list-group-item-action">My votes</a>
+    <a href="<?php echo $config->baseUrl;?>jodels.php?sort=mycomms" class="list-group-item list-group-item-action">My <?php echo $config->app_vocabulary['comments'];?></a>
+    <a href="<?php echo $config->baseUrl;?>jodels.php?sort=myvotes" class="list-group-item list-group-item-action">My votes</a>
 </div>
 <!-- end user functions -->
 
@@ -102,8 +102,7 @@
   <?php 
     if($caps['mod_posts'] == true){
       //is mod
-      echo '<a href="#" class="list-group-item list-group-item-action">Moderation</a>'; 
-      $_SESSION['caps_mod_posts'] = true;
+      echo '<a href="user/mod.php" class="list-group-item list-group-item-action">Moderation</a>'; 
       $hascaps = true;
     }
     if($caps['reset_paswd'] == true){
@@ -115,31 +114,26 @@
     if($caps['promote_to_mod'] == true || $caps['promote_to_admin'] == true  || $caps['promote_to_superadmin'] == true || $caps['promote_to_user'] == true || $caps['ban'] == true || $caps['delete_users'] == true || $caps['change_karma'] == true )  {
       //can manage users
       echo '<a href="user/usermgmt.php" class="list-group-item list-group-item-action">Usermanagement</a>'; 
-      $_SESSION['caps_promote_to_mod'] = true;
       $hascaps = true;
     }
     if($caps['delete_posts'] == true || $caps['change_post_score'] == true || $caps['change_votes'] == true || $caps['edit_posts'] == true){
       //can manage posts
-    echo '<a href="#" class="list-group-item list-group-item-action">Postmanagement</a>'; 
-    $_SESSION['caps_delete_posts'] = true;
+    echo '<a href="user/postmgmt.php" class="list-group-item list-group-item-action">Postmanagement</a>'; 
     $hascaps = true;
     }
     if($caps['add_color'] == true){
       //can manage colors
       echo '<a href="user/colormgmt.php" class="list-group-item list-group-item-action">Add a color</a>'; 
-      $_SESSION['caps_add_color'] = true;
       $hascaps = true;
     } 
   if($caps['delete_user_votes'] == true){
     //can manage users
     echo '<a href="#" class="list-group-item list-group-item-action">Manage Votes</a>'; 
-    $_SESSION['caps_delete_user_votes'] = true;
     $hascaps = true;
   }
   if($caps['create_admin_notice'] == true){
     //can manage admin notices
     echo '<a href="#" class="list-group-item list-group-item-action">Create admin notice</a>'; 
-    $_SESSION['caps_create_admin_notice'] = true;
     $hascaps = true;
   }
   if(!isset($hascaps)){

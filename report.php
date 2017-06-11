@@ -57,14 +57,18 @@ $type = $_GET['type'];
 $contentID = $_GET['id'];
 
 if(isset($_GET['reason'])){
+	//user wants to report a post
+	//save the reason
 	$reason = $_GET['reason'];
+	//save report in DB
 	$reported = reportContent( $type, $contentID, $reason);
+	//if a post is reported, redirect to a post below
 	if($_GET['type'] == "post"){
 		$nextpost = $contentID--;
 	}
 	header('Location: ' . $apiroot->baseUrl . 'jodels.php#' . $contentID);
 }
-
+//get all reasons and save them in an array
 $abuseurl = $apiroot . "abuse?transform=1";
 $absuejson = getCall($abuseurl);
 $abusearray = json_decode($absuejson, true);
@@ -76,6 +80,8 @@ $abusearray = json_decode($absuejson, true);
 <div class="container">
 <?php 
 foreach($abusearray['abuse'] as $abuse){
+	//list all reasons
+	if($abuseID != $config->postmeta['system_mod_id']){
 	$abusedesc = $abuse['abusedesc'];
 	
 		$message = "?type=" . $type . "&id=" . $contentID . "&reason=" . $abuse['abuseID'];
@@ -83,6 +89,7 @@ foreach($abusearray['abuse'] as $abuse){
 		<a href="<?php echo $message ?>" class="list-group-item list-group-item-action"><?php echo $abusedesc; ?></a>
 
 	<?php
+	}
 
 }
 

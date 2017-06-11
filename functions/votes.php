@@ -12,7 +12,7 @@
  * @since 0.3
  */
 function voteJodel($jodel2vote, $how2vote){
-	global $apiroot, $baseurl;
+	global $apiroot, $baseurl, $config;
 	//Get the post to upvote and users who voted this post
 	$callurl = $apiroot . "jodels?transform=1&filter=jodelID,eq," . $jodel2vote;
 	$jodeljson = getCall($callurl);
@@ -41,12 +41,12 @@ function voteJodel($jodel2vote, $how2vote){
 			$score = $score - $config->postmeta['get_downvote'];		}
 	}
 	//Update votes & score of post in DB
-	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
+	$postfields = "{\n  \n  \"votes_cnt\": \"$votes\",\n  \"score\": \"$score\"\n}";
 	$callurl = $apiroot . "jodels/" . $jodel2vote;
 	$voted = putCall($callurl,$postfields);
 	$userid = $_SESSION['userid'];
 	//Wirte to DB, that this user now voted on this post
-	$postfields = "{\n  \n  \"userIDFK\": $userid,\n  \"jodelIDFK\": $jodel2vote\n}";
+	$postfields = "{\n  \n  \"userIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$jodel2vote\"\n}";
 	$callurl = $apiroot . "jodelvotes";
 	$uservoted = postCall($callurl,$postfields);
 
@@ -70,9 +70,9 @@ function voteJodel($jodel2vote, $how2vote){
 	if ($how2vote == "up"){
 		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
 	} elseif ($how2vote == "down"){
-		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_downvote'];
+		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['get_downvote'];
 	}
-	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
+	$postfields = "{\n  \n  \"karma\": \"$karmaFromAuthor\"\n}";
 	$callurl = $apiroot . "jodlers/" . $author;
 	$karmaupdated = putCall($callurl, $postfields);
 
@@ -82,7 +82,7 @@ function voteJodel($jodel2vote, $how2vote){
 	} elseif ($how2vote == "down"){
 		$voterKarma = $voterKarma - $config->karma_calc['do_downvote'];
 	}
-	$postfields = "{\n  \n  \"karma\": $voterKarma\n}";
+	$postfields = "{\n  \n  \"karma\": \"$voterKarma\"\n}";
 	$callurl = $apiroot . "jodlers/" . $userid;
 	$karmaupdated = putCall($callurl, $postfields);
 
@@ -109,7 +109,7 @@ header('Location: ' . $baseurl . 'jodels.php#' . $jodel2vote);
  * @since 0.3
  */
 function voteComment( $comment2vote, $how2vote){
-	global $apiroot, $baseurl;
+	global $apiroot, $baseurl, $config;
 	$userid = $_SESSION['userid'];
 	$apiroot = $config->apiUrl;
 	$commentsjson = getCall($apiroot . "comments?transform=1&filter=commentID,eq," . $comment2vote);
@@ -135,34 +135,54 @@ function voteComment( $comment2vote, $how2vote){
 			$score = $score - $config->postmeta['get_downvote'];
 		}
 	}
-	$postfields = "{\n  \n  \"votes_cnt\": $votes,\n  \"score\": $score\n}";
-	$voted = putCall($apiroot . "comments/" . $comment2vote,$postfields);
+	//Update votes & score of post in DB
+	$postfields = "{\n  \n  \"votes_cnt\": \"$votes\",\n  \"score\": \"$score\"\n}";
+	$callurl = $apiroot . "comments/" . $comment2vote;
+	$voted = putCall($callurl,$postfields);
+	$userid = $_SESSION['userid'];
+	//Wirte to DB, that this user now voted on this post
+	$postfields = "{\n  \n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$comment2vote\"\n}";
+	$callurl = $apiroot . "commentvotes";
+	$uservoted = postCall($callurl,$postfields);
 
-	$postfields = "{\n  \n  \"jodlerIDFK\": $userid,\n  \"commentIDFK\": $comment2vote\n}";
-	$uservoted = postCall($apiroot . "commentvotes", $postfields);
-
-	$authorkarmajson = getCall($apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $author);
+	//Get current karma of post author
+	$callurl = $apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $author;
+	$authorkarmajson = getCall($callurl);
 	$authorkarma = json_decode($authorkarmajson, true);
 	foreach($authorkarma['jodlers'] as $user){
 		$karmaFromAuthor = $user['karma'];
 	}
-	if($how2vote == "up"){
+
+	//Get current karma of voter
+	$callurl = $apiroot . "jodlers?transform=1&filter=jodlerID,eq," . $userid;
+	$voterkarmajson = getCall($callurl);
+	$voterkarma = json_decode($voterkarmajson, true);
+	foreach($voterkarma['jodlers'] as $user){
+		$voterKarma = $user['karma'];
+	}
+
+	//incerase karma of the author, update it in DB
+	if ($how2vote == "up"){
 		$karmaFromAuthor = $karmaFromAuthor + $config->karma_calc['get_upvote'];
-	} elseif($how2vote == "down"){
+	} elseif ($how2vote == "down"){
 		$karmaFromAuthor = $karmaFromAuthor - $config->karma_calc['get_downvote'];
 	}
-	$postfields = "{\n  \n  \"karma\": $karmaFromAuthor\n}";
-	$karmaupdated = putCall($apiroot . "jodlers/" . $author, $postfields);
+	$postfields = "{\n  \n  \"karma\": \"$karmaFromAuthor\"\n}";
+	$callurl = $apiroot . "jodlers/" . $author;
+	$karmaupdated = putCall($callurl, $postfields);
 
-	if($how2vote == "up"){
-		$karma = $karma + $config->karma_calc['do_upvote'];
-	} elseif($how2vote == "down"){
-		$karma = $karma - $config->karma_calc['do_downvote'];
+	//incerase the karma of the voter (current user) and update it in DB
+	if ($how2vote == "up"){
+		$voterKarma = $voterKarma + $config->karma_calc['do_upvote'];
+	} elseif ($how2vote == "down"){
+		$voterKarma = $voterKarma - $config->karma_calc['do_downvote'];
 	}
-	$postfields = "{\n  \n  \"karma\": $karma\n}";
-	$karmaupdated = putCall($apiroot . "jodlers/" . $userid, $postfields);
+	$postfields = "{\n  \n  \"karma\": \"$voterKarma\"\n}";
+	$callurl = $apiroot . "jodlers/" . $userid;
+	$karmaupdated = putCall($callurl, $postfields);
 
 	} else {
+		//user has already voted on this post
 	$_SESSION['errorMsg'] = "Already voted";
 }
 header('Location: ' . $baseurl . 'comments.php?showcomment=' . $postID . '#' . $comment2vote);

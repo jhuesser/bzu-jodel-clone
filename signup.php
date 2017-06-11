@@ -9,7 +9,10 @@
 	$config = require('config.php');
 	$apiroot = $config->apiUrl;
 
+	$mainaction = true;
+
 	if(isset($_GET['register'])) {
+		$mainaction = false;
 		//User wants to register
 		//set local values for easy handling
  		$error = false;
@@ -72,7 +75,23 @@
  			} 
 		}
 
-		if(isset($errorMsg)) {
+		
+		}
+		if($mainaction == true){
+
+?>
+<div id="top"></div>
+<!-- main menu -->
+<ul class="nav ">
+	<li class="nav-item">
+		<img src="img/domaynW.png" alt="DomaynTec Logo" width="30%">
+	</li>
+  
+</ul>
+<!-- end main menu -->
+<div class="test"></div>
+<?php
+if(isset($errorMsg)) {
 			//Show error message
 			?>
 			<div class="alert alert-danger" role="alert">
@@ -86,12 +105,11 @@
   				<strong>Perfect!</strong> <?php echo $successMsg;?>
 			</div>
 			<?php
-		}
+	}?>
 
-
-	}
-?>
-
+<div class="alert alert-warning" role="alert">
+  <strong>Warning!</strong> This is a test environment. Every user that is not approved by the admins / developer gets banned.
+</div>
 <!-- signup form -->
 <div class="container">
 	<div class="wrapper">
@@ -112,3 +130,4 @@
 </div>
 <!-- end form -->
 <?php include 'functions/footer.php';
+		}

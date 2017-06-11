@@ -10,45 +10,65 @@
 	$title = "Manage Users | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
+	$mainaction = true;
 
 	//check if user is logged in & has required caps
-	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_reset_paswd'])) {
-		header('Location: ' . $config->baseUrl . 'https://jodel.domayntec.ch/login.php');
+	$mycaps = $_SESSION['my_caps'];
+	if(!isset($_SESSION['userid']) || $mycaps['reset_paswd'] == false) {
+		header('Location: ' . $config->baseUrl . 'user.php');
 	}
 
 	//set up working variables
 	$userid = $_SESSION['userid'];
 	$mycaps = $_SESSION['my_caps'];
 	
-	
+	if(isset($_GET['deluser'])){
+		$mainaction = false;
+		//user wants to delete a color
+		//get ID of color to delete
+		$user = $_GET['deluser'];
+		//setup call URL
+		$callurl = $apiroot . "jodlers/" . $user;
+		//Send DELETE call to url
+		$deleteduser = deleteCall($callurl);
+		//redirect
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
 
 	
 	
 	if(isset($_GET['ban'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['ban'], 0, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['active'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['active'], 1, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['mod'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['mod'], 2, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['admin'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['admin'], 3, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($_GET['superadmin'])){
+		$mainaction = false;
 		$updated = manipulateUser($_GET['superadmin'], 4, $mycaps);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 	if(isset($updated)){
+		$mainaction = false;
 		if($updated == false){
 			$_SESSION['errorMsg'] = "Something went wrong!";
 		}
 	}
+	if($mainaction == false){
 	
 	?>
 	
@@ -91,7 +111,8 @@
 		$jodlers = json_decode($jodlersjson, true);
 
 		foreach($jodlers['jodlers'] as $jodler){
-			$color = getRandomColor();
+			$colors = getRandomColor();
+			$color = $colors['colorhex'];
 			$acctype = getAccountType($config, $jodler['account_state']);
 			//show all colors
 			?><div class="card card-inverse mb-3 text-center" id="<?php echo $jodler['jodlerID'];?>" style="background-color: #<?php echo $color;?>;">
@@ -114,7 +135,11 @@
 						?><a href="?superadmin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button></a><?php
 					}
 						?>			
-					
+					<div class="jodelvotes">
+						<!--delete button -->
+							<a href="?deluser=<?php echo $jodler['jodlerID'];?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+					</div>
+					<div class="clear"></div>
 				</blockquote>
 		</div> 
 	</div>
@@ -122,4 +147,4 @@
 		}
 		//include footer
 		include '../functions/footer.php';
-		
+	}

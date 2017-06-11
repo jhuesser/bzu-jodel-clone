@@ -6,10 +6,12 @@
 	$title = "Add color | SocialDomayn";
 	$stylesheet = "jodel.css";
 	include '../functions/header.php';
+	$mainaction = true;
 
 	//check if user is logged in & has required caps
-	if(!isset($_SESSION['userid']) || !isset($_SESSION['caps_add_color'])) {
-		header('Location: ' . $config->baseUrl . '/login.php');
+	$mycaps = $_SESSION['my_caps'];
+	if(!isset($_SESSION['userid']) || $mycaps['add_color'] == false) {
+		header('Location: ' . $config->baseUrl . 'user.php');
 	}
 
 	//set up working variables
@@ -17,6 +19,7 @@
 	$apiroot = $config->apiUrl;
 
 	if(isset($_GET['addcolor'])){
+		$mainaction = false;
 		//user wants to add a color
 		//save colorname & hexcode in values
 		$colorname = $_POST['colorname'];
@@ -31,6 +34,7 @@
 	}
 
 	if(isset($_GET['delcol'])){
+		$mainaction = false;
 		//user wants to delete a color
 		//get ID of color to delete
 		$colorid = $_GET['delcol'];
@@ -41,6 +45,7 @@
 		//redirect
 		header('Location: ' . $config->baseUrl . 'user/colormgmt.php');
 	}
+	if($mainaction == true){
 ?>
 <div id="top"></div>
 <!-- main menu -->
@@ -117,3 +122,4 @@
 		}
 		//include footer
 		include '../functions/footer.php';
+	}

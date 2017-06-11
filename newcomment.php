@@ -45,6 +45,7 @@
 		$jodel = $_GET['comment'];
 		//encode special chars to avoid injection
 		$comment = htmlspecialchars($_POST['comment'], ENT_QUOTES);
+		$comment = trim(preg_replace('/\s\s+/', ' ', $comment));
 		//set color as local value
 		$color = $_POST['color'];
 		//get data from original post

@@ -79,6 +79,31 @@ text-decoration: none;
 	color: grey;
 }
 
+.mod-approve{
+	color: green;
+}
+.mod-approve:hover{
+	color: #07c300;
+}
+
+.mod-deny{
+	color: #c10000;
+}
+.mod-deny:hover{
+	color: red;
+}
+
+.mod-idc{
+	color: #0101ab;
+}
+.mod-idc:hover{
+	color:blue;
+}
+
+.mod-buttons{
+	text-align: center;
+	font-size: 80px;
+}
 .newcomment{
 	text-align: center;
 	position: fixed; 
@@ -112,4 +137,8 @@ text-decoration: none;
 }
 *:-ms-input-placeholder { /* Internet Explorer 10-11 */
    color:    white !important;
+}
+
+.reason {
+	text-align: center;
 }

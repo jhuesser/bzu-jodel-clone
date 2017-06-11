@@ -28,7 +28,7 @@
 			}
 			break;
 		case 2:
-			 if($mycaps['promote_to_mod'] == true){
+			 if($mycaps['promote_to_mod'] == true ){
 			 $execute = true;
 			}
 			break;
@@ -47,7 +47,7 @@
 	 }
  
 	if($execute == true){
-		$callurl = $apiroot . "/jodlers/" . $user;
+		$callurl = $apiroot . "jodlers/" . $user;
 		$postfields = "{\n  \n  \"account_state\": \"$role\"\n\n}";
 		$changes = putCall($callurl, $postfields);
 	} 

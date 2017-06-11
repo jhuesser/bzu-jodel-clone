@@ -11,6 +11,7 @@ return (object) array(
 	'apiUrl' => "ENTER_URL_TO_MYSQL_REST_API", //with ending slash
 	'recaptcha_sitekey' => "ENTER_RECAPTCHA_SITE_KEY",
 	'recaptcha_secret' => "ENTER_RECAPTCHA_SECRET_KEY",
+	'image_upload_dir' => "ENTER_PATH_TO_IMAGE_UPLOAD_DIR",
     'app_info' => array(
         'appName'=>"ENTER_APP_NAME",
         'appURL'=> "ENTER_APP_URL", //with ending slash
@@ -65,12 +66,15 @@ return (object) array(
 	'postmeta' => array(
 		'needed_downvotes' => -5, //needed downvotes to hide the post
 		'needed_score_mod' => 50,
+		'system_mod_id' => 10,
 		'get_upvote' => 10,
 		'mod_approve' => 20,
 		'get_comment' => 5,
 		'get_downvote' => 10,
 		'mod_deny' => 20,
-		'get_report' => 50
+		'get_report' => 50,
+		'post_deleted_score' => 0, //needed score to delete a post
+		'post_approved_score' => 150 //needed score to approve a post again
 	),
 
 	'user_caps' => (object) array(

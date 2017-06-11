@@ -9,9 +9,12 @@
 	require 'functions/apicalls.php';
 	$config = require('config.php');
 	require 'functions/votes.php';
+	require 'functions/usermanipulation.php';
+	require 'functions/admintools.php';
 	$apiroot = $config->apiUrl;
 	$baseurl = $config->baseUrl;
-
+	$uploaddir = $config->image_upload_dir;
+	$mainaction = true;
 	if(!isset($_SESSION['userid'])) {
  		header('Location: ' . $config->baseUrl . 'login.php');
 
@@ -30,17 +33,31 @@
 	$_SESSION['karma'] = $karma;
 	$_SESSION['acctype'] = $accstate;
 
+	//If a user is a normal user and has enough reputation, promote to mod
+	if($karma >= $config->karma_calc['promote_mod'] && $accstate == 1){
+		//set dummy caps for manipulateUserFunction
+		$mycaps = array();
+		$mycaps['promote_to_mod'] = true;
+		$updated = manipulateUser($userid, 2, $mycaps);
+		//destroy caps to aviod abuse
+		unset($mycaps);
+
+	}
+
 	//if joels.php?upvotejodel=$jodelID is called, upvote it
 	if(isset($_GET['upvotejodel'])){
+		$mainaction = false;
 		voteJodel( $_GET['upvotejodel'], "up");
 		
 	}
 
 	//if jodels.php?downvotejodel=$jodelID ist called, downvote post
 	if(isset($_GET['downvotejodel'])){
+		$mainaction = false;
 		voteJodel( $_GET['downvotejodel'], "down");
 	
 	}
+	if($mainaction == true){
 	//If jodels.php?sort=$sort is called, post should be sorted
 	if(isset($_GET['sort'])){
 		$parameter = $_GET['sort'];
@@ -58,11 +75,18 @@
 			case "my":
 				$sort = "my";
 				break;
+			case "mycomms":
+				$sort= "mycomms";
+				break;
+			case "myvotes":
+				$sort = "myvotes";
+				break;
 			default:
 				$sort = "latest";
 		
 		}
 	}
+	
 ?>
 <!-- Top / Main Navigation -->
 <div id="top"></div>
@@ -85,7 +109,7 @@
   	</li>
   	<!-- user profile -->
   	<li class="nav-item">
-    	<a class="nav-link <?php if($sort == 'my'){ echo 'active';}?>" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $karma;?></a>
+    	<a class="nav-link <?php if($sort == 'my' || $sort =='mycomms' || $sort =='myvotes'){ echo 'active';}?>" href="user.php"><i class="fa fa-user" aria-hidden="true"></i><?php echo $karma;?></a>
   	</li>
 </ul>
 <!-- must check in stylesheet -->
@@ -115,6 +139,26 @@
 		case "my":
 			$filter="&filter=jodlerIDFK,eq," . $userid;
 			break;
+		case "mycomms":
+			$commenturl = $apiroot . "comments?transform=1,filter=jodlerIDFK,eq," . $userid;
+			$commentsjson = getCall($commenturl);
+			$comments = json_decode($commentsjson, true);
+			$filter = "";
+			foreach($comments['comments'] as $comment){
+				$filter .= "&filter[]=jodelID,eq," . $comment['jodelIDFK'];
+			}
+			$filter .= "&satisfy=any";
+			break;
+		case "myvotes":
+			$voteurl = $apiroot . "jodelvotes?transform=1&userIDFK,eq," . $userid;
+			$votesjson = getCall($voteurl);
+			$votes = json_decode($votesjson, true);
+			$filter = "";
+			foreach($votes['jodelvotes'] as $vote){
+				$filter .= "&filter[]=jodelID,eq," . $vote['jodelIDFK'];
+			}
+			$filter .= "&satisfy=any";
+			break;
 		default:
 			$filter = "";
  	}
@@ -125,26 +169,24 @@
 	//process posts
 
 	foreach($postdata['jodeldata'] as $post){
+		if($post['score'] <= $config->postmeta['needed_score_mod']){
+			$reported = reportContent( "post", $post['jodelID'], $config->postmeta['system_mod_id']);
+		}
 
 			//setup layout
+			if($post['votes_cnt'] > $config->postmeta['needed_downvotes']){
 			?>
 			<div class="card card-inverse mb-3 text-center" id="<?php echo $post['jodelID'];?>" style="background-color: #<?php echo $post['colorhex'];?>;">
   				<div class="card-block">
     				<blockquote class="card-blockquote">
-						<?php
-							if($post['votes_cnt'] < -5){
-							//post is downvoted by the community.
-							//TODO: set required downvotes to config
-							//TODO: Don't display this posts in stream
-							echo "This post was voted out by the community";
-						?>
-					</blockquote>
-  				</div>
-			</div>
-						<?php
-							} else{
+						<?php				
 								//post isn't downvoted
-		 						echo $post['jodel'];?>
+		 						echo $post['jodel'];
+								 if(isset($post['path'])){
+									 echo '<br><img src="' . $uploaddir . $post['path'] . '" alt="jodelimage">';
+								 }
+								 
+								 ?>
 		 						<!-- voting and number of votes -->
 								<div class="jodelvotes">
 									<a href="?upvotejodel=<?php echo $post['jodelID'];?>"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
@@ -158,7 +200,7 @@
 									<?php
 										$timeago = jodelage($post['createdate']);
 									?>
-									<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
+									<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><span id="<?php echo 'time-' . $post['jodelID'];?>"><?php echo $timeago;?></span>
 									<?php echo " " ;?><a href="comments.php?showcomment=<?php echo $post['jodelID'];?>"><i class="fa fa-comment" aria-hidden="true"></i><?php echo $post['comments_cnt'];?></a>
 									<?php if ($post['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
 								<!-- end post metadata -->
@@ -176,3 +218,4 @@
 <?php
 //include footer
 include 'functions/footer.php';
+	}
