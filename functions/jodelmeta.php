@@ -125,7 +125,7 @@ function getRandomColor(){
  * @since 0.7
  */
 function deletePost($postID){
-    global $apiroot, $config;
+    global $apiroot, $baseurl, $config;
     //get uploaddir
     $uploaddir = $config->image_upload_dir;
     //get name of image
@@ -166,7 +166,7 @@ function deletePost($postID){
  * @since 0.7
  */
 function deleteComment($commentID){
-    global $apiroot, $config;
+    global $apiroot, $config, $baseurl;
     //get uploaddir
     $uploaddir = $config->image_upload_dir;
     //get imageID of comment
