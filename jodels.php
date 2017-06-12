@@ -44,6 +44,12 @@
 
 	}
 
+	if(isset($_GET['deletepost'])){
+		$post2delete = $_GET['deletepost'];
+		deletePost($post2delete);
+		
+	}
+
 	//if joels.php?upvotejodel=$jodelID is called, upvote it
 	if(isset($_GET['upvotejodel'])){
 		$mainaction = false;
@@ -214,6 +220,7 @@
 									<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><span id="<?php echo 'time-' . $post['jodelID'];?>"><?php echo $timeago;?></span>
 									<?php echo " " ;?><a href="comments.php?showcomment=<?php echo $post['jodelID'];?>"><i class="fa fa-comment" aria-hidden="true"></i><?php echo $post['comments_cnt'];?></a>
 									<?php if ($post['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+									<?php if ($post['jodlerIDFK'] == $userid){ echo '<a href="?deletepost=' . $post['jodelID'] . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';}?>
 								<!-- end post metadata -->
 					</blockquote>
   				</div> <!-- end post card somewhere here -->

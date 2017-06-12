@@ -70,6 +70,13 @@
   				}
 			}
 			//save image location to DB
+
+			//split filname and extension to lowercase extension
+			$filearray = explode(".", $filename);
+			$ext = $filearray[1];
+			$extlow = strtolower($ext);
+			$filename = $filearray[0] . "." . $extlow;
+
 			$callurl = $apiroot . "images";
 			$postfields = "{\n \"path\": \"$filename\" \n}";
 			$imageID = postCall($callurl, $postfields);

@@ -63,8 +63,7 @@ if(isset($_GET['del'])){
 	$mainaction = false;
 	//get post to delete and setup delete URL for API, call it, redirect back
 	$post2del = $_GET['del'];
-	$callurl = $apiroot . "jodels/" . $post2del;
-	$deleted = deleteCall($callurl);
+	deletePost($post2del);
 	header('Location: ' . $baseurl . 'user/postmgmt.php');
 }
 
