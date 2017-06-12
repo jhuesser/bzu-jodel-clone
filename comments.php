@@ -40,6 +40,18 @@ if(isset($_GET['showcomment'])){
 	die("You need to select a post. <a href=\"index.php\">Go back</a>.");
 }
 
+if(isset($_GET['deletepost'])){
+		$post2delete = $_GET['deletepost'];
+		deletePost($post2delete);
+		
+	}
+
+if(isset($_GET['deletecomment'])){
+		$comment2delete = $_GET['deletecomment'];
+		deleteComment($comment2delete);
+		
+	}
+
 if(isset($_GET['upvotecomment'])){
 	$mainaction = false;
 	//upvote a comment
@@ -138,6 +150,8 @@ foreach($jodels['jodeldata'] as $jodel) {
 					<?php echo " ";?><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $timeago;?>
 					<a href="report.php?type=post&id=<?php echo $jodel['jodelID'];?>"><i class="fa fa-flag" aria-hidden="true"></i></a>
 					<?php if ($jodel['account_state'] == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
+					<?php if ($jodel['jodlerIDFK'] == $userid){ echo '<a href="?deletepost=' . $post['jodelID'] . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';}?>
+
 				</div>
 			</blockquote>
   		</div>
@@ -194,6 +208,8 @@ foreach($postdata['comments'] as $comment){
 						<a href="report.php?type=comment&id=<?php echo $comment['commentID'];?>"><i class="fa fa-flag" aria-hidden="true"></i></a>
 						<?php if ($accstate == 4){echo '<i class="adminmark fa fa-check-square" aria-hidden="true"></i>';}?>
 						<?php if ($jodelauthor == $comment['jodlerIDFK']){echo '<i class="fa fa-trophy" aria-hidden="true"></i> OP';}?>
+						<?php if ($comment['jodlerIDFK'] == $userid){echo '<a href="?showcomment=' . $postID . '&deletecomment=' . $comment['commentID'] . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';}?>
+
 					</div>
 				</blockquote>
   			</div>
