@@ -99,7 +99,11 @@
 		if(isset($newscore)){
 			//if new score is equal or below required minimum, delete it
 			if($newscore <= $config->postmeta['post_deleted_score']){
-				$deleted = deleteCall($apiroot. $middle . "/" . $post);
+				if($middle == "jodels"){
+					deletePost($post);
+				}elseif($middle = "comments"){
+					deleteComment($post);
+				}
 			} elseif($newscore >= $config->postmeta['post_approved_score']){
 				//if new score is equal or above required maximum
 				//get all reports of this post

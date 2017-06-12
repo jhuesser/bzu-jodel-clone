@@ -11,7 +11,7 @@ return (object) array(
 	'apiUrl' => "ENTER_URL_TO_MYSQL_REST_API", //with ending slash
 	'recaptcha_sitekey' => "ENTER_RECAPTCHA_SITE_KEY",
 	'recaptcha_secret' => "ENTER_RECAPTCHA_SECRET_KEY",
-	'image_upload_dir' => "ENTER_PATH_TO_IMAGE_UPLOAD_DIR",
+	'image_upload_dir' => "ENTER_PATH_TO_IMAGE_UPLOAD_DIR", //with ending slash
     'app_info' => array(
         'appName'=>"ENTER_APP_NAME",
         'appURL'=> "ENTER_APP_URL", //with ending slash
