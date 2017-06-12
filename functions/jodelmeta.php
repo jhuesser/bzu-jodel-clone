@@ -115,4 +115,31 @@ function getRandomColor(){
      }
      return $values;
  }
+ 
+function deletePost($postID){
+    global $apiroot, $config;
+    $uploaddir = $config->image_upload_dir;
+
+     $callurl = $apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $postID;
+
+     $postjson = getCall($callurl);
+     $posts = json_decode($postjson, true);
+   foreach($posts['jodeldata'] as $post){
+        $filename = $post["path"];
+    }
+   if(isset($filename)){
+       $path = $uploaddir . $filename;
+  
+       $images = json_decode(getCall($apiroot . "images?transform=1&filter=path,eq," . $filename), true);
+       foreach($images['images'] as $image){
+           $imageID = $image['imageID'];
+       }
+       
+       unlink($path);
+       deleteCall($apiroot . "images/" . $imageID);
+   } else {
+    deleteCall($apiroot . "jodels/" . $postID);
+   }
+   header('Location: ' . $baseurl . 'jodels.php');
+}
 ?>
