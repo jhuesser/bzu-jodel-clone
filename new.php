@@ -75,7 +75,7 @@
 			$filearray = explode(".", $filename);
 			$ext = $filearray[1];
 			$extlow = strtolower($ext);
-			$filename = $filearray . $ext;
+			$filename = $filearray[0] . "." . $extlow;
 
 			$callurl = $apiroot . "images";
 			$postfields = "{\n \"path\": \"$filename\" \n}";
