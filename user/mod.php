@@ -19,6 +19,7 @@
 	$userid = $_SESSION['userid'];
 	$apiroot = $config->apiUrl;
 	$baseurl = $config->baseUrl;
+	$uploaddir = "../" . $config->image_upload_dir;
 
 	//if content is moderated
 	if(isset($_GET['type']) && isset($_GET['approve']) || isset($_GET['deny']) || isset($_GET['idc'])){
@@ -70,7 +71,11 @@
 				}
 				//register new score & mod report to DB
 				$approved = putCall($apiroot . $middle . "/" . $post, $putfields);
-				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
+				if($middle == "comment"){
+					$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
+				}else{
+					$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				}
 				$moded = postCall($apiroot . "moderated", $postfields);
 				break;
 			case "deny":
@@ -85,13 +90,21 @@
 				}
 				//save to DB
 				$denied = putCall($apiroot . $middle . "/" . $post, $putfields);
-				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
+				if($middle == "comment"){
+					$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
+				}else{
+					$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				}
 				$moded = postCall($apiroot . "moderated", $postfields);
 			
 			break;
 			case "idc":
 				//mod doesn't know what to do, just save modreport in DB
-				$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
+				if($middle == "comment"){
+					$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"commentIDFK\": \"$post\"\n}";
+				}else{
+					$postfields = "{\n  \"jodlerIDFK\": \"$userid\",\n  \"jodelIDFK\": \"$post\"\n}";
+				}
 				$moded = postCall($apiroot . "moderated", $postfields);
 				break;
 		}
@@ -205,7 +218,14 @@ if($mainaction == true){
   							<div class="card-block">
     							<blockquote class="card-blockquote">
 									<?php
-									echo $post['jodel'];?>
+									//post isn't downvoted
+								if(!isset($post['path'])){
+		 						echo $post['jodel'];
+								} else {
+								 
+									 echo '<br><img src="' . $uploaddir . $post['path'] . '" alt="jodelimage">';
+								 }
+								 ?>
 		 							<!-- number of votes -->
 									<div class="jodelvotes">
 										<a href="#"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
@@ -263,7 +283,17 @@ if($mainaction == true){
   							<div class="card-block">
     							<blockquote class="card-blockquote">
 									<?php
-									echo $comment['comment'];?>
+									if(!isset($comment['imageIDFK'])){
+		 			echo $comment['comment'];
+					} else {
+						 $imageurl = $apiroot . "images?transform=1&filter=imageID,eq," .  $comment['imageIDFK'];
+						 $imagejson = getCall($imageurl);
+						 $images = json_decode($imagejson, true);
+						 foreach($images['images'] as $image){
+							 $path = $image['path'];
+						 }
+						 echo '<br><img src="' . $uploaddir . $path . '" alt="commentImage">';
+					 }?>
 		 							<!-- number of votes -->
 									<div class="jodelvotes">
 										<a href="#"<i class="fa fa-angle-up" aria-hidden="true"></i></a><br>
