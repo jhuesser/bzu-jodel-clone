@@ -68,7 +68,7 @@
 			$_SESSION['errorMsg'] = "Something went wrong!";
 		}
 	}
-	if($mainaction == false){
+	if($mainaction == true){
 	
 	?>
 	

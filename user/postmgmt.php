@@ -89,7 +89,7 @@ if(isset($_GET['update'])){
 }
 
 
-	if($mainaction == false){
+	if($mainaction == true){
 
 	?>
 	<div class="container">

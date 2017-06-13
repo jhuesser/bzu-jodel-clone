@@ -89,8 +89,6 @@
   $_SESSION['my_caps'] = $caps;
 
   
-
-  
   //show user tools
   echo "<h2>You are " . $accdesc . ". Here are your tools:</h2>";
   
