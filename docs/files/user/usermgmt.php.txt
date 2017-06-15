@@ -1,0 +1,150 @@
+<?php
+	session_start();
+	//Include functions & meta data
+	require '../functions/apicalls.php';
+	$config = require('../config.php');
+	$apiroot = $config->apiUrl;
+	require '../functions/jodelmeta.php';
+	require '../functions/admintools.php';
+	require '../functions/usermanipulation.php';
+	$title = "Manage Users | SocialDomayn";
+	$stylesheet = "jodel.css";
+	include '../functions/header.php';
+	$mainaction = true;
+
+	//check if user is logged in & has required caps
+	$mycaps = $_SESSION['my_caps'];
+	if(!isset($_SESSION['userid']) || $mycaps['reset_paswd'] == false) {
+		header('Location: ' . $config->baseUrl . 'user.php');
+	}
+
+	//set up working variables
+	$userid = $_SESSION['userid'];
+	$mycaps = $_SESSION['my_caps'];
+	
+	if(isset($_GET['deluser'])){
+		$mainaction = false;
+		//user wants to delete a color
+		//get ID of color to delete
+		$user = $_GET['deluser'];
+		//setup call URL
+		$callurl = $apiroot . "jodlers/" . $user;
+		//Send DELETE call to url
+		$deleteduser = deleteCall($callurl);
+		//redirect
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+
+	
+	
+	if(isset($_GET['ban'])){
+		$mainaction = false;
+		$updated = manipulateUser($_GET['ban'], 0, $mycaps);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($_GET['active'])){
+		$mainaction = false;
+		$updated = manipulateUser($_GET['active'], 1, $mycaps);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($_GET['mod'])){
+		$mainaction = false;
+		$updated = manipulateUser($_GET['mod'], 2, $mycaps);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($_GET['admin'])){
+		$mainaction = false;
+		$updated = manipulateUser($_GET['admin'], 3, $mycaps);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($_GET['superadmin'])){
+		$mainaction = false;
+		$updated = manipulateUser($_GET['superadmin'], 4, $mycaps);
+		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
+	}
+	if(isset($updated)){
+		$mainaction = false;
+		if($updated == false){
+			$_SESSION['errorMsg'] = "Something went wrong!";
+		}
+	}
+	if($mainaction == true){
+	
+	?>
+	
+
+<div id="top"></div>
+<!-- main menu -->
+<ul class="nav justify-content-center">
+	<li class="nav-item">
+		<a class="nav-link" href="../user.php"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+	</li>
+	<li class="nav-item">
+    <a class="nav-link" href="javascript:window.location.reload();"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../jodels.php"><i class="fa fa-comments-o" aria-hidden="true"></i></a>
+  </li>
+  
+</ul>
+<!-- end main menu -->
+<div class="test"></div>
+
+<?php
+	if(isset($_SESSION['errorMsg'])) {
+		//show error msg
+ 		?>
+		<div class="alert alert-danger" role="alert">
+  		<strong>Holy guacamole!</strong> <?php echo $_SESSION['errorMsg'];?>
+		</div>
+		<?php
+	}
+	?>
+	<div class="container">
+		<h1>
+			<?php echo "Hello " . $_SESSION['username'];?>
+		</h1>
+	</div>
+	<?php
+	$jodlersurl = $apiroot . "jodlers?transform=1";
+		$jodlersjson = getCall($jodlersurl);
+		$jodlers = json_decode($jodlersjson, true);
+
+		foreach($jodlers['jodlers'] as $jodler){
+			$colors = getRandomColor();
+			$color = $colors['colorhex'];
+			$acctype = getAccountType($config, $jodler['account_state']);
+			//show all colors
+			?><div class="card card-inverse mb-3 text-center" id="<?php echo $jodler['jodlerID'];?>" style="background-color: #<?php echo $color;?>;">
+  		<div class="card-block">
+    		<blockquote class="card-blockquote">
+					<?php echo $jodler['jodlerID'] . "<br>" . $jodler['jodlerHRID'] . "<br>" . $acctype->typedesc . "<br>";
+					if ($mycaps['ban'] == true){
+						?><a href="?ban=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['baned'] ?></button></a><?php
+					}
+					if ($mycaps['promote_to_user'] == true){
+						?><a href="?active=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['jodler'] ?></button></a><?php
+					}
+					if ($mycaps['promote_to_mod'] == true){
+						?><a href="?mod=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['mod'] ?></button></a><?php
+					}
+					if ($mycaps['promote_to_admin'] == true){
+						?><a href="?admin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['admin'] ?></button></a><?php
+					}
+					if ($mycaps['promote_to_superadmin'] == true){
+						?><a href="?superadmin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button></a><?php
+					}
+						?>			
+					<div class="jodelvotes">
+						<!--delete button -->
+							<a href="?deluser=<?php echo $jodler['jodlerID'];?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+					</div>
+					<div class="clear"></div>
+				</blockquote>
+		</div> 
+	</div>
+	<?php
+		}
+		//include footer
+		include '../functions/footer.php';
+	}
