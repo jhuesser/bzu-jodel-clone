@@ -68,7 +68,7 @@
 			$_SESSION['errorMsg'] = "Something went wrong!";
 		}
 	}
-	if($mainaction == false){
+	if($mainaction == true){
 	
 	?>
 	
@@ -134,7 +134,9 @@
 					if ($mycaps['promote_to_superadmin'] == true){
 						?><a href="?superadmin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button></a><?php
 					}
-						?>			
+						?>	
+						<br>
+						<a href="postmgmt.php?showby=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning">Show posts by</button></a>		
 					<div class="jodelvotes">
 						<!--delete button -->
 							<a href="?deluser=<?php echo $jodler['jodlerID'];?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
