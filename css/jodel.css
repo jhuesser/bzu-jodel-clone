@@ -5,11 +5,14 @@
 .clear {
 	clear: both;
 }
+.forker {
+	z-index: 100;
+}
 
 .nav {
 	background-color: orange;
 	position: fixed;
-	z-index: 100;
+	z-index: 99;
 	width: 100%;
 	
 	
