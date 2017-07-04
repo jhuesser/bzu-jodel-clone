@@ -60,3 +60,30 @@
  
  }
  
+ /**
+ *
+ * @param int $user2delete The ID of the user to delete.
+ *
+ * @author Jonas Hüsser
+ *
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ *
+ * @since 0.5
+ */
+ function deleteUser($user2delete){
+	global $apiroot, $config;
+
+	//Get all posts of user
+	$posts = json_decode(getCall($apiroot . "jodeldata?transform=1&filter=jodelID,eq," . $user2delete), true);
+	//Push all IDs to an array
+	$postIDs = array();
+	foreach($posts['jodels'] as $jodel){
+		array_push($postIDs,$jodel['jodelID']);
+	}
+	//Save delete all posts of the user (images)
+	foreach($postIDs as $post){
+		deletePost($post);
+	}
+	deleteCall($apiroot . "jodlers/" . $user2delete);
+
+ }

@@ -114,6 +114,7 @@
 			if($newscore <= $config->postmeta['post_deleted_score']){
 				if($middle == "jodels"){
 					deletePost($post);
+					 header('Location: ' . $baseurl . 'jodels.php');
 				}elseif($middle = "comments"){
 					deleteComment($post);
 				}
