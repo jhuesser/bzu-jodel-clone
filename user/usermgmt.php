@@ -28,10 +28,7 @@
 		//get ID of color to delete
 		$user = $_GET['deluser'];
 		//setup call URL
-		$callurl = $apiroot . "jodlers/" . $user;
-		//Send DELETE call to url
-		$deleteduser = deleteCall($callurl);
-		//redirect
+		deleteUser($user);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 

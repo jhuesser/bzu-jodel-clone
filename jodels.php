@@ -47,6 +47,7 @@
 	if(isset($_GET['deletepost'])){
 		$post2delete = $_GET['deletepost'];
 		deletePost($post2delete);
+		 header('Location: ' . $baseurl . 'jodels.php');
 		
 	}
 
