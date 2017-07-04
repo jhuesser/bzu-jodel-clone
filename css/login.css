@@ -12,6 +12,9 @@
 	border: 1px solid orange;
 }
 
+.forker {
+	z-index: 100;
+}
 
 .test {
 	padding-top: 70px;
@@ -23,7 +26,7 @@
 .nav {
 	background-color: orange;
 	position: fixed;
-	z-index: 100;
+	z-index: 99;
 	width: 100%;
 	
 	
