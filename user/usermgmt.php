@@ -28,10 +28,7 @@
 		//get ID of color to delete
 		$user = $_GET['deluser'];
 		//setup call URL
-		$callurl = $apiroot . "jodlers/" . $user;
-		//Send DELETE call to url
-		$deleteduser = deleteCall($callurl);
-		//redirect
+		deleteUser($user);
 		header('Location: ' . $config->baseUrl . 'user/usermgmt.php');
 	}
 
@@ -68,7 +65,7 @@
 			$_SESSION['errorMsg'] = "Something went wrong!";
 		}
 	}
-	if($mainaction == false){
+	if($mainaction == true){
 	
 	?>
 	
@@ -134,7 +131,9 @@
 					if ($mycaps['promote_to_superadmin'] == true){
 						?><a href="?superadmin=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning"><?php echo $config->app_vocabulary['superadmin'] ?></button></a><?php
 					}
-						?>			
+						?>	
+						<br>
+						<a href="postmgmt.php?showby=<?php echo $jodler['jodlerID'];?>"><button type="button" class="btn btn-warning">Show posts by</button></a>		
 					<div class="jodelvotes">
 						<!--delete button -->
 							<a href="?deluser=<?php echo $jodler['jodlerID'];?>"><i class="fa fa-trash-o" aria-hidden="true"></i></a>

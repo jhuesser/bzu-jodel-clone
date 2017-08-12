@@ -152,7 +152,7 @@ function deletePost($postID){
        //only delete post
     deleteCall($apiroot . "jodels/" . $postID);
    }
-   header('Location: ' . $baseurl . 'jodels.php');
+  
 }
 
  /**

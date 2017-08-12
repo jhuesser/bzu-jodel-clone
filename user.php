@@ -17,6 +17,7 @@
 ?>
 
 <!-- main menu-->
+<a class="forker" target="_blank" href="https://github.com/jhuesser/bzu-jodel-clone"><img class="forker" style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
 <div id="top"></div>
 
 <ul class="nav justify-content-center">
@@ -89,8 +90,6 @@
   $_SESSION['my_caps'] = $caps;
 
   
-
-  
   //show user tools
   echo "<h2>You are " . $accdesc . ". Here are your tools:</h2>";
   
@@ -126,11 +125,6 @@
       echo '<a href="user/colormgmt.php" class="list-group-item list-group-item-action">Add a color</a>'; 
       $hascaps = true;
     } 
-  if($caps['delete_user_votes'] == true){
-    //can manage users
-    echo '<a href="#" class="list-group-item list-group-item-action">Manage Votes</a>'; 
-    $hascaps = true;
-  }
   if($caps['create_admin_notice'] == true){
     //can manage admin notices
     echo '<a href="#" class="list-group-item list-group-item-action">Create admin notice</a>'; 

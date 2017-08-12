@@ -88,8 +88,12 @@ if(isset($_GET['update'])){
 
 }
 
+if(isset($_GET['showby'])){
+	$showby = $_GET['showby'];
+	$filter = "&filter=jodlerIDFK,eq," . $showby;
+}
 
-	if($mainaction == false){
+	if($mainaction == true){
 
 	?>
 	<div class="container">
@@ -100,7 +104,7 @@ if(isset($_GET['update'])){
 
 	<?php
 	//get all posts and store them in an arry
-	$jodelsUrl = $apiroot . "jodeldata?transform=1";
+	$jodelsUrl = $apiroot . "jodeldata?transform=1" . $filter;
 	$posts = getCall($jodelsUrl);
 	$postdata = json_decode($posts, true);
 

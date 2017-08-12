@@ -7,4 +7,4 @@ php:
   - '7.1'
   - hhvm
   - nightly
-cript: phpunit jodels.php
+script: phpunit jodels.php

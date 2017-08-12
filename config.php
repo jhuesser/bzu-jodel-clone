@@ -93,7 +93,6 @@ return (object) array(
 			'add_color' => true,
 			'change_post_score' => true,
 			'edit_posts' => true,
-			'delete_user_votes' => true,
 			'manage_abuse' => true,
 			'create_admin_notice' => true
 		),
@@ -113,7 +112,6 @@ return (object) array(
 			'add_color' => true,
 			'change_post_score' => false,
 			'edit_posts' => true,
-			'delete_user_votes' => true,
 			'manage_abuse' => true,
 			'create_admin_notice' => true
 
@@ -134,7 +132,6 @@ return (object) array(
 			'add_color' => false,
 			'change_post_score' => false,
 			'edit_posts' => false,
-			'delete_user_votes' => false,
 			'manage_abuse' => false,
 			'create_admin_notice' => false
 
@@ -155,7 +152,6 @@ return (object) array(
 			'add_color' => false,
 			'change_post_score' => false,
 			'edit_posts' => false,
-			'delete_user_votes' => false,
 			'manage_abuse' => false,
 			'create_admin_notice' => false
 
