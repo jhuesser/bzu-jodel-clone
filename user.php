@@ -125,11 +125,6 @@
       echo '<a href="user/colormgmt.php" class="list-group-item list-group-item-action">Add a color</a>'; 
       $hascaps = true;
     } 
-  if($caps['delete_user_votes'] == true){
-    //can manage users
-    echo '<a href="#" class="list-group-item list-group-item-action">Manage Votes</a>'; 
-    $hascaps = true;
-  }
   if($caps['create_admin_notice'] == true){
     //can manage admin notices
     echo '<a href="#" class="list-group-item list-group-item-action">Create admin notice</a>'; 
