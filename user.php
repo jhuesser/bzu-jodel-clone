@@ -127,7 +127,7 @@
     } 
   if($caps['create_admin_notice'] == true){
     //can manage admin notices
-    echo '<a href="#" class="list-group-item list-group-item-action">Create admin notice</a>'; 
+    echo '<a href="user/adminote.php" class="list-group-item list-group-item-action">Create admin notice</a>'; 
     $hascaps = true;
   }
   if(!isset($hascaps)){

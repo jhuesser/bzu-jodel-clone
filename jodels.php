@@ -184,6 +184,21 @@
 	}
 	*/
 
+	if(file_exists('user/notice.txt')){
+		$notice = file_get_contents('user/notice.txt');
+		?>
+		<div class="card card-inverse mb-3 text-center" style="background-color: grey;">
+  			<div class="card-block">
+    			<blockquote class="card-blockquote">
+				<?php
+					echo $notice;
+				?>
+				</blockquote>
+			</div>
+		</div>
+		<?php
+	}
+
 	foreach($postdata['jodeldata'] as $post){
 		if($post['score'] <= $config->postmeta['needed_score_mod'] /* && $postAndResons[$post['jodelID']] != $config->postmeta['system_mod_id']*/){			
 			$reported = reportContent( "post", $post['jodelID'], $config->postmeta['system_mod_id']);
